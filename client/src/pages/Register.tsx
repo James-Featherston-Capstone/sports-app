@@ -1,38 +1,44 @@
 import { useState } from "react";
-import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
+import Input from "../components/Input";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
+  const [testPassword, setTestPassword] = useState("");
   const [email, setEmail] = useState("");
-  const handleLogin = (event: React.FormEvent) => {
+  const handleRegister = (event: React.FormEvent) => {
     event.preventDefault();
     // Make API call
     // Set login state to true
-    console.log("Logged In");
+    console.log("Registered");
   };
   return (
     <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
-      <h1 className="text-lg">Login to Team Up</h1>
+      <h1 className="text-xl">Create an Account</h1>
       <form
         className="flex justify-center flex-col items-start"
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
       >
         <label> Email: </label>
         <Input value={email} setValue={setEmail} type="text" />
         <label> Password: </label>
         <Input value={password} setValue={setPassword} type="password" />
+        <label> Confirm Password: </label>
+        <Input
+          value={testPassword}
+          setValue={setTestPassword}
+          type="password"
+        />
         <button type="submit" className="w-100 m-1">
           Login
         </button>
       </form>
       <p>
-        Don't have an account?{" "}
-        <a onClick={() => navigate("/register")}>Register</a>
+        Already have an account? <a onClick={() => navigate("/login")}>Login</a>
       </p>
     </div>
   );
 };
 
-export default Login;
+export default Register;
