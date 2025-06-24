@@ -7,7 +7,12 @@ const authRouter = require("./routes/authRoutes");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const corsObject = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsObject));
 
 let sessionConfig = {
   name: "sessionId",

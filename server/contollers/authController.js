@@ -34,9 +34,7 @@ exports.login = async (req, res) => {
     const filters = { email: email };
     const user = await authService.getUser(filters);
     if (user && (await verifyPassword(plainPassword, user.password))) {
-      console.log("Creating session");
       req.session.user = user;
-      console.log(req.session);
       res.json(user);
     } else {
       throw Error;
@@ -55,14 +53,10 @@ exports.logout = async (req, res) => {
 
 exports.me = async (req, res) => {
   try {
-    console.log(req.session);
-    console.log(req.session.user);
     if (!req.session.user) {
-      console.log("In here");
       return res.status(401).json({ message: "Not logged in" });
     }
-    console.log(1);
-    const filters = { id: req.session.userId };
+    const filters = { id: req.session.user.id };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
