@@ -14,8 +14,8 @@ const Register = () => {
     console.log("Registered");
   };
   return (
-    <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
-      <h1 className="text-xl">Create an Account</h1>
+    <div className="container border-2 w-5/10 h-5gfrlldebrltkddfdblgklt/10 flex justify-center items-center rounded-md flex-col">
+      <h1 className="text-xl">Create a Team Up Account</h1>
       <form
         className="flex justify-center flex-col items-start"
         onSubmit={handleRegister}

@@ -9,7 +9,7 @@ const Input = ({ value, setValue, type }: InputProps) => {
     <>
       <input
         type={type}
-        className="w-100"
+        className="w-1/1"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
