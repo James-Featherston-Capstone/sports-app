@@ -1,5 +1,3 @@
-import React from "react";
-
 type InputProps = {
   value: string;
   setValue: (value: string) => void;
