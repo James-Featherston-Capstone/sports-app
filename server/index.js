@@ -1,16 +1,14 @@
 const express = require("express");
-const PORT = 3000;
+const cors = require("cors");
 const session = require("express-session");
-const dotenv = require("dotenv");
+const PORT = 3000;
 
-dotenv.config();
-
-const authRouter = require("./routes/auth");
+const authRouter = require("./routes/authRoutes");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
-// Codepaths example config, will likely need to change
 let sessionConfig = {
   name: "sessionId",
   secret: "keep it secret, keep it safe",
@@ -25,10 +23,6 @@ let sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use("/api/auth", authRouter);
-
-app.get("/", (req, res) => {
-  res.send("Working");
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
