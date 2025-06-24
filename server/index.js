@@ -1,6 +1,9 @@
 const express = require("express");
 const PORT = 3000;
 const session = require("express-session");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const authRouter = require("./routes/auth");
 
