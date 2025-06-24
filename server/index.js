@@ -22,6 +22,7 @@ let sessionConfig = {
 };
 
 app.use(session(sessionConfig));
+app.set("trust proxy", 1);
 app.use("/api/auth", authRouter);
 
 app.listen(PORT, () => {

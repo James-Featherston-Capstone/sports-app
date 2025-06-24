@@ -34,7 +34,9 @@ exports.login = async (req, res) => {
     const filters = { email: email };
     const user = await authService.getUser(filters);
     if (user && (await verifyPassword(plainPassword, user.password))) {
-      req.session.userId = user.id;
+      console.log("Creating session");
+      req.session.user = user;
+      console.log(req.session);
       res.json(user);
     } else {
       throw Error;
@@ -48,20 +50,22 @@ exports.logout = async (req, res) => {
   req.session.destroy((err) => {
     res.json({ message: "Logout successful" });
   });
-  next({ message: "Logout failed" });
+  res.send("This person is logged out");
 };
 
 exports.me = async (req, res) => {
   try {
-    if (!req.session.userId) {
+    console.log(req.session);
+    console.log(req.session.user);
+    if (!req.session.user) {
+      console.log("In here");
       return res.status(401).json({ message: "Not logged in" });
     }
+    console.log(1);
     const filters = { id: req.session.userId };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
     res.status(404).json({ message: "Internal Server Error" });
   }
-
-  res.send("This person is logged in");
 };

@@ -1,16 +1,20 @@
 import { useState } from "react";
 import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
+import { login } from "../utils/authService";
 
 const Login = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const handleLogin = (event: React.FormEvent) => {
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    const user = await login({ password: password, email: email });
     // Make API call
     // Set login state to true
-    console.log("Logged In");
+    console.log(user);
   };
   return (
     <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
@@ -26,6 +30,11 @@ const Login = () => {
         <button type="submit" className="w-100 m-1">
           Login
         </button>
+        {error ? (
+          <p className="text-red-500 self-center">{errorMessage}</p>
+        ) : (
+          <></>
+        )}
       </form>
       <p>
         Don't have an account?{" "}
