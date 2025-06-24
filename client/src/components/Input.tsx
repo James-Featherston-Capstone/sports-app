@@ -1,13 +1,14 @@
 type InputProps = {
   value: string;
   setValue: (value: string) => void;
+  type: string;
 };
 
-const Input = ({ value, setValue }: InputProps) => {
+const Input = ({ value, setValue, type }: InputProps) => {
   return (
     <>
       <input
-        type="text"
+        type={type}
         className="w-100"
         value={value}
         onChange={(e) => setValue(e.target.value)}
