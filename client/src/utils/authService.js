@@ -21,14 +21,16 @@ const login = async (data) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+    credentials: "include",
   };
   return await fetchData(path, req);
 };
 
-const loginStatus = async (data) => {
+const loginStatus = async () => {
   const path = `${BASE_URL}/auth/me`;
   const req = {
     method: "GET",
+    credentials: "include",
   };
   return await fetchData(path, req);
 };
