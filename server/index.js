@@ -24,10 +24,6 @@ let sessionConfig = {
 app.use(session(sessionConfig));
 app.use("/api/auth", authRouter);
 
-app.get("/api", (req, res) => {
-  res.send("Testing the route");
-});
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

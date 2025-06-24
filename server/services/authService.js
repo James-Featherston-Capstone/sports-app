@@ -1,8 +1,8 @@
 const prisma = require("../prisma.js");
 
-exports.getUserByEmail = async (targetEmail) => {
+exports.getUser = async (filters) => {
   const user = await prisma.user.findFirst({
-    where: { email: targetEmail },
+    where: filters,
   });
   return user;
 };

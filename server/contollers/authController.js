@@ -4,8 +4,14 @@ const { hashPassword, verifyPassword } = require("../utils/argon");
 exports.register = async (req, res) => {
   try {
     const { email, password: plainPassword } = req.body;
-    const user = await authService.getUserByEmail(email);
-    if (user) {
+    if (!email || !plainPassword) {
+      return res
+        .status(400)
+        .json({ error: "Username and password are required." });
+    }
+    const filters = { email: email };
+    const existingUser = await authService.getUser(filters);
+    if (existingUser) {
       throw Error;
     }
     const hash = await hashPassword(plainPassword);
@@ -18,9 +24,44 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  res.send("You are now logged in");
+  try {
+    const { email, password: plainPassword } = req.body;
+    if (!email || !plainPassword) {
+      return res
+        .status(400)
+        .json({ error: "Username and password are required." });
+    }
+    const filters = { email: email };
+    const user = await authService.getUser(filters);
+    if (user && (await verifyPassword(plainPassword, user.password))) {
+      req.session.userId = user.id;
+      res.json(user);
+    } else {
+      throw Error;
+    }
+  } catch (error) {
+    res.status(404).json({ message: "Internal Server Error" });
+  }
 };
 
 exports.logout = async (req, res) => {
-  res.send("You are now logged out");
+  req.session.destroy((err) => {
+    res.json({ message: "Logout successful" });
+  });
+  next({ message: "Logout failed" });
+};
+
+exports.me = async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ message: "Not logged in" });
+    }
+    const filters = { id: req.session.userId };
+    const user = await authService.getUser(filters);
+    res.json(user);
+  } catch (error) {
+    res.status(404).json({ message: "Internal Server Error" });
+  }
+
+  res.send("This person is logged in");
 };
