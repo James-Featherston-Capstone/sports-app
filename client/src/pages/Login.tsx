@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../components/Input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
+import { useLoginContext } from "../contexts/loginContext";
+import { checkStatus } from "../utils/authService";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setLoginStatus } = useLoginContext();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const performStatusCheck = async () => {
+      if (await checkStatus()) {
+        setLoginStatus(true);
+        navigate("/events");
+      }
+    };
+    performStatusCheck();
+  }, []);
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     const user = await login({ password: password, email: email });
-    // Make API call
-    // Set login state to true
+    if (!user) {
+      setError(true);
+      setErrorMessage("Username or password Incorrect");
+    } else {
+      setLoginStatus(true);
+      navigate("/events");
+    }
     console.log(user);
   };
+
   return (
     <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
       <h1 className="text-lg">Login to Team Up</h1>

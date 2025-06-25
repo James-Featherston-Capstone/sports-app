@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import { register } from "../utils/authService";
+import { useLoginContext } from "../contexts/loginContext";
+import { checkStatus } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { setLoginStatus } = useLoginContext();
   const [password, setPassword] = useState("");
   const [testPassword, setTestPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const performStatusCheck = async () => {
+      if (await checkStatus()) {
+        setLoginStatus(true);
+        navigate("/events");
+      }
+    };
+    performStatusCheck();
+  }, []);
+
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
     if (password !== testPassword) {
@@ -17,9 +31,11 @@ const Register = () => {
       setErrorMessage("Passwords Do Not Match");
     } else {
       const user = await register({ email: email, password: password });
-      // Make API call
-      // Set login state to true
       console.log(user);
+      if (user) {
+        setLoginStatus(true);
+        navigate("/events");
+      }
     }
   };
   return (
@@ -40,7 +56,7 @@ const Register = () => {
           type="password"
         />
         <button type="submit" className="w-100 m-1">
-          Login
+          Register
         </button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>

@@ -1,7 +1,7 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
 
-const register = async (data) => {
+const register = async <T = any>(data: Object) : Promise<T> => {
   const path = `${BASE_URL}/auth/register`;
   const req = {
     method: "POST",
@@ -9,11 +9,12 @@ const register = async (data) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+    credentials: "include",
   };
   return await fetchData(path, req);
 };
 
-const login = async (data) => {
+const login = async <T = any>(data: Object) : Promise<T> => {
   const path = `${BASE_URL}/auth/login`;
   const req = {
     method: "POST",
@@ -35,4 +36,12 @@ const loginStatus = async () => {
   return await fetchData(path, req);
 };
 
-export { register, login, loginStatus };
+const checkStatus = async () => {
+  const status = await loginStatus()
+  if (status) {
+    return true
+  }
+  return false
+}
+
+export { register, login, loginStatus, checkStatus };

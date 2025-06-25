@@ -1,5 +1,5 @@
 const BASE_URL = "http://localhost:3000/api";
-const fetchData = async (path, request) => {
+const fetchData = async <T = any>(path: string, request: Object) : Promise<T> => {
   let data = null;
   try {
     const response = await fetch(path, request);
