@@ -9,7 +9,12 @@ const authRouter = require("./routes/authRoutes");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+const corsObject = {
+  origin: "http://localhost:5173",
+  credentials: true,
+};
+app.use(cors(corsObject));
 
 let sessionConfig = {
   name: "sessionId",
@@ -24,6 +29,7 @@ let sessionConfig = {
 };
 
 app.use(session(sessionConfig));
+app.set("trust proxy", 1);
 app.use("/api/auth", authRouter);
 
 app.use((err, req, res) => {

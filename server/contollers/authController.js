@@ -21,6 +21,7 @@ exports.register = async (req, res, next) => {
     const hash = await hashPassword(plainPassword);
     const newUser = { email, password: hash };
     const retUser = await authService.createUser(newUser);
+    req.session.user = retUser;
     res.json(retUser);
   } catch (error) {
     next(error);
@@ -36,7 +37,7 @@ exports.login = async (req, res, next) => {
     const filters = { email: email };
     const user = await authService.getUser(filters);
     if (user && (await verifyPassword(plainPassword, user.password))) {
-      req.session.userId = user.id;
+      req.session.user = user;
       res.json(user);
     } else {
       throw new NotFoundError("Email or password is incorrect.");
@@ -58,15 +59,13 @@ exports.logout = async (req, res, next) => {
 
 exports.me = async (req, res, next) => {
   try {
-    if (!req.session.userId) {
+    if (!req.session.user) {
       throw UnauthorizedError("User is not logged in");
     }
-    const filters = { id: req.session.userId };
+    const filters = { id: req.session.user.id };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
     next(UnauthorizedError);
   }
-
-  res.send("This person is logged in");
 };
