@@ -1,18 +1,22 @@
 const authService = require("../services/authService");
 const { hashPassword, verifyPassword } = require("../utils/argon");
+const {
+  ValidationError,
+  ConflictError,
+  NotFoundError,
+  UnauthorizedError,
+} = require("../middleware/Errors");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
     const { email, password: plainPassword } = req.body;
     if (!email || !plainPassword) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required." });
+      throw new ValidationError("Missing email or password");
     }
     const filters = { email: email };
     const existingUser = await authService.getUser(filters);
     if (existingUser) {
-      throw Error;
+      throw ConflictError("This email is already in use");
     }
     const hash = await hashPassword(plainPassword);
     const newUser = { email, password: hash };
@@ -20,17 +24,15 @@ exports.register = async (req, res) => {
     req.session.user = retUser;
     res.json(retUser);
   } catch (error) {
-    res.status(404).json({ message: "Internal Server Error" });
+    next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password: plainPassword } = req.body;
     if (!email || !plainPassword) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required." });
+      throw new ValidationError("Missing email or password");
     }
     const filters = { email: email };
     const user = await authService.getUser(filters);
@@ -38,29 +40,32 @@ exports.login = async (req, res) => {
       req.session.user = user;
       res.json(user);
     } else {
-      throw Error;
+      throw new NotFoundError("Email or password is incorrect.");
     }
   } catch (error) {
-    res.status(404).json({ message: "Internal Server Error" });
+    next(error);
   }
 };
 
-exports.logout = async (req, res) => {
-  req.session.destroy((err) => {
-    res.json({ message: "Logout successful" });
-  });
-  res.send("This person is logged out");
+exports.logout = async (req, res, next) => {
+  try {
+    req.session.destroy((err) => {
+      res.json({ message: "Logout successful" });
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.me = async (req, res) => {
+exports.me = async (req, res, next) => {
   try {
     if (!req.session.user) {
-      return res.status(401).json({ message: "Not logged in" });
+      throw UnauthorizedError("User is not logged in");
     }
     const filters = { id: req.session.user.id };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
-    res.status(404).json({ message: "Internal Server Error" });
+    next(UnauthorizedError);
   }
 };

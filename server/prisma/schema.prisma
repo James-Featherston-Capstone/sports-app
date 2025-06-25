@@ -29,7 +29,10 @@ model Profile {
   description String   @default("")
   location    String[] @default([])
   sports      String[] @default([])
-  pfp         String
+  pfp         String   @default("")
   user        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
+  // eventsCreated
+  // eventsRSVP
+  // friends
 }
