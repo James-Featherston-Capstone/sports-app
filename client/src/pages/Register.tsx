@@ -31,7 +31,6 @@ const Register = () => {
       setErrorMessage("Passwords Do Not Match");
     } else {
       const user = await register({ email: email, password: password });
-      console.log(user);
       if (user) {
         setLoginStatus(true);
         navigate("/events");

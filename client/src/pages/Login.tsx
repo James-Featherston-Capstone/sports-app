@@ -33,7 +33,6 @@ const Login = () => {
       setLoginStatus(true);
       navigate("/events");
     }
-    console.log(user);
   };
 
   return (

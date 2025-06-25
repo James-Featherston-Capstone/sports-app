@@ -3,9 +3,7 @@ import Input from "../Input";
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const handleSearch = () => {
-    console.log();
-  };
+  const handleSearch = () => {};
   return (
     <article className="flex m-3">
       <div className="w-50 mr-1.5">
