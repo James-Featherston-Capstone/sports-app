@@ -1,10 +1,10 @@
-import SearchFilter from "../components/events-components/SearchFilter";
+import EventSearchFilter from "../components/events-components/EventSearchFilter";
 import EventList from "../components/events-components/EventList";
 
 const Events = () => {
   return (
-    <section className="w-1/1 grow-1">
-      <SearchFilter />
+    <section className="grow w-screen">
+      <EventSearchFilter />
       <EventList />
     </section>
   );

@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Events from "./pages/Events";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Athletes from "./pages/Athletes";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/athletes" element={<Athletes />} />
       </Routes>
       <Footer />
     </div>

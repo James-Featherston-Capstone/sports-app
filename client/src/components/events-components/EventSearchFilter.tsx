@@ -1,7 +1,7 @@
 import Search from "./Search";
 import Filter from "./Filter";
 
-const SearchFilter = () => {
+const EventSearchFilter = () => {
   return (
     <section className="flex flex-row items-start justify-center ml-10 mr-10">
       <Filter />
@@ -10,4 +10,4 @@ const SearchFilter = () => {
   );
 };
 
-export default SearchFilter;
+export default EventSearchFilter;
