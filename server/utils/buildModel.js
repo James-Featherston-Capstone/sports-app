@@ -1,16 +1,22 @@
 const buildProfile = (req) => {
   const userId = parseInt(req.params.userId);
   const profile = { userId: userId };
-  const { username, firstname, lastname, description, location, sports, pfp } =
-    req.body;
-  addIfPresent(username, "username", profile);
+  const { firstname, lastname, description, location, sports } = req.body;
   addIfPresent(firstname, "firstname", profile);
   addIfPresent(lastname, "lastname", profile);
   addIfPresent(description, "description", profile);
   addIfPresent(location, "location", profile);
   addIfPresent(sports, "sports", profile);
-  addIfPresent(pfp, "pfp", profile);
   return profile;
+};
+
+const buildUserUpdates = (req) => {
+  const userId = parseInt(req.params.userId);
+  const user = { id: userId };
+  const { username, pfp } = req.body;
+  addIfPresent(username, "username", user);
+  addIfPresent(pfp, "pfp", user);
+  return user;
 };
 
 const addIfPresent = (variable, name, obj) => {
@@ -19,4 +25,4 @@ const addIfPresent = (variable, name, obj) => {
   }
 };
 
-module.exports = { buildProfile };
+module.exports = { buildProfile, buildUserUpdates };
