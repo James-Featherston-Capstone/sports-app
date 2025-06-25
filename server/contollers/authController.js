@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
     const hash = await hashPassword(plainPassword);
     const newUser = { email, password: hash };
     const retUser = await authService.createUser(newUser);
+    req.session.user = retUser;
     res.json(retUser);
   } catch (error) {
     res.status(404).json({ message: "Internal Server Error" });
@@ -34,7 +35,7 @@ exports.login = async (req, res) => {
     const filters = { email: email };
     const user = await authService.getUser(filters);
     if (user && (await verifyPassword(plainPassword, user.password))) {
-      req.session.userId = user.id;
+      req.session.user = user;
       res.json(user);
     } else {
       throw Error;
@@ -48,20 +49,18 @@ exports.logout = async (req, res) => {
   req.session.destroy((err) => {
     res.json({ message: "Logout successful" });
   });
-  next({ message: "Logout failed" });
+  res.send("This person is logged out");
 };
 
 exports.me = async (req, res) => {
   try {
-    if (!req.session.userId) {
+    if (!req.session.user) {
       return res.status(401).json({ message: "Not logged in" });
     }
-    const filters = { id: req.session.userId };
+    const filters = { id: req.session.user.id };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
     res.status(404).json({ message: "Internal Server Error" });
   }
-
-  res.send("This person is logged in");
 };
