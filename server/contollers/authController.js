@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
     const hash = await hashPassword(plainPassword);
     const newUser = { email, password: hash };
     const retUser = await authService.createUser(newUser);
+    req.session.user = retUser;
     res.json(retUser);
   } catch (error) {
     res.status(404).json({ message: "Internal Server Error" });
