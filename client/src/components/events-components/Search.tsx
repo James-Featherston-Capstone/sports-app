@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
-import InputCustom from "../Input";
+import { Input } from "../ui/input";
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -8,7 +8,12 @@ const Search = () => {
   return (
     <article className="flex m-3">
       <div className="w-50 mr-1.5">
-        <InputCustom value={query} setValue={setQuery} type="text" />
+        <Input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search Events..."
+        />
       </div>
       <Button onClick={handleSearch}>Search</Button>
     </article>

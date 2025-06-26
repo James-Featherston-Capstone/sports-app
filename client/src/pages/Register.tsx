@@ -44,10 +44,10 @@ const Register = () => {
     }
   };
   return (
-    <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
-      <h1 className="text-xl">Create a Team Up Account</h1>
+    <div className="container border-2 w-5/10 h-5/10 min-h-fit flex justify-center items-center rounded-md flex-col">
+      <h1 className="text-xl mx-3">Create a Team Up Account</h1>
       <form
-        className="flex justify-center flex-col items-start"
+        className="flex justify-center flex-col items-start w-85/100"
         onSubmit={handleRegister}
       >
         <label> Username: </label>
@@ -62,7 +62,7 @@ const Register = () => {
           setValue={setTestPassword}
           type="password"
         />
-        <Button type="submit" className="w-100 m-1">
+        <Button type="submit" className="w-1/1 mx-0 my-1.5">
           Register
         </Button>
         {error ? (
@@ -72,7 +72,10 @@ const Register = () => {
         )}
       </form>
       <p>
-        Already have an account? <a onClick={() => navigate("/login")}>Login</a>
+        Already have an account?{" "}
+        <Button variant="link" onClick={() => navigate("/login")}>
+          Login
+        </Button>
       </p>
     </div>
   );
