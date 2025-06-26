@@ -15,24 +15,54 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String
-  password String
-  profile  Profile?
+  id            Int            @id @default(autoincrement())
+  email         String
+  password      String
+  username      String         @default("Unknown User")
+  pfp           String         @default("")
+  profile       Profile?
+  eventsCreated Event[]
+  eventsRSVP    EventRSVP[]
+  comments      EventComment[]
 }
 
 model Profile {
   id          Int      @id @default(autoincrement())
-  username    String
   firstname   String
   lastname    String
   description String   @default("")
   location    String[] @default([])
   sports      String[] @default([])
-  pfp         String   @default("")
   user        User     @relation(fields: [userId], references: [id])
   userId      Int      @unique
-  // eventsCreated
-  // eventsRSVP
-  // friends
+}
+
+model Event {
+  id          Int            @id @default(autoincrement())
+  organizer   User           @relation(fields: [organizerId], references: [id])
+  organizerId Int
+  eventImage  String         @default("")
+  sport       String         @default("")
+  description String         @default("")
+  eventTime   DateTime
+  location    String
+  rsvps       EventRSVP[]
+  comments    EventComment[]
+}
+
+model EventRSVP {
+  id      Int   @id @default(autoincrement())
+  event   Event @relation(fields: [eventId], references: [id])
+  eventId Int
+  user    User  @relation(fields: [userId], references: [id])
+  userId  Int
+}
+
+model EventComment {
+  id       Int    @id @default(autoincrement())
+  comment  String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId Int
+  Event    Event  @relation(fields: [eventId], references: [id])
+  eventId  Int
 }

@@ -1,7 +1,7 @@
 const userService = require("../services/userService");
 
 const { validateNewUser } = require("../utils/validation");
-const { buildProfile } = require("../utils/buildModel");
+const { buildProfile, buildUserUpdates } = require("../utils/buildModel");
 
 exports.getUserProfile = async (req, res, next) => {
   try {
@@ -16,9 +16,11 @@ exports.getUserProfile = async (req, res, next) => {
 exports.createUserProfile = async (req, res, next) => {
   try {
     validateNewUser(req);
-    const userObj = buildProfile(req);
-    const newUser = await userService.createUserProfile(userObj);
-    res.json(newUser);
+    const profileObj = buildProfile(req);
+    const userObj = buildUserUpdates(req);
+    const updateUser = await userService.updateUser(userObj);
+    const newProfile = await userService.createUserProfile(profileObj);
+    res.json({ ...updateUser, profile: newProfile });
   } catch (error) {
     next(error);
   }
@@ -26,9 +28,11 @@ exports.createUserProfile = async (req, res, next) => {
 
 exports.updateUserProfile = async (req, res, next) => {
   try {
-    const userObj = buildProfile(req);
-    const updatedUser = await userService.updateUserProfile(userObj);
-    res.json(updatedUser);
+    const profileObj = buildProfile(req);
+    const userObj = buildUserUpdates(req);
+    const updatedUser = await userService.updateUser(userObj);
+    const updatedProfile = await userService.updateUserProfile(profileObj);
+    res.json({ ...updatedUser, profile: updatedProfile });
   } catch (error) {
     next(error);
   }

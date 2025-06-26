@@ -6,4 +6,21 @@ const validateNewUser = (req) => {
   }
 };
 
-module.exports = { validateNewUser };
+const validateNewEvent = (req) => {
+  const { organizerId, eventTime, location } = req.body;
+  if ((!organizerId || !eventTime, !location)) {
+    throw new ValidationError("Must include organizerId, time, and location");
+  }
+};
+
+const validateNewComment = (req) => {
+  const eventId = req.params.eventId;
+  const { authorId, comment } = req.body;
+  if ((!eventId || !authorId, !comment)) {
+    throw new ValidationError(
+      "Must include authorId, eventId, and the comment"
+    );
+  }
+};
+
+module.exports = { validateNewUser, validateNewEvent, validateNewComment };

@@ -7,6 +7,7 @@ const { Prisma } = require("./generated/prisma");
 const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
+const eventRouter = require("./routes/eventRoutes");
 
 const app = express();
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use(session(sessionConfig));
 app.set("trust proxy", 1);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/events", eventRouter);
 
 app.use((err, req, res) => {
   if (err instanceof CustomError) {
