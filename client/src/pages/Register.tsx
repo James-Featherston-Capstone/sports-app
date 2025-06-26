@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "../components/Input";
+import InputCustom from "@/components/Input";
 import { register } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
+import { Button } from "@/components/ui/button";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [testPassword, setTestPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,7 +32,11 @@ const Register = () => {
       setError(true);
       setErrorMessage("Passwords Do Not Match");
     } else {
-      const user = await register({ email: email, password: password });
+      const user = await register({
+        email: email,
+        password: password,
+        username: username,
+      });
       if (user) {
         setLoginStatus(true);
         navigate("/events");
@@ -44,19 +50,21 @@ const Register = () => {
         className="flex justify-center flex-col items-start"
         onSubmit={handleRegister}
       >
+        <label> Username: </label>
+        <InputCustom value={username} setValue={setUsername} type="text" />
         <label> Email: </label>
-        <Input value={email} setValue={setEmail} type="text" />
+        <InputCustom value={email} setValue={setEmail} type="text" />
         <label> Password: </label>
-        <Input value={password} setValue={setPassword} type="password" />
+        <InputCustom value={password} setValue={setPassword} type="password" />
         <label> Confirm Password: </label>
-        <Input
+        <InputCustom
           value={testPassword}
           setValue={setTestPassword}
           type="password"
         />
-        <button type="submit" className="w-100 m-1">
+        <Button type="submit" className="w-100 m-1">
           Register
-        </button>
+        </Button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>
         ) : (

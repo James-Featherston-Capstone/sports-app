@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import Input from "../components/Input";
+import InputCustom from "@/components/Input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -43,12 +44,12 @@ const Login = () => {
         onSubmit={handleLogin}
       >
         <label> Email: </label>
-        <Input value={email} setValue={setEmail} type="text" />
+        <InputCustom value={email} setValue={setEmail} type="text" />
         <label> Password: </label>
-        <Input value={password} setValue={setPassword} type="password" />
-        <button type="submit" className="w-100 m-1">
+        <InputCustom value={password} setValue={setPassword} type="password" />
+        <Button type="submit" className="w-100 m-1">
           Login
-        </button>
+        </Button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>
         ) : (

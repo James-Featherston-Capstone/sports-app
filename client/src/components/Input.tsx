@@ -1,15 +1,16 @@
+import { Input } from "./ui/input";
+
 type InputProps = {
   value: string;
   setValue: (value: string) => void;
   type: string;
 };
 
-const Input = ({ value, setValue, type }: InputProps) => {
+const InputCustom = ({ value, setValue, type }: InputProps) => {
   return (
     <>
-      <input
+      <Input
         type={type}
-        className="w-1/1"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
@@ -17,4 +18,4 @@ const Input = ({ value, setValue, type }: InputProps) => {
   );
 };
 
-export default Input;
+export default InputCustom;
