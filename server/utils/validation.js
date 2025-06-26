@@ -6,4 +6,11 @@ const validateNewUser = (req) => {
   }
 };
 
-module.exports = { validateNewUser };
+const validateNewEvent = (req) => {
+  const { organizerId, eventTime, location } = req.body;
+  if ((!organizerId || !eventTime, !location)) {
+    throw new ValidationError("Must include organizerId, time, and location");
+  }
+};
+
+module.exports = { validateNewUser, validateNewEvent };

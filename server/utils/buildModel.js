@@ -19,10 +19,23 @@ const buildUserUpdates = (req) => {
   return user;
 };
 
+const buildEvent = (req) => {
+  const event = {};
+  const { organizerId, eventImage, sport, description, eventTime, location } =
+    req.body;
+  addIfPresent(organizerId, "organizerId", event);
+  addIfPresent(eventImage, "eventImage", event);
+  addIfPresent(sport, "sport", event);
+  addIfPresent(description, "description", event);
+  addIfPresent(eventTime, "eventTime", event);
+  addIfPresent(location, "location", event);
+  return event;
+};
+
 const addIfPresent = (variable, name, obj) => {
   if (variable) {
     obj[name] = variable;
   }
 };
 
-module.exports = { buildProfile, buildUserUpdates };
+module.exports = { buildProfile, buildUserUpdates, buildEvent };
