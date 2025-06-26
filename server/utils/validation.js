@@ -13,4 +13,14 @@ const validateNewEvent = (req) => {
   }
 };
 
-module.exports = { validateNewUser, validateNewEvent };
+const validateNewComment = (req) => {
+  const eventId = req.params.eventId;
+  const { authorId, comment } = req.body;
+  if ((!eventId || !authorId, !comment)) {
+    throw new ValidationError(
+      "Must include authorId, eventId, and the comment"
+    );
+  }
+};
+
+module.exports = { validateNewUser, validateNewEvent, validateNewComment };

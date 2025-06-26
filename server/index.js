@@ -34,7 +34,7 @@ app.use(session(sessionConfig));
 app.set("trust proxy", 1);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/events");
+app.use("/api/events", eventRouter);
 
 app.use((err, req, res) => {
   if (err instanceof CustomError) {

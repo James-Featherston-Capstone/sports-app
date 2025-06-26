@@ -7,9 +7,9 @@ exports.createEvent = async (eventObj) => {
   return event;
 };
 
-exports.updateEvent = async (eventObj) => {
+exports.updateEvent = async (eventObj, eventId) => {
   const event = await prisma.event.update({
-    where: { id: eventObj.id },
+    where: { id: eventId },
     data: eventObj,
   });
   return event;
@@ -34,6 +34,13 @@ exports.removeRsvpEvent = async (rsvpId) => {
     where: { id: rsvpId },
   });
   return delRsvp;
+};
+
+exports.createComment = async (commentObj) => {
+  const comment = await prisma.eventComment.create({
+    data: commentObj,
+  });
+  return comment;
 };
 
 exports.getComments = async (eventId) => {

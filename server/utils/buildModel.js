@@ -32,10 +32,20 @@ const buildEvent = (req) => {
   return event;
 };
 
+const buildComment = (req) => {
+  const eventId = parseInt(req.params.eventId);
+  const commentObj = { eventId: eventId };
+  const { authorId, comment } = req.body;
+  const intAId = parseInt(authorId);
+  addIfPresent(intAId, "authorId", commentObj);
+  addIfPresent(comment, "comment", commentObj);
+  return commentObj;
+};
+
 const addIfPresent = (variable, name, obj) => {
   if (variable) {
     obj[name] = variable;
   }
 };
 
-module.exports = { buildProfile, buildUserUpdates, buildEvent };
+module.exports = { buildProfile, buildUserUpdates, buildEvent, buildComment };
