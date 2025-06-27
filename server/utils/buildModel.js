@@ -12,10 +12,7 @@ const buildProfile = (req) => {
     email,
     profile_image_url,
   } = req.body;
-  let mappedSports = [];
-  for (let sport of sports) {
-    mappedSports = [...mappedSports, mapSports(sport)];
-  }
+  const mappedSports = sports.map((sport) => mapSports(sport));
   addIfPresent(bio, "bio", user);
   addIfPresent(latitude, "latitude", user);
   addIfPresent(longitude, "longitude", user);
