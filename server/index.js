@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const { Prisma } = require("./generated/prisma");
 
 const { CustomError } = require("./middleware/Errors");
