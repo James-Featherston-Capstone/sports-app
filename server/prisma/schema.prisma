@@ -23,7 +23,7 @@ model User {
   bio                String         @default("")
   latitude           Decimal        @default(0.0)
   longitude          Decimal        @default(0.0)
-  sports             String[]       @default([])
+  sports             Sports[]       @default([])
   created_at         DateTime       @default(now())
   updated_at         DateTime       @default(now())
   eventsCreated      Event[]
@@ -77,4 +77,20 @@ model EventComment {
   eventId    Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+}
+
+enum Sports {
+  FOOTBALL
+  SOCCER
+  BASKETBALL
+  BASEBALL
+  TENNIS
+  PICKLEBALL
+  SOFTBALL
+  RACQUETBALL
+  FRISBEE
+  VOLLEYBALL
+  GOLF
+  HOCKEY
+  NONE
 }

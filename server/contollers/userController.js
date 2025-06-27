@@ -6,6 +6,8 @@ const { buildProfile } = require("../utils/buildModel");
 exports.updateUserProfile = async (req, res, next) => {
   try {
     const userObj = buildProfile(req);
+    const updatedAt = new Date();
+    userObj.updated_at = updatedAt;
     const updatedUser = await userService.updateUser(userObj);
     res.json(updatedUser);
   } catch (error) {

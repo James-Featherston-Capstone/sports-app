@@ -31,6 +31,8 @@ exports.updateEvent = async (req, res, next) => {
   try {
     const eventId = parseInt(req.params.eventId);
     const eventObj = buildEvent(req);
+    const updatedAt = new Date();
+    eventObj.updated_at = updatedAt;
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);
   } catch (error) {
