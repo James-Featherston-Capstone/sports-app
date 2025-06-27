@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import InputCustom from "@/components/Input";
+import { Input } from "@/components/ui/input";
 import { register } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
@@ -51,16 +51,32 @@ const Register = () => {
         onSubmit={handleRegister}
       >
         <label> Username: </label>
-        <InputCustom value={username} setValue={setUsername} type="text" />
+        <Input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="on"
+        />
         <label> Email: </label>
-        <InputCustom value={email} setValue={setEmail} type="text" />
+        <Input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="on"
+        />
         <label> Password: </label>
-        <InputCustom value={password} setValue={setPassword} type="password" />
-        <label> Confirm Password: </label>
-        <InputCustom
-          value={testPassword}
-          setValue={setTestPassword}
+        <Input
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="on"
+        />
+        <label> Confirm Password: </label>
+        <Input
+          type="password"
+          value={testPassword}
+          onChange={(e) => setTestPassword(e.target.value)}
+          autoComplete="on"
         />
         <Button type="submit" className="w-1/1 mx-0 my-1.5">
           Register

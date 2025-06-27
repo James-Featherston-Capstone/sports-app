@@ -4,18 +4,23 @@ import { Input } from "../ui/input";
 
 const Search = () => {
   const [query, setQuery] = useState("");
-  const handleSearch = () => {};
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(query);
+  };
   return (
     <article className="flex m-3">
-      <div className="w-50 mr-1.5">
+      <form onSubmit={handleSearch} className="flex">
         <Input
+          className="w-50 mr-1.5"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search Events..."
+          autoComplete="on"
         />
-      </div>
-      <Button onClick={handleSearch}>Search</Button>
+        <Button type="submit">Search</Button>
+      </form>
     </article>
   );
 };

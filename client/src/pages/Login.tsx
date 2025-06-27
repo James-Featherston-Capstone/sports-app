@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import InputCustom from "@/components/Input";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
@@ -44,9 +44,19 @@ const Login = () => {
         onSubmit={handleLogin}
       >
         <label> Email: </label>
-        <InputCustom value={email} setValue={setEmail} type="text" />
+        <Input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="on"
+        />
         <label> Password: </label>
-        <InputCustom value={password} setValue={setPassword} type="password" />
+        <Input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="on"
+        />
         <Button type="submit" className="w-100 m-1">
           Login
         </Button>
