@@ -1,7 +1,7 @@
 import EventCard from "./EventCard";
 
 const EventList = () => {
-  const events = [{}, {}];
+  const events = [{ name: "john" }, { name: "Hernyr" }];
   return (
     <section className="flex justify-start">
       {events.map((event) => {

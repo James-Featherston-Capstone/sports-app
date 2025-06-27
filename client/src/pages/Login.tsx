@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import Input from "../components/Input";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -43,12 +44,22 @@ const Login = () => {
         onSubmit={handleLogin}
       >
         <label> Email: </label>
-        <Input value={email} setValue={setEmail} type="text" />
+        <Input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="on"
+        />
         <label> Password: </label>
-        <Input value={password} setValue={setPassword} type="password" />
-        <button type="submit" className="w-100 m-1">
+        <Input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="on"
+        />
+        <Button type="submit" className="w-100 m-1">
           Login
-        </button>
+        </Button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>
         ) : (
@@ -57,7 +68,9 @@ const Login = () => {
       </form>
       <p>
         Don't have an account?{" "}
-        <a onClick={() => navigate("/register")}>Register</a>
+        <Button variant="link" onClick={() => navigate("/register")}>
+          Register
+        </Button>
       </p>
     </div>
   );

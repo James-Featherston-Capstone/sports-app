@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Input from "../components/Input";
+import { Input } from "@/components/ui/input";
 import { register } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
+import { Button } from "@/components/ui/button";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [testPassword, setTestPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,7 +32,11 @@ const Register = () => {
       setError(true);
       setErrorMessage("Passwords Do Not Match");
     } else {
-      const user = await register({ email: email, password: password });
+      const user = await register({
+        email: email,
+        password: password,
+        username: username,
+      });
       if (user) {
         setLoginStatus(true);
         navigate("/events");
@@ -38,25 +44,43 @@ const Register = () => {
     }
   };
   return (
-    <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
-      <h1 className="text-xl">Create a Team Up Account</h1>
+    <div className="container border-2 w-5/10 h-5/10 min-h-fit flex justify-center items-center rounded-md flex-col">
+      <h1 className="text-xl mx-3">Create a Team Up Account</h1>
       <form
-        className="flex justify-center flex-col items-start"
+        className="flex justify-center flex-col items-start w-85/100"
         onSubmit={handleRegister}
       >
+        <label> Username: </label>
+        <Input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoComplete="on"
+        />
         <label> Email: </label>
-        <Input value={email} setValue={setEmail} type="text" />
+        <Input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="on"
+        />
         <label> Password: </label>
-        <Input value={password} setValue={setPassword} type="password" />
+        <Input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="on"
+        />
         <label> Confirm Password: </label>
         <Input
-          value={testPassword}
-          setValue={setTestPassword}
           type="password"
+          value={testPassword}
+          onChange={(e) => setTestPassword(e.target.value)}
+          autoComplete="on"
         />
-        <button type="submit" className="w-100 m-1">
+        <Button type="submit" className="w-1/1 mx-0 my-1.5">
           Register
-        </button>
+        </Button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>
         ) : (
@@ -64,7 +88,10 @@ const Register = () => {
         )}
       </form>
       <p>
-        Already have an account? <a onClick={() => navigate("/login")}>Login</a>
+        Already have an account?{" "}
+        <Button variant="link" onClick={() => navigate("/login")}>
+          Login
+        </Button>
       </p>
     </div>
   );
