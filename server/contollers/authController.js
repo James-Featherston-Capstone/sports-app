@@ -60,12 +60,12 @@ exports.logout = async (req, res, next) => {
 exports.me = async (req, res, next) => {
   try {
     if (!req.session.user) {
-      throw UnauthorizedError("User is not logged in");
+      throw new UnauthorizedError("User is not logged in");
     }
     const filters = { id: req.session.user.id };
     const user = await authService.getUser(filters);
     res.json(user);
   } catch (error) {
-    next(UnauthorizedError);
+    next(error);
   }
 };

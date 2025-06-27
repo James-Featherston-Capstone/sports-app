@@ -36,7 +36,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/events", eventRouter);
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   if (err instanceof CustomError) {
     return res.status(err.statusCode).json({ error: err.message });
   } else if (err instanceof Prisma.PrismaClientKnownRequestError) {

@@ -11,8 +11,5 @@ exports.createUser = async (user) => {
   const newUser = await prisma.user.create({
     data: user,
   });
-  if (!newUser) {
-    throw Error;
-  }
   return newUser;
 };
