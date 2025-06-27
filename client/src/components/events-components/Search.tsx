@@ -6,7 +6,6 @@ const Search = () => {
   const [query, setQuery] = useState("");
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(query);
   };
   return (
     <article className="flex m-3">
