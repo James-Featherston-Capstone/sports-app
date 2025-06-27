@@ -1,38 +1,38 @@
+const { UnauthorizedError } = require("../middleware/Errors");
 const userService = require("../services/userService");
 
-const { validateNewUser } = require("../utils/validation");
-const { buildProfile, buildUserUpdates } = require("../utils/buildModel");
+const { buildProfile } = require("../utils/buildModel");
+
+exports.updateUserProfile = async (req, res, next) => {
+  try {
+    const userObj = buildProfile(req);
+    const updatedAt = new Date();
+    userObj.updated_at = updatedAt;
+    const updatedUser = await userService.updateUser(userObj);
+    res.json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.getUserProfile = async (req, res, next) => {
   try {
     const userId = parseInt(req.params.userId);
-    const user = await userService.getUserProfile(userId);
+    const user = await userService.getUser(userId);
     res.json(user);
   } catch (error) {
     next(error);
   }
 };
 
-exports.createUserProfile = async (req, res, next) => {
+exports.getAllUsers = async (req, res, next) => {
   try {
-    validateNewUser(req);
-    const profileObj = buildProfile(req);
-    const userObj = buildUserUpdates(req);
-    const updateUser = await userService.updateUser(userObj);
-    const newProfile = await userService.createUserProfile(profileObj);
-    res.json({ ...updateUser, profile: newProfile });
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.updateUserProfile = async (req, res, next) => {
-  try {
-    const profileObj = buildProfile(req);
-    const userObj = buildUserUpdates(req);
-    const updatedUser = await userService.updateUser(userObj);
-    const updatedProfile = await userService.updateUserProfile(profileObj);
-    res.json({ ...updatedUser, profile: updatedProfile });
+    const user = req.session.user;
+    if (!user) {
+      throw new UnauthorizedError("Must be logged in");
+    }
+    const users = await userService.getAllUsers(user.id);
+    res.json(users);
   } catch (error) {
     next(error);
   }

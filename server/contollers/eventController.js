@@ -1,7 +1,20 @@
-const { ValidationError } = require("../middleware/Errors");
+const { ValidationError, UnauthorizedError } = require("../middleware/Errors");
 const eventService = require("../services/eventService");
 const { buildEvent, buildComment } = require("../utils/buildModel");
 const { validateNewEvent, validateNewComment } = require("../utils/validation");
+
+exports.getAllEvents = async (req, res, next) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      throw new UnauthorizedError();
+    }
+    const events = await eventService.getAllEvents();
+    res.json(events);
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.createEvent = async (req, res, next) => {
   try {
@@ -18,6 +31,8 @@ exports.updateEvent = async (req, res, next) => {
   try {
     const eventId = parseInt(req.params.eventId);
     const eventObj = buildEvent(req);
+    const updatedAt = new Date();
+    eventObj.updated_at = updatedAt;
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);
   } catch (error) {
@@ -37,7 +52,8 @@ exports.deleteEvent = async (req, res, next) => {
 
 exports.rsvpEvent = async (req, res, next) => {
   try {
-    const { eventId, userId } = req.body;
+    const eventId = req.params.eventId;
+    const { userId } = req.body;
     if (!eventId || !userId) {
       throw new ValidationError();
     }

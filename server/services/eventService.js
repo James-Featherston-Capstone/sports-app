@@ -1,5 +1,15 @@
 const prisma = require("../prisma.js");
 
+exports.getAllEvents = async (userId) => {
+  const events = await prisma.event.findMany({
+    take: 10,
+    orderBy: {
+      eventTime: "desc",
+    },
+  });
+  return events;
+};
+
 exports.createEvent = async (eventObj) => {
   const event = await prisma.event.create({
     data: eventObj,
