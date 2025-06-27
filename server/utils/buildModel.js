@@ -1,21 +1,25 @@
+const { mapSports } = require("./mapEnum");
+
 const buildProfile = (req) => {
   const userId = parseInt(req.params.userId);
-  const profile = { userId: userId };
-  const { firstname, lastname, description, location, sports } = req.body;
-  addIfPresent(firstname, "firstname", profile);
-  addIfPresent(lastname, "lastname", profile);
-  addIfPresent(description, "description", profile);
-  addIfPresent(location, "location", profile);
-  addIfPresent(sports, "sports", profile);
-  return profile;
-};
-
-const buildUserUpdates = (req) => {
-  const userId = parseInt(req.params.userId);
   const user = { id: userId };
-  const { username, pfp } = req.body;
+  const {
+    bio,
+    latitude,
+    longitude,
+    sports,
+    username,
+    email,
+    profile_image_url,
+  } = req.body;
+  const mappedSports = sports.map((sport) => mapSports(sport));
+  addIfPresent(bio, "bio", user);
+  addIfPresent(latitude, "latitude", user);
+  addIfPresent(longitude, "longitude", user);
+  addIfPresent(mappedSports, "sports", user);
   addIfPresent(username, "username", user);
-  addIfPresent(pfp, "pfp", user);
+  addIfPresent(email, "email", user);
+  addIfPresent(profile_image_url, "profile_image_url", user);
   return user;
 };
 
@@ -48,4 +52,4 @@ const addIfPresent = (variable, name, obj) => {
   }
 };
 
-module.exports = { buildProfile, buildUserUpdates, buildEvent, buildComment };
+module.exports = { buildProfile, buildEvent, buildComment };
