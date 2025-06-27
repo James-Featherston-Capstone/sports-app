@@ -12,28 +12,22 @@ exports.getUser = async (userId) => {
   return safeUser;
 };
 
-exports.createUserProfile = async (profileObj) => {
-  if ((await this.getUserProfile(profileObj.userId)).profile) {
-    throw new ConflictError("User Profile Already Created");
-  }
-  const resProfile = await prisma.profile.create({
-    data: profileObj,
-  });
-  return resProfile;
-};
-
-exports.updateUserProfile = async (updatedUser) => {
-  const resProfile = await prisma.profile.update({
-    where: { userId: updatedUser.userId },
-    data: updatedUser,
-  });
-  return resProfile;
-};
-
 exports.updateUser = async (userObj) => {
   const resUser = await prisma.user.update({
     where: { id: userObj.id },
     data: userObj,
   });
   return resUser;
+};
+
+exports.getAllUsers = async (userId) => {
+  const users = await prisma.user.findMany({
+    where: {
+      NOT: {
+        id: userId,
+      },
+    },
+    take: 10,
+  });
+  return users;
 };

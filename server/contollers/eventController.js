@@ -1,7 +1,20 @@
-const { ValidationError } = require("../middleware/Errors");
+const { ValidationError, UnauthorizedError } = require("../middleware/Errors");
 const eventService = require("../services/eventService");
 const { buildEvent, buildComment } = require("../utils/buildModel");
 const { validateNewEvent, validateNewComment } = require("../utils/validation");
+
+exports.getAllEvents = async (req, res, next) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      throw new UnauthorizedError();
+    }
+    const events = await eventService.getAllEvents();
+    res.json(events);
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.createEvent = async (req, res, next) => {
   try {
