@@ -37,7 +37,8 @@ exports.deleteEvent = async (req, res, next) => {
 
 exports.rsvpEvent = async (req, res, next) => {
   try {
-    const { eventId, userId } = req.body;
+    const eventId = req.params.eventId;
+    const { userId } = req.body;
     if (!eventId || !userId) {
       throw new ValidationError();
     }

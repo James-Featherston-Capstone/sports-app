@@ -1,20 +1,15 @@
 const { NotFoundError, ConflictError } = require("../middleware/Errors");
 const prisma = require("../prisma.js");
 
-exports.getUserProfile = async (userId) => {
+exports.getUser = async (userId) => {
   const profile = await prisma.user.findUnique({
     where: { id: userId },
-    select: {
-      id: true,
-      username: true,
-      pfp: true,
-      profile: true,
-    },
   });
   if (!profile) {
     throw new NotFoundError();
   }
-  return profile;
+  const { password, ...safeUser } = profile;
+  return safeUser;
 };
 
 exports.createUserProfile = async (profileObj) => {
@@ -39,11 +34,6 @@ exports.updateUser = async (userObj) => {
   const resUser = await prisma.user.update({
     where: { id: userObj.id },
     data: userObj,
-    select: {
-      id: true,
-      username: true,
-      pfp: true,
-    },
   });
   return resUser;
 };

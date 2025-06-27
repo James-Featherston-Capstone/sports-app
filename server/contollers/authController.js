@@ -9,17 +9,17 @@ const {
 
 exports.register = async (req, res, next) => {
   try {
-    const { email, password: plainPassword } = req.body;
-    if (!email || !plainPassword) {
+    const { email, password: plainPassword, username } = req.body;
+    if (!email || !plainPassword || !username) {
       throw new ValidationError("Missing email or password");
     }
     const filters = { email: email };
     const existingUser = await authService.getUser(filters);
     if (existingUser) {
-      throw ConflictError("This email is already in use");
+      throw new ConflictError("This email is already in use");
     }
     const hash = await hashPassword(plainPassword);
-    const newUser = { email, password: hash };
+    const newUser = { email, password: hash, username: username };
     const retUser = await authService.createUser(newUser);
     req.session.user = retUser;
     res.json(retUser);
@@ -49,7 +49,7 @@ exports.login = async (req, res, next) => {
 
 exports.logout = async (req, res, next) => {
   try {
-    req.session.destroy((err) => {
+    req.session.destroy(() => {
       res.json({ message: "Logout successful" });
     });
   } catch (error) {
