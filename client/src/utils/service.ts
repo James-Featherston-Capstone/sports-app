@@ -6,7 +6,6 @@ const fetchData = async <T = any>(
   path: string,
   request: Object
 ): Promise<T> => {
-  console.log(BASE_URL);
   let data = null;
   try {
     const response = await fetch(path, request);
