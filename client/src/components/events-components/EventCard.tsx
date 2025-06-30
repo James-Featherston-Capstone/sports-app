@@ -1,27 +1,35 @@
-// Need to define an interface for an event
+import { Card, CardContent, CardDescription } from "../ui/card";
+
 interface EventProps {
   event: Event;
 }
 
 interface Event {
-  created_at: Date;
-  description: String;
-  eventImg: String;
-  eventTime: Date;
-  location: String;
+  created_at: string;
+  description: string;
+  eventImage: string;
+  eventTime: string;
+  location: string;
   latitude: number;
   longitude: number;
   organizerId: number;
   id: number;
-  sport: String;
-  updated_at: Date;
+  sport: string;
+  updated_at: string;
 }
 
 const EventCard = ({ event }: EventProps) => {
   return (
-    <article className="flex flex-col justify-start itmes-center w-75 h-100 m-3 p-1.5 border rounded-xl">
-      <div>Is this working {event.description}</div>
-    </article>
+    <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
+      <CardDescription>
+        <h1 className="text-black">{event.description}</h1>
+      </CardDescription>
+      <CardContent>
+        <h1>Time: {event.eventTime}</h1>
+        <h1>Location: {event.location}</h1>
+        <h1>Sport: {event.sport}</h1>
+      </CardContent>
+    </Card>
   );
 };
 

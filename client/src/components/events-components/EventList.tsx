@@ -3,17 +3,17 @@ import EventCard from "./EventCard";
 import { getAllEvents } from "@/utils/eventService";
 
 interface Event {
-  created_at: Date;
-  description: String;
-  eventImg: String;
-  eventTime: Date;
-  location: String;
+  created_at: string;
+  description: string;
+  eventImage: string;
+  eventTime: string;
+  location: string;
   latitude: number;
   longitude: number;
   organizerId: number;
   id: number;
-  sport: String;
-  updated_at: Date;
+  sport: string;
+  updated_at: string;
 }
 
 const EventList = () => {
@@ -27,7 +27,7 @@ const EventList = () => {
     fetchEvents();
   }, []);
   return (
-    <ul className="flex justify-start">
+    <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center">
       {events.map((event: Event) => {
         return <EventCard key={event.id} event={event} />;
       })}
