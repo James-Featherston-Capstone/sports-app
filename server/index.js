@@ -1,8 +1,11 @@
+require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
-const session = require("express-session");
 const PORT = process.env.PORT || 3000;
 const { Prisma } = require("./generated/prisma");
+const cors = require("cors");
+const session = require("express-session");
+const { RedisStore } = require("connect-redis");
+const { createClient } = require("redis");
 
 const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
@@ -13,17 +16,28 @@ const app = express();
 app.use(express.json());
 
 const corsObject = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "https://team-up-client.onrender.com"],
   credentials: true,
 };
 app.use(cors(corsObject));
 
+const redisClient = createClient({
+  legacyMode: true,
+  url: process.env.REDIS_URL,
+  socket: {
+    tls: true,
+  },
+});
+
+redisClient.connect().catch(console.error);
+const redisStore = new RedisStore({ client: redisClient });
+
 let sessionConfig = {
   name: "sessionId",
-  secret: "keep it secret, keep it safe",
+  store: redisStore,
+  secret: process.env.SESSION_SECRET,
   cookie: {
     maxAge: 1000 * 60 * 5,
-    secure: process.env.RENDER ? true : false,
     httpOnly: false,
   },
   resave: false,
