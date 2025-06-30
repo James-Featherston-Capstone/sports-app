@@ -38,6 +38,8 @@ let sessionConfig = {
   secret: process.env.SESSION_SECRET,
   cookie: {
     maxAge: 1000 * 60 * 5,
+    secure: process.env.RENDER === "production" ? true : false,
+    sameSite: "none",
     httpOnly: false,
   },
   resave: false,
@@ -49,6 +51,11 @@ app.set("trust proxy", 1);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/events", eventRouter);
+
+app.get("/api/redis-test", (req, res) => {
+  (req.session.test = "Testing Connection"),
+    res.send("Redis working successfully.");
+});
 
 app.use((err, req, res, next) => {
   if (err instanceof CustomError) {
