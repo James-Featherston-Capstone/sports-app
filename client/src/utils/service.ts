@@ -1,5 +1,8 @@
-const BASE_URL = "http://localhost:3000/api";
-const fetchData = async <T = any>(path: string, request: Object) : Promise<T> => {
+const BASE_URL = "https://sports-app-nz7w.onrender.com/api";
+const fetchData = async <T = any>(
+  path: string,
+  request: Object
+): Promise<T> => {
   let data = null;
   try {
     const response = await fetch(path, request);
