@@ -21,20 +21,8 @@ const corsObject = {
 };
 app.use(cors(corsObject));
 
-const redisClient = createClient({
-  legacyMode: true,
-  url: process.env.REDIS_URL,
-  socket: {
-    tls: true,
-  },
-});
-
-redisClient.connect().catch(console.error);
-const redisStore = new RedisStore({ client: redisClient });
-
 let sessionConfig = {
   name: "sessionId",
-  store: redisStore,
   secret: process.env.SESSION_SECRET,
   cookie: {
     maxAge: 1000 * 60 * 5,
@@ -44,6 +32,20 @@ let sessionConfig = {
   resave: false,
   saveUninitialized: false,
 };
+
+if (process.env.RENDER === "production") {
+  const redisClient = createClient({
+    legacyMode: true,
+    url: process.env.REDIS_URL,
+    socket: {
+      tls: true,
+    },
+  });
+
+  redisClient.connect().catch(console.error);
+  const redisStore = new RedisStore({ client: redisClient });
+  sessionConfig.store = redisStore;
+}
 
 app.use(session(sessionConfig));
 app.set("trust proxy", 1);
