@@ -7,7 +7,6 @@ const register = async <T = any>(
   password: string
 ): Promise<T> => {
   const path = `${BASE_URL}/auth/register`;
-  console.log({ ...data, password: password });
   const req = {
     method: "POST",
     headers: {

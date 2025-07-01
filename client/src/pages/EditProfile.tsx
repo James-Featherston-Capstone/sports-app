@@ -24,25 +24,21 @@ const EditProfile = ({
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
   const [newProfile, setNewProfile] = useState<ProfileType>(profile);
-  console.log(profile);
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (type === "create") {
-      console.log(newProfile);
       const user = await createProfile(newProfile);
       if (user) {
         setLoginStatus(true);
         navigate("/events");
       }
     } else {
-      console.log(newProfile);
       const user = await createProfile(newProfile);
       setProfile(newProfile);
       if (user) {
         onReturn(false);
       }
-      console.log("need to update user");
     }
   };
   if (!editing) {

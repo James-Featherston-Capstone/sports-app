@@ -13,7 +13,6 @@ const Profile = () => {
     const fetchProfile = async () => {
       const retrievedProfile = await getUserProfile();
       setProfile(retrievedProfile);
-      console.log(retrievedProfile);
       setLoading(false);
     };
     fetchProfile();

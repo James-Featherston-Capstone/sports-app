@@ -12,8 +12,6 @@ const createProfile = async <T = any>(profile: ProfileType): Promise<T> => {
     body: JSON.stringify(profile),
     credentials: "include",
   };
-  const res = await fetchData(path, req);
-  console.log(res);
   return await fetchData(path, req);
 };
 
