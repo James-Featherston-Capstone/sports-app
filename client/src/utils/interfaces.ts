@@ -8,4 +8,18 @@ interface ProfileType {
   sports: string[];
   profile_image_url: string;
 }
-export type { ProfileType };
+
+interface EventType {
+  created_at: string;
+  description: string;
+  eventImage: string;
+  eventTime: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+  organizerId: number;
+  id: number;
+  sport: string;
+  updated_at: string;
+}
+export type { ProfileType, EventType };
