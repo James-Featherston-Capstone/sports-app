@@ -17,7 +17,7 @@ interface Profile {
 }
 
 const Profile = () => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState<Profile>({} as Profile);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -41,7 +41,7 @@ const Profile = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <h1></h1>
+      <h1>{profile.bio}</h1>
       Profile
     </div>
   );
