@@ -8,11 +8,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import withAuth from "./components/Protected";
 import withAuthBar from "./components/ProtectedBar";
+import Profile from "./pages/Profile";
 
 function App() {
   const ProtectedEvents = withAuth(Events);
   const ProtectedHeader = withAuthBar(Header);
   const ProtectedFooter = withAuthBar(Footer);
+  const ProtectedProfile = withAuth(Profile);
   return (
     <div className="app w-screen">
       <ProtectedHeader />
@@ -21,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/events" element={<ProtectedEvents />} />
+        <Route path="/profile" element={<ProtectedProfile />} />
       </Routes>
       <ProtectedFooter />
     </div>
