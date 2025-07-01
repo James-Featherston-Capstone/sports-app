@@ -69,7 +69,7 @@ const Login = () => {
         )}
       </form>
       <p>
-        Don't have an account?{" "}
+        Don't have an account?
         <Button
           variant="link"
           className="text-white"
