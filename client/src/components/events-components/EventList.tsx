@@ -17,21 +17,27 @@ interface Event {
 }
 
 const EventList = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
       const retrievedEvents = await getAllEvents();
       setEvents(retrievedEvents);
+      setLoading(false);
     };
     fetchEvents();
   }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center">
       {events.map((event: Event) => {
         return (
-          <ul>
-            <EventCard key={event.id} event={event} />
+          <ul key={event.id}>
+            <EventCard event={event} />
           </ul>
         );
       })}
