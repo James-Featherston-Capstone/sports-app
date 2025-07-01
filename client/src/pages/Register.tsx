@@ -1,21 +1,31 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { register } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
 import { Button } from "@/components/ui/button";
+import EditProfile from "./EditProfile";
+import type { ProfileType } from "@/utils/interfaces";
+import { register } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
   const [password, setPassword] = useState("");
   const [testPassword, setTestPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [creatingProfile, setCreatingProfile] = useState(false);
+  const [profile, setProfile] = useState<ProfileType>({
+    bio: "",
+    email: "",
+    username: "",
+    location: "",
+    latitude: "0.0",
+    longitude: "0.0",
+    sports: [],
+    profile_image_url: "",
+  });
   useEffect(() => {
     const performStatusCheck = async () => {
       if (await checkStatus()) {
@@ -32,15 +42,12 @@ const Register = () => {
       setError(true);
       setErrorMessage("Passwords Do Not Match");
     } else {
-      const user = await register({
-        email: email,
-        password: password,
-        username: username,
-      });
+      const user = await register(profile, password);
       if (user) {
-        setLoginStatus(true);
-        navigate("/events");
+        setCreatingProfile(true);
       }
+      setError(true);
+      setErrorMessage("Email is already in use");
     }
   };
   return (
@@ -54,8 +61,8 @@ const Register = () => {
         <Input
           className="mb-3 mt-.5"
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={profile.username}
+          onChange={(e) => setProfile({ ...profile, username: e.target.value })}
           autoComplete="on"
           placeholder="Username"
         />
@@ -63,8 +70,8 @@ const Register = () => {
         <Input
           className="mb-3 mt-.5"
           type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={profile.email}
+          onChange={(e) => setProfile({ ...profile, email: e.target.value })}
           autoComplete="on"
           placeholder="someone@gmail.com"
         />
@@ -105,6 +112,14 @@ const Register = () => {
           Login
         </Button>
       </p>
+      <EditProfile
+        onReturn={setCreatingProfile}
+        editing={creatingProfile}
+        type="create"
+        profile={profile}
+        setProfile={setProfile}
+        password={password}
+      />
     </div>
   );
 };
