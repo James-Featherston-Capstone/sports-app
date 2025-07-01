@@ -44,41 +44,49 @@ const Register = () => {
     }
   };
   return (
-    <div className="container border-2 w-5/10 h-5/10 min-h-fit flex justify-center items-center rounded-md flex-col">
+    <div className="container border-2 w-9/10 md:w-5/10 h-8/10 p-1 md:p-6 md:h-6/10 flex justify-center items-center rounded-md flex-col">
       <h1 className="text-xl mx-3">Create a Team Up Account</h1>
       <form
-        className="flex justify-center flex-col items-start w-85/100"
+        className="flex justify-center flex-col items-start w-9/10"
         onSubmit={handleRegister}
       >
-        <label> Username: </label>
+        <label className="my-3"> Username: </label>
         <Input
+          className="mb-3 mt-.5"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           autoComplete="on"
+          placeholder="Username"
         />
         <label> Email: </label>
         <Input
+          className="mb-3 mt-.5"
           type="text"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
+          placeholder="someone@gmail.com"
         />
         <label> Password: </label>
         <Input
+          className="mb-3 mt-.5"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="on"
+          placeholder="Password"
         />
         <label> Confirm Password: </label>
         <Input
+          className="mb-3 mt-.5"
           type="password"
           value={testPassword}
           onChange={(e) => setTestPassword(e.target.value)}
           autoComplete="on"
+          placeholder="Password"
         />
-        <Button type="submit" className="w-1/1 mx-0 my-1.5">
+        <Button type="submit" className="w-1/1 mx-0 my-1.5" variant="secondary">
           Register
         </Button>
         {error ? (
@@ -89,7 +97,11 @@ const Register = () => {
       </form>
       <p>
         Already have an account?{" "}
-        <Button variant="link" onClick={() => navigate("/login")}>
+        <Button
+          variant="link"
+          className="text-white"
+          onClick={() => navigate("/login")}
+        >
           Login
         </Button>
       </p>

@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "latitude" DECIMAL(65,30) NOT NULL DEFAULT 0.0,
+ADD COLUMN     "longitude" DECIMAL(65,30) NOT NULL DEFAULT 0.0;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "location" TEXT NOT NULL DEFAULT '';

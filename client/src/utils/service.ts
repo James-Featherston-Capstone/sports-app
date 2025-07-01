@@ -1,4 +1,7 @@
-const BASE_URL = "https://sports-app-nz7w.onrender.com/api";
+const BASE_URL =
+  import.meta.env.VITE_URL_MODE === "dev"
+    ? "http://localhost:3000/api"
+    : "https://sports-app-nz7w.onrender.com/api";
 const fetchData = async <T = any>(
   path: string,
   request: Object

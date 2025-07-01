@@ -37,10 +37,10 @@ const Login = () => {
   };
 
   return (
-    <div className="container border-2 w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
+    <div className="container border-2 w-9/10 md:w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
       <h1 className="text-lg">Login to Team Up</h1>
       <form
-        className="flex justify-center flex-col items-start"
+        className="flex justify-center flex-col items-start w-9/10"
         onSubmit={handleLogin}
       >
         <label> Email: </label>
@@ -49,6 +49,7 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
+          placeholder="someone@gmail.com"
         />
         <label> Password: </label>
         <Input
@@ -56,8 +57,9 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="on"
+          placeholder="Password"
         />
-        <Button type="submit" className="w-100 m-1">
+        <Button type="submit" className="w-1/1 mx-0 my-1" variant="secondary">
           Login
         </Button>
         {error ? (
@@ -68,7 +70,11 @@ const Login = () => {
       </form>
       <p>
         Don't have an account?{" "}
-        <Button variant="link" onClick={() => navigate("/register")}>
+        <Button
+          variant="link"
+          className="text-white"
+          onClick={() => navigate("/register")}
+        >
           Register
         </Button>
       </p>

@@ -21,6 +21,7 @@ model User {
   password           String
   profile_image_url  String         @default("")
   bio                String         @default("")
+  location           String         @default("")
   latitude           Decimal        @default(0.0)
   longitude          Decimal        @default(0.0)
   sports             Sports[]       @default([])
@@ -52,6 +53,8 @@ model Event {
   description String         @default("")
   eventTime   DateTime
   location    String
+  latitude    Decimal        @default(0.0)
+  longitude   Decimal        @default(0.0)
   created_at  DateTime       @default(now())
   updated_at  DateTime       @default(now())
   rsvps       EventRSVP[]

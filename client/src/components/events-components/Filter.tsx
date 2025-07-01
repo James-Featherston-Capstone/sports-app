@@ -8,7 +8,7 @@ import {
 
 const Filter = () => {
   return (
-    <article className="m-3 flex">
+    <article className="m-3 flex order-2">
       <Select>
         <SelectTrigger className="w-35">
           <SelectValue placeholder="Choose Filter" />

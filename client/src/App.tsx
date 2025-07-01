@@ -14,7 +14,7 @@ function App() {
   const ProtectedHeader = withAuthBar(Header);
   const ProtectedFooter = withAuthBar(Footer);
   return (
-    <div className="app">
+    <div className="app w-screen">
       <ProtectedHeader />
       <Routes>
         <Route path="/" element={<Home />} />

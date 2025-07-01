@@ -3,7 +3,7 @@ import EventList from "../components/events-components/EventList";
 
 const Events = () => {
   return (
-    <section className="w-1/1 grow-1">
+    <section className="w-1/1 grow-1 overflow-auto">
       <SearchFilter />
       <EventList />
     </section>
