@@ -1,7 +1,7 @@
 const { mapSports } = require("./mapEnum");
 
 const buildProfile = (req) => {
-  const userId = parseInt(req.params.userId);
+  const userId = req.session.user.id;
   const user = { id: userId };
   const {
     bio,
@@ -10,6 +10,7 @@ const buildProfile = (req) => {
     sports,
     username,
     email,
+    location,
     profile_image_url,
   } = req.body;
   const mappedSports = sports.map((sport) => mapSports(sport));
@@ -17,6 +18,7 @@ const buildProfile = (req) => {
   addIfPresent(latitude, "latitude", user);
   addIfPresent(longitude, "longitude", user);
   addIfPresent(mappedSports, "sports", user);
+  addIfPresent(location, "location", user);
   addIfPresent(username, "username", user);
   addIfPresent(email, "email", user);
   addIfPresent(profile_image_url, "profile_image_url", user);
