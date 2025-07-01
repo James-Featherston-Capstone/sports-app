@@ -17,7 +17,7 @@ exports.updateUserProfile = async (req, res, next) => {
 
 exports.getUserProfile = async (req, res, next) => {
   try {
-    const userId = parseInt(req.params.userId);
+    const userId = req.session.user.id;
     const user = await userService.getUser(userId);
     res.json(user);
   } catch (error) {

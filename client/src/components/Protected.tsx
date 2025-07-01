@@ -5,10 +5,14 @@ import { useLoginContext } from "../contexts/loginContext";
 const withAuth = (WrappedComponent: React.FC) => {
   const ProtectedComponent = (props: object) => {
     const { loginStatus } = useLoginContext();
+    const { newUser } = useLoginContext();
     const navigate = useNavigate();
     useEffect(() => {
       if (!loginStatus) {
         navigate("/login");
+      }
+      if (newUser) {
+        navigate("/profile");
       }
     }, [loginStatus]);
     if (!loginStatus) {
