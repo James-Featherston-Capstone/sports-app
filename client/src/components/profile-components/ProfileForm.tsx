@@ -27,6 +27,7 @@ const ProfileForm = ({
         onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
         autoComplete="on"
         placeholder="Create a Bio"
+        required
       />
       <label className="self-start ml-1">Location:</label>
       <Input
@@ -35,6 +36,7 @@ const ProfileForm = ({
         onChange={(e) => setProfile({ ...profile, location: e.target.value })}
         autoComplete="on"
         placeholder="Location"
+        required
       />
       <label className="self-start ml-1">
         {" "}

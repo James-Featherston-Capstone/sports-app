@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileForm from "@/components/profile-components/ProfileForm";
 import type { ProfileType } from "@/utils/interfaces";
 import { createProfile } from "@/utils/profileService";
+import { useState } from "react";
 
 interface ProfileProps {
   editing: boolean;
@@ -22,21 +23,24 @@ const EditProfile = ({
 }: ProfileProps) => {
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
+  const [newProfile, setNewProfile] = useState<ProfileType>(profile);
+  console.log(profile);
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (type === "create") {
-      console.log(profile);
-      const user = await createProfile(profile);
+      console.log(newProfile);
+      const user = await createProfile(newProfile);
       if (user) {
         setLoginStatus(true);
         navigate("/events");
       }
     } else {
-      console.log(profile);
-      const user = await createProfile(profile);
+      console.log(newProfile);
+      const user = await createProfile(newProfile);
+      setProfile(newProfile);
       if (user) {
-        navigate("/profile");
+        onReturn(false);
       }
       console.log("need to update user");
     }
@@ -54,8 +58,8 @@ const EditProfile = ({
       <h1 className="text-4xl">Profile Settings</h1>
       <ProfileForm
         onSubmit={onSubmit}
-        profile={profile}
-        setProfile={setProfile}
+        profile={newProfile}
+        setProfile={setNewProfile}
       />
     </div>
   );

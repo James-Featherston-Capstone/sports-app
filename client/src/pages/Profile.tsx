@@ -27,6 +27,7 @@ const Profile = () => {
       <div className="w-50 h-50 max-h-50 max-w-50">
         {!profile.profile_image_url ? (
           <img
+            className="w-50 h-50 rounded-full"
             src={`https://avatar.iran.liara.run/username?username=${profile.username}`}
             alt=""
           />
