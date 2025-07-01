@@ -29,7 +29,11 @@ const EventList = () => {
   return (
     <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center">
       {events.map((event: Event) => {
-        return <EventCard key={event.id} event={event} />;
+        return (
+          <ul>
+            <EventCard key={event.id} event={event} />
+          </ul>
+        );
       })}
     </ul>
   );
