@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "@/utils/authService";
 
-const withAuth = (WrappedComponent: React.FC, canRedirect: boolean) => {
+interface WithAuthVars {
+  WrappedComponent: React.FC;
+  canRedirect: boolean;
+}
+
+const withAuth = ({ WrappedComponent, canRedirect }: WithAuthVars) => {
   const ProtectedComponent = (props: object) => {
     const { loginStatus, setLoginStatus } = useLoginContext();
     const navigate = useNavigate();
