@@ -10,10 +10,22 @@ import withAuth from "./components/Protected";
 import ProfilePage from "./pages/ProfilePage";
 
 function App() {
-  const ProtectedEvents = withAuth(Events, true);
-  const ProtectedHeader = withAuth(Header, false);
-  const ProtectedFooter = withAuth(Footer, false);
-  const ProtectedProfile = withAuth(ProfilePage, true);
+  const ProtectedEvents = withAuth({
+    WrappedComponent: Events,
+    canRedirect: true,
+  });
+  const ProtectedHeader = withAuth({
+    WrappedComponent: Header,
+    canRedirect: false,
+  });
+  const ProtectedFooter = withAuth({
+    WrappedComponent: Footer,
+    canRedirect: false,
+  });
+  const ProtectedProfile = withAuth({
+    WrappedComponent: ProfilePage,
+    canRedirect: true,
+  });
   return (
     <div className="app w-screen">
       <ProtectedHeader />
