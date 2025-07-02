@@ -4,6 +4,10 @@ const prisma = require("../prisma.js");
 exports.getUser = async (userId) => {
   const profile = await prisma.user.findUnique({
     where: { id: userId },
+    include: {
+      eventsCreated: true,
+      eventsRSVP: true,
+    },
   });
   if (!profile) {
     throw new NotFoundError();
