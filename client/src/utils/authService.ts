@@ -42,9 +42,12 @@ const loginStatus = async () => {
 
 const checkStatus = () => {
   const cookies = document.cookie;
+  console.log(cookies);
   if (cookies.includes("sessionId")) {
+    console.log("return true");
     return true;
   }
+  console.log("returning false");
   return false;
 };
 
