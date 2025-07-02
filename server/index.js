@@ -28,6 +28,7 @@ let sessionConfig = {
     maxAge: 1000 * 60 * 5,
     secure: process.env.RENDER === "production" ? true : false,
     httpOnly: false,
+    sameSite: "none",
   },
   resave: false,
   saveUninitialized: false,
