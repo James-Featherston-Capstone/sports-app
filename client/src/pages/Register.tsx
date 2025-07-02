@@ -5,7 +5,7 @@ import { useLoginContext } from "../contexts/loginContext";
 import { checkStatus } from "../utils/authService";
 import { Button } from "@/components/ui/button";
 import EditProfile from "./EditProfile";
-import type { ProfileType } from "@/utils/interfaces";
+import type { Profile } from "@/utils/interfaces";
 import { register } from "../utils/authService";
 
 const Register = () => {
@@ -16,7 +16,7 @@ const Register = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [creatingProfile, setCreatingProfile] = useState(false);
-  const [profile, setProfile] = useState<ProfileType>({
+  const [profile, setProfile] = useState<Profile>({
     bio: "",
     email: "",
     username: "",

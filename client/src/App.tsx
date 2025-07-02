@@ -8,13 +8,13 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import withAuth from "./components/Protected";
 import withAuthBar from "./components/ProtectedBar";
-import Profile from "./pages/Profile";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const ProtectedEvents = withAuth(Events);
   const ProtectedHeader = withAuthBar(Header);
   const ProtectedFooter = withAuthBar(Footer);
-  const ProtectedProfile = withAuth(Profile);
+  const ProtectedProfile = withAuth(ProfilePage);
   return (
     <div className="app w-screen">
       <ProtectedHeader />

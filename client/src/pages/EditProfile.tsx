@@ -1,7 +1,7 @@
 import { useLoginContext } from "@/contexts/loginContext";
 import { useNavigate } from "react-router-dom";
 import ProfileForm from "@/components/profile-components/ProfileForm";
-import type { ProfileType } from "@/utils/interfaces";
+import type { Profile } from "@/utils/interfaces";
 import { createProfile } from "@/utils/profileService";
 import { useState } from "react";
 
@@ -9,8 +9,8 @@ interface ProfileProps {
   editing: boolean;
   type: string;
   onReturn: (status: boolean) => void;
-  profile: ProfileType;
-  setProfile: (current: ProfileType) => void;
+  profile: Profile;
+  setProfile: (current: Profile) => void;
   password: string;
 }
 
@@ -23,7 +23,7 @@ const EditProfile = ({
 }: ProfileProps) => {
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
-  const [newProfile, setNewProfile] = useState<ProfileType>(profile);
+  const [newProfile, setNewProfile] = useState<Profile>(profile);
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

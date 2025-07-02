@@ -1,12 +1,12 @@
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import SportsOptions from "./SportsOptions";
-import type { ProfileType } from "@/utils/interfaces";
+import type { Profile } from "@/utils/interfaces";
 
 interface ProfileFormComponents {
   onSubmit: (event: React.FormEvent) => void;
-  profile: ProfileType;
-  setProfile: (current: ProfileType) => void;
+  profile: Profile;
+  setProfile: (current: Profile) => void;
 }
 
 const ProfileForm = ({
