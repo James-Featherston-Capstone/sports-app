@@ -6,7 +6,6 @@ const cors = require("cors");
 const session = require("express-session");
 const { RedisStore } = require("connect-redis");
 const { createClient } = require("redis");
-const { checkSessionExists } = require("./middleware/UserAuthValidation");
 
 const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
@@ -26,7 +25,7 @@ let sessionConfig = {
   name: "sessionId",
   secret: process.env.SESSION_SECRET,
   cookie: {
-    maxAge: 1000 * 60 * 5,
+    maxAge: 1000 * 5,
     secure: process.env.RENDER === "production" ? true : false,
     httpOnly: false,
     sameSite: process.env.RENDER === "production" ? "none" : "lax",
@@ -51,9 +50,8 @@ if (process.env.RENDER === "production") {
 
 app.use(session(sessionConfig));
 app.set("trust proxy", 1);
-app.use(checkSessionExists);
 app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/events", eventRouter);
 
 app.get("/api/redis-test", (req, res) => {
