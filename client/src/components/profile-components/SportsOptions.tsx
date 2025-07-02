@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import type { ProfileType } from "@/utils/interfaces";
+import type { Profile } from "@/utils/interfaces";
 const sportsOptions = [
   "SOCCER",
   "FOOTBALL",
@@ -16,8 +16,8 @@ const sportsOptions = [
 ];
 
 interface SportProps {
-  profile: ProfileType;
-  setProfile: (current: ProfileType) => void;
+  profile: Profile;
+  setProfile: (current: Profile) => void;
 }
 
 const SportsOptions = ({ profile, setProfile }: SportProps) => {

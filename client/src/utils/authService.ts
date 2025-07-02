@@ -1,9 +1,9 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { ProfileType } from "./interfaces";
+import type { Profile } from "./interfaces";
 
 const register = async <T = any>(
-  data: ProfileType,
+  data: Profile,
   password: string
 ): Promise<T> => {
   const path = `${BASE_URL}/auth/register`;

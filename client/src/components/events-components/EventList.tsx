@@ -1,17 +1,17 @@
 import EventCard from "./EventCard";
-import type { EventType } from "@/utils/interfaces";
+import type { Event } from "@/utils/interfaces";
 
 interface EventListProps {
-  events: EventType[];
+  events: Event[];
 }
 
 const EventList = ({ events }: EventListProps) => {
   return (
     <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center">
-      {events.map((event: EventType) => {
+      {events.map((event: Event) => {
         return (
           <ul key={event.id}>
-            <EventCard event={event} owns={false} />
+            <EventCard event={event} editable={false} />
           </ul>
         );
       })}

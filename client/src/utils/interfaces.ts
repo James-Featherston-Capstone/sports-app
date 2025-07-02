@@ -1,4 +1,4 @@
-interface ProfileType {
+interface Profile {
   bio: string;
   email: string;
   username: string;
@@ -9,7 +9,7 @@ interface ProfileType {
   profile_image_url: string;
 }
 
-interface EventType {
+interface Event {
   created_at: string;
   description: string;
   eventImage: string;
@@ -22,4 +22,4 @@ interface EventType {
   sport: string;
   updated_at: string;
 }
-export type { ProfileType, EventType };
+export type { Profile, Event };

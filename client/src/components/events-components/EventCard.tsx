@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import EventCreation from "./EventCreation";
-import type { EventType } from "@/utils/interfaces";
+import EventModify from "./EventModify";
+import type { Event } from "@/utils/interfaces";
 
 interface EventProps {
-  event: EventType;
-  owns: boolean;
+  event: Event;
+  editable: boolean;
 }
 
-const EventCard = ({ event, owns }: EventProps) => {
-  const [edit, setEdit] = useState(false);
+const EventCard = ({ event, editable }: EventProps) => {
+  const [isEditing, setIsEditing] = useState(false);
   return (
     <>
       <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
@@ -23,11 +23,15 @@ const EventCard = ({ event, owns }: EventProps) => {
           <h1>Sport: {event.sport}</h1>
         </CardContent>
         <CardFooter>
-          {owns ? <Button onClick={() => setEdit(true)}>Edit</Button> : <></>}
+          {editable ? (
+            <Button onClick={() => setIsEditing(true)}>Edit</Button>
+          ) : (
+            <></>
+          )}
           <Button className="h-8">RSVP</Button>
         </CardFooter>
       </Card>
-      {edit ? <EventCreation event={event} /> : <></>}
+      <EventModify open={isEditing} onOpenChange={setIsEditing} />
     </>
   );
 };

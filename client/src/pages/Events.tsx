@@ -3,24 +3,24 @@ import EventList from "../components/events-components/EventList";
 import { Button } from "@/components/ui/button";
 import { getAllEvents } from "@/utils/eventService";
 import { useEffect, useState } from "react";
-import type { EventType } from "@/utils/interfaces";
-import EventCreation from "@/components/events-components/EventCreation";
+import type { Event } from "@/utils/interfaces";
+import EventModify from "@/components/events-components/EventModify";
 
 const Events = () => {
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [create, setCreate] = useState(false);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isEventListLoading, setIsEventListLoading] = useState(true);
+  const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
       const retrievedEvents = await getAllEvents();
       setEvents(retrievedEvents);
-      setLoading(false);
+      setIsEventListLoading(false);
     };
     fetchEvents();
   }, []);
 
-  if (loading) {
+  if (isEventListLoading) {
     return <h1>Loading...</h1>;
   }
   return (
@@ -29,14 +29,17 @@ const Events = () => {
         <Button
           variant="secondary"
           className="order-0 sm:order-4 w-8/10 sm:w-auto m-3"
-          onClick={() => setCreate(true)}
+          onClick={() => setIsShowingCreationForm(true)}
         >
           Create Event
         </Button>
         <SearchFilter />
       </div>
       <EventList events={events} />
-      {create ? <EventCreation event={undefined} /> : <></>}
+      <EventModify
+        open={isShowingCreationForm}
+        onOpenChange={setIsShowingCreationForm}
+      />
     </section>
   );
 };
