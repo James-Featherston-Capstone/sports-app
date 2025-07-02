@@ -1,5 +1,5 @@
 import { Calendar } from "../ui/calendar";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
@@ -10,6 +10,10 @@ import {
   SelectItem,
 } from "../ui/select";
 import { Dialog, DialogTitle, DialogContent, DialogHeader } from "../ui/dialog";
+import { getDateTime } from "../../utils/utils";
+import { createEvent } from "@/utils/eventService";
+import type { Event } from "@/utils/interfaces";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface EventModifyProps {
   open: boolean;
@@ -39,17 +43,35 @@ const EventModify = ({ open, onOpenChange }: EventModifyProps) => {
   const [eventLocation, setEventLocation] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
 
-  const handleEventModify = () => {};
+  const handleEventModify = async (e: FormEvent) => {
+    e.preventDefault();
+    console.log(date);
+    const event: Event = {
+      description: description,
+      sport: sport,
+      eventImage: eventImage ? eventImage : "",
+      eventTime: getDateTime(eventTime, date).toISOString(),
+      location: eventLocation,
+    };
+    console.log("Here");
+    createEvent(event);
+    console.log(event);
+    onOpenChange(false);
+  };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white text-black flex flex-col items-center">
         <form onSubmit={handleEventModify}>
           <DialogHeader>
             <DialogTitle className="my-2">Modify an Event</DialogTitle>
+            <DialogDescription>
+              Fill out the form to update an event
+            </DialogDescription>
           </DialogHeader>
           <Input
             type="text"
             value={description}
+            aria-describedby="Description"
             onChange={(e) => setDescription(e.target.value)}
             autoComplete="on"
             placeholder="Event Description"
@@ -76,7 +98,6 @@ const EventModify = ({ open, onOpenChange }: EventModifyProps) => {
             onChange={(e) => setEventImage(e.target.value)}
             autoComplete="on"
             placeholder="Set Event Image URL"
-            required
             className="my-1"
           />
           <Calendar
