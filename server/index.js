@@ -6,6 +6,7 @@ const cors = require("cors");
 const session = require("express-session");
 const { RedisStore } = require("connect-redis");
 const { createClient } = require("redis");
+const { checkSessionExists } = require("./middleware/UserAuthValidation");
 
 const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
@@ -50,6 +51,7 @@ if (process.env.RENDER === "production") {
 
 app.use(session(sessionConfig));
 app.set("trust proxy", 1);
+app.use(checkSessionExists);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/events", eventRouter);

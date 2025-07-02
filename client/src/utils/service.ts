@@ -10,7 +10,11 @@ const fetchData = async <T = any>(
   try {
     const response = await fetch(path, request);
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      if (response.status === 401) {
+        window.location.href = "/login";
+      } else {
+        throw new Error("Failed to fetch data");
+      }
     }
     data = await response.json();
   } catch (error) {
