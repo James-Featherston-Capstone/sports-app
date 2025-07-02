@@ -103,7 +103,7 @@ const Register = () => {
         )}
       </form>
       <p>
-        Already have an account?{" "}
+        Already have an account?
         <Button
           variant="link"
           className="text-white"

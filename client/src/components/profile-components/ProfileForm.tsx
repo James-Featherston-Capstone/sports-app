@@ -38,10 +38,7 @@ const ProfileForm = ({
         placeholder="Location"
         required
       />
-      <label className="self-start ml-1">
-        {" "}
-        Profile Picture URL (Optional):{" "}
-      </label>
+      <label className="self-start ml-1">Profile Picture URL (Optional):</label>
       <Input
         type="text"
         value={profile.profile_image_url}
