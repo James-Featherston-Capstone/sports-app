@@ -7,7 +7,7 @@ interface EventListProps {
 
 const EventList = ({ events }: EventListProps) => {
   return (
-    <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center">
+    <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center w-screen">
       {events.map((event: Event) => {
         return (
           <ul key={event.id}>
