@@ -27,13 +27,10 @@ const Register = () => {
     profile_image_url: "",
   });
   useEffect(() => {
-    const performStatusCheck = async () => {
-      if (await checkStatus()) {
-        setLoginStatus(true);
-        navigate("/events");
-      }
-    };
-    performStatusCheck();
+    if (checkStatus()) {
+      setLoginStatus(true);
+      navigate("/events");
+    }
   }, []);
 
   const handleRegister = async (event: React.FormEvent) => {

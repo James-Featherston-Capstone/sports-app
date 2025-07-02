@@ -15,13 +15,10 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const performStatusCheck = async () => {
-      if (await checkStatus()) {
-        setLoginStatus(true);
-        navigate("/events");
-      }
-    };
-    performStatusCheck();
+    if (checkStatus()) {
+      setLoginStatus(true);
+      navigate("/events");
+    }
   }, []);
 
   const handleLogin = async (event: React.FormEvent) => {

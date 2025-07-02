@@ -19,6 +19,13 @@ class UnauthorizedError extends CustomError {
     this.statusCode = 401;
   }
 }
+class ForbiddenError extends CustomError {
+  constructor(message) {
+    super(message);
+    this.name = "ForbiddenError";
+    this.statusCode = 403;
+  }
+}
 
 class NotFoundError extends CustomError {
   constructor(message) {
@@ -43,4 +50,5 @@ module.exports = {
   ConflictError,
   NotFoundError,
   UnauthorizedError,
+  ForbiddenError,
 };

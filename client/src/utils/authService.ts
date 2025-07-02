@@ -40,9 +40,9 @@ const loginStatus = async () => {
   return await fetchData(path, req);
 };
 
-const checkStatus = async () => {
-  const status = await loginStatus();
-  if (status) {
+const checkStatus = () => {
+  const cookies = document.cookie;
+  if (cookies.includes("sessionId")) {
     return true;
   }
   return false;

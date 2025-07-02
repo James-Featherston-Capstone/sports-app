@@ -7,14 +7,25 @@ import Events from "./pages/Events";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import withAuth from "./components/Protected";
-import withAuthBar from "./components/ProtectedBar";
 import ProfilePage from "./pages/ProfilePage";
 
 function App() {
-  const ProtectedEvents = withAuth(Events);
-  const ProtectedHeader = withAuthBar(Header);
-  const ProtectedFooter = withAuthBar(Footer);
-  const ProtectedProfile = withAuth(ProfilePage);
+  const ProtectedEvents = withAuth({
+    WrappedComponent: Events,
+    canRedirect: true,
+  });
+  const ProtectedHeader = withAuth({
+    WrappedComponent: Header,
+    canRedirect: false,
+  });
+  const ProtectedFooter = withAuth({
+    WrappedComponent: Footer,
+    canRedirect: false,
+  });
+  const ProtectedProfile = withAuth({
+    WrappedComponent: ProfilePage,
+    canRedirect: true,
+  });
   return (
     <div className="app w-screen">
       <ProtectedHeader />
