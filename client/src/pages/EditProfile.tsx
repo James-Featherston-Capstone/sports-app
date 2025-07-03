@@ -48,10 +48,17 @@ const EditProfile = ({
     <div className="flex flex-col grow-1 w-screen h-screen items-center justify-center bg-black fixed pt-20">
       <div className="absolute top-6 left-4" onClick={() => onReturn(false)}>
         <span className="material-symbols-outlined">
-          <h1 className="text-4xl">chevron_left</h1>
+          {type === "edit" && <h1 className="text-4xl">chevron_left</h1>}
         </span>
       </div>
-      <h1 className="text-4xl">Profile Settings</h1>
+      <h1 className="text-4xl">
+        {type === "create" ? "Create Profile" : "Edit Profile"}
+      </h1>
+      {type === "create" && (
+        <h2 className="text-l my-2">
+          Profile can be changed later in settings
+        </h2>
+      )}
       <ProfileForm
         onSubmit={onSubmit}
         profile={newProfile}

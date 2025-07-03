@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
@@ -24,6 +24,9 @@ const Login = () => {
       navigate("/events");
     }
   };
+  useEffect(() => {
+    login({});
+  }, []);
 
   return (
     <div className="container border-2 w-9/10 md:w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
