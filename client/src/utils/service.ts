@@ -11,12 +11,15 @@ const fetchData = async <T = any>(
     const response = await fetch(path, request);
     if (!response.ok) {
       if (response.status === 401) {
-        window.location.href = "/login";
+        const data = await response.json();
+
+        window.location.href = data.redirect;
       } else {
         throw new Error("Failed to fetch data");
       }
+    } else {
+      data = await response.json();
     }
-    data = await response.json();
   } catch (error) {
     console.error(error);
   }
