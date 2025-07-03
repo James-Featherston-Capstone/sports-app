@@ -45,7 +45,6 @@ const EventModify = ({ open, onOpenChange }: EventModifyProps) => {
 
   const handleEventModify = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(date);
     const event: Event = {
       description: description,
       sport: sport,
@@ -53,9 +52,7 @@ const EventModify = ({ open, onOpenChange }: EventModifyProps) => {
       eventTime: getDateTime(eventTime, date).toISOString(),
       location: eventLocation,
     };
-    console.log("Here");
     createEvent(event);
-    console.log(event);
     onOpenChange(false);
   };
   return (

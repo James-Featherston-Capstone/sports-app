@@ -12,7 +12,6 @@ const getAllEvents = async <T = any>(): Promise<T> => {
 };
 
 const createEvent = async <T = any>(event: Event): Promise<T> => {
-  console.log("Getting event");
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
