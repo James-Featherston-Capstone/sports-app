@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EditProfile from "./EditProfile";
 import type { Profile } from "@/utils/interfaces";
-import { register } from "../utils/authService";
+import { login, register } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -33,11 +33,15 @@ const Register = () => {
       const user = await register(profile, password);
       if (user) {
         setCreatingProfile(true);
+      } else {
+        setError(true);
+        setErrorMessage("Email is already in use");
       }
-      setError(true);
-      setErrorMessage("Email is already in use");
     }
   };
+  useEffect(() => {
+    login({});
+  }, []);
   return (
     <div className="container border-2 w-9/10 md:w-5/10 h-8/10 p-1 md:p-6 md:h-6/10 flex justify-center items-center rounded-md flex-col">
       <h1 className="text-xl mx-3">Create a Team Up Account</h1>

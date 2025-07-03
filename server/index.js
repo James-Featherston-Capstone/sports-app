@@ -53,7 +53,10 @@ app.set("trust proxy", 1);
 
 app.use((req, res, next) => {
   const path = req.url;
-  if (path === "/api/auth/login" || path === "api/auth/register") {
+  if (path === "/api/auth/login" || path === "/api/auth/register") {
+    if (req.session && req.session.user) {
+      res.status(401).json({ redirect: "/events" });
+    }
     next();
   } else if (req.session && req.session.user) {
     next();
@@ -61,6 +64,7 @@ app.use((req, res, next) => {
     res.status(401).json({ redirect: "/login" });
   }
 });
+
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/events", eventRouter);
