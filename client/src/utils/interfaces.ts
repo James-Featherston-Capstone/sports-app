@@ -22,4 +22,10 @@ interface Event {
   sport: string;
   updated_at?: string;
 }
-export type { Profile, Event };
+
+interface EventFilters {
+  searchQuery?: string;
+  filter?: string;
+}
+
+export type { Profile, Event, EventFilters };

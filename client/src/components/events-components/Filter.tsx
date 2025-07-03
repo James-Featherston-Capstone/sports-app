@@ -5,17 +5,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { EventFilters } from "@/utils/interfaces";
+import { useState } from "react";
 
-const Filter = () => {
+interface filterProps {
+  handleFilter: (filter: EventFilters) => void;
+}
+
+const Filter = ({ handleFilter }: filterProps) => {
+  const [selectedEventOption, setSelectedEventOption] = useState("all");
+
+  const onFilterChange = (value: string) => {
+    handleFilter({ filter: value });
+    setSelectedEventOption(value);
+  };
+
   return (
     <article className="m-3 flex order-2">
-      <Select>
+      <Select value={selectedEventOption} onValueChange={onFilterChange}>
         <SelectTrigger className="w-35">
-          <SelectValue placeholder="Choose Filter" />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="location">Location</SelectItem>
-          <SelectItem value="sports">Sports</SelectItem>
+          <SelectItem value="all">All Events</SelectItem>
+          <SelectItem value="location">My RSVP's</SelectItem>
+          <SelectItem value="sports">My Created</SelectItem>
         </SelectContent>
       </Select>
     </article>
