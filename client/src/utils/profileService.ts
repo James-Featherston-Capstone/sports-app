@@ -3,7 +3,7 @@ import { BASE_URL } from "./service";
 import { fetchData } from "./service";
 
 const createProfile = async <T = any>(profile: Profile): Promise<T> => {
-  const path = `${BASE_URL}/user`;
+  const path = `${BASE_URL}/users`;
   const req = {
     method: "PUT",
     headers: {

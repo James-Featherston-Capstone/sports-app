@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/authService";
 import { useLoginContext } from "../contexts/loginContext";
-import { checkStatus } from "../utils/authService";
 import { Button } from "@/components/ui/button";
 
 const Login = () => {
@@ -13,13 +12,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    if (checkStatus()) {
-      setLoginStatus(true);
-      navigate("/events");
-    }
-  }, []);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();

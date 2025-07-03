@@ -1,8 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
-import { useLoginContext } from "../contexts/loginContext";
-import { checkStatus } from "../utils/authService";
 import { Button } from "@/components/ui/button";
 import EditProfile from "./EditProfile";
 import type { Profile } from "@/utils/interfaces";
@@ -10,7 +8,6 @@ import { register } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setLoginStatus } = useLoginContext();
   const [password, setPassword] = useState("");
   const [testPassword, setTestPassword] = useState("");
   const [error, setError] = useState(false);
@@ -26,12 +23,6 @@ const Register = () => {
     sports: [],
     profile_image_url: "",
   });
-  useEffect(() => {
-    if (checkStatus()) {
-      setLoginStatus(true);
-      navigate("/events");
-    }
-  }, []);
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();

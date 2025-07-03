@@ -26,10 +26,9 @@ const buildProfile = (req) => {
 };
 
 const buildEvent = (req) => {
-  const event = {};
-  const { organizerId, eventImage, sport, description, eventTime, location } =
-    req.body;
-  addIfPresent(organizerId, "organizerId", event);
+  const organizerId = req.session.user.id;
+  const event = { organizerId: organizerId };
+  const { eventImage, sport, description, eventTime, location } = req.body;
   addIfPresent(eventImage, "eventImage", event);
   addIfPresent(sport, "sport", event);
   addIfPresent(description, "description", event);

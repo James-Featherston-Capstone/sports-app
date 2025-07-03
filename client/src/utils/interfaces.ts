@@ -10,16 +10,16 @@ interface Profile {
 }
 
 interface Event {
-  created_at: string;
+  created_at?: string;
   description: string;
   eventImage: string;
   eventTime: string;
   location: string;
-  latitude: number;
-  longitude: number;
-  organizerId: number;
-  id: number;
+  latitude?: number;
+  longitude?: number;
+  organizerId?: number;
+  id?: number;
   sport: string;
-  updated_at: string;
+  updated_at?: string;
 }
 export type { Profile, Event };

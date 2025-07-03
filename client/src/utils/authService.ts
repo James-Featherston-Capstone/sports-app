@@ -40,12 +40,4 @@ const loginStatus = async () => {
   return await fetchData(path, req);
 };
 
-const checkStatus = () => {
-  const cookies = document.cookie;
-  if (cookies.includes("sessionId")) {
-    return true;
-  }
-  return false;
-};
-
-export { register, login, loginStatus, checkStatus };
+export { register, login, loginStatus };
