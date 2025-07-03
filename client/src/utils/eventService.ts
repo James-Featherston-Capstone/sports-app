@@ -1,13 +1,10 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { Event, EventFilters } from "./interfaces";
+import type { Event } from "./interfaces";
 
-const getAllEvents = async <T = any>(filters: EventFilters): Promise<T> => {
-  console.log(filters);
-  const urlParams = new URLSearchParams(JSON.stringify(filters));
-  console.log(urlParams.toString());
+const getAllEvents = async <T = any>(filters: object): Promise<T> => {
+  const urlParams = new URLSearchParams(Object.entries(filters));
   const path = `${BASE_URL}/events?${urlParams.toString()}`;
-  console.log(path);
   const req = {
     method: "GET",
     credentials: "include",

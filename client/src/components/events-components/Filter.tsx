@@ -28,8 +28,8 @@ const Filter = ({ handleFilter }: filterProps) => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Events</SelectItem>
-          <SelectItem value="location">My RSVP's</SelectItem>
-          <SelectItem value="sports">My Created</SelectItem>
+          <SelectItem value="rsvp">My RSVP's</SelectItem>
+          <SelectItem value="created">My Created</SelectItem>
         </SelectContent>
       </Select>
     </article>
