@@ -2,8 +2,9 @@ import { BASE_URL } from "./service";
 import { fetchData } from "./service";
 import type { Event } from "./interfaces";
 
-const getAllEvents = async <T = any>(): Promise<T> => {
-  const path = `${BASE_URL}/events`;
+const getAllEvents = async <T = any>(filters: object): Promise<T> => {
+  const urlParams = new URLSearchParams(Object.entries(filters));
+  const path = `${BASE_URL}/events?${urlParams.toString()}`;
   const req = {
     method: "GET",
     credentials: "include",

@@ -1,10 +1,37 @@
 const prisma = require("../prisma.js");
 
-exports.getAllEvents = async (userId) => {
+exports.getAllEvents = async (query) => {
   const events = await prisma.event.findMany({
+    where: {
+      description: {
+        contains: query,
+      },
+    },
     take: 10,
     orderBy: {
       eventTime: "desc",
+    },
+  });
+  return events;
+};
+
+exports.getAllEventRSVP = async (userId) => {
+  const rsvps = await prisma.eventRSVP.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      event: true,
+    },
+  });
+  const eventArr = rsvps.map((rsvp) => rsvp.event);
+  return eventArr;
+};
+
+exports.getAllEventsCreated = async (userId) => {
+  const events = await prisma.event.findMany({
+    where: {
+      organizerId: userId,
     },
   });
   return events;
