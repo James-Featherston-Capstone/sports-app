@@ -18,9 +18,11 @@ interface Event {
   latitude?: number;
   longitude?: number;
   organizerId?: number;
-  id?: number;
+  id: number;
   sport: string;
   updated_at?: string;
+  rsvpList?: number[];
+  isRsvpCurrentUser?: boolean;
 }
 
 interface EventFilters {

@@ -13,7 +13,7 @@ const Events = () => {
   const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
 
   const fetchEvents = async () => {
-    const retrievedEvents = await getAllEvents({});
+    const retrievedEvents = await getAllEvents({} as EventFilters);
     setEvents(retrievedEvents);
     setIsEventListLoading(false);
   };
