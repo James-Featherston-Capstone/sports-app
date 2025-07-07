@@ -69,6 +69,8 @@ model EventRSVP {
   userId     Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  @@unique([eventId, userId])
 }
 
 model EventComment {
