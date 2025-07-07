@@ -25,4 +25,17 @@ const createEvent = async <T = any>(event: Event): Promise<T> => {
   return await fetchData(path, req);
 };
 
-export { getAllEvents, createEvent };
+const editEvent = async <T = any>(event: Event): Promise<T> => {
+  const path = `${BASE_URL}/events/${event.id}`;
+  const req = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(event),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+export { getAllEvents, createEvent, editEvent };

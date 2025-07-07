@@ -33,6 +33,9 @@ exports.getAllEventsCreated = async (userId) => {
     where: {
       organizerId: userId,
     },
+    orderBy: {
+      eventTime: "desc",
+    },
   });
   return events;
 };
