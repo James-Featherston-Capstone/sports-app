@@ -56,8 +56,9 @@ app.use((req, res, next) => {
   if (path === "/api/auth/login" || path === "/api/auth/register") {
     if (req.session && req.session.user) {
       res.status(401).json({ redirect: "/" });
+    } else {
+      next();
     }
-    next();
   } else if (req.session && req.session.user) {
     next();
   } else {
