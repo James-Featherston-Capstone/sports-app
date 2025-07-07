@@ -56,9 +56,6 @@ const Events = () => {
         <EventModify
           open={isShowingCreationForm}
           onOpenChange={setIsShowingCreationForm}
-          isCreatingEvent={true}
-          baseEvent={{} as Event}
-          updateDisplayedEvent={(_: Event): void => {}}
         />
       )}
     </section>

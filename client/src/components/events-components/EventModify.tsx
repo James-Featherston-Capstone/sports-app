@@ -1,5 +1,10 @@
 import { Calendar } from "../ui/calendar";
-import { useState, type FormEvent } from "react";
+import {
+  useState,
+  type Dispatch,
+  type FormEvent,
+  type SetStateAction,
+} from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
@@ -12,15 +17,14 @@ import {
 import { Dialog, DialogTitle, DialogContent, DialogHeader } from "../ui/dialog";
 import { getDateTime, getTimeOfDay } from "../../utils/utils";
 import { createEvent, editEvent } from "@/utils/eventService";
-import type { Event } from "@/utils/interfaces";
+import type { EventWithRsvp, Event } from "@/utils/interfaces";
 import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface EventModifyProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  isCreatingEvent: boolean;
-  baseEvent: Event;
-  updateDisplayedEvent: (event: Event) => void;
+  baseEvent?: EventWithRsvp;
+  updateDisplayedEvent?: Dispatch<SetStateAction<EventWithRsvp>>;
 }
 
 const sportsOptions = [
@@ -41,27 +45,26 @@ const sportsOptions = [
 const EventModify = ({
   open,
   onOpenChange,
-  isCreatingEvent,
   baseEvent,
   updateDisplayedEvent,
 }: EventModifyProps) => {
   const [description, setDescription] = useState(
-    baseEvent.id ? baseEvent.description : ""
+    baseEvent ? baseEvent.description : ""
   );
   const [sport, setSport] = useState(
-    baseEvent.id ? baseEvent.sport.toUpperCase() : ""
+    baseEvent ? baseEvent.sport.toUpperCase() : ""
   );
   const [eventImage, setEventImage] = useState(
-    baseEvent.id ? baseEvent.eventImage : ""
+    baseEvent ? baseEvent.eventImage : ""
   );
   const [eventTime, setEventTime] = useState(
-    baseEvent.id ? getTimeOfDay(baseEvent.eventTime) : "12:00"
+    baseEvent ? getTimeOfDay(baseEvent.eventTime) : "12:00"
   );
   const [eventLocation, setEventLocation] = useState(
-    baseEvent.id ? baseEvent.location : ""
+    baseEvent ? baseEvent.location : ""
   );
   const [date, setDate] = useState<Date | undefined>(
-    baseEvent.id ? new Date(baseEvent.eventTime) : new Date()
+    baseEvent ? new Date(baseEvent.eventTime) : new Date()
   );
 
   const handleEventModify = async (e: FormEvent) => {
@@ -73,14 +76,14 @@ const EventModify = ({
       eventTime: getDateTime(eventTime, date).toISOString(),
       location: eventLocation,
     };
-    const event: Event = baseEvent.id
-      ? { ...baseEvent, ...eventChanges }
-      : eventChanges;
-    if (isCreatingEvent) {
+    if (!baseEvent) {
+      type CreateEvent = Omit<Event, "id" | "rsvps">;
+      const event: CreateEvent = eventChanges;
       createEvent(event);
     } else {
+      const event: EventWithRsvp = { ...baseEvent, ...eventChanges };
       editEvent(event);
-      updateDisplayedEvent(event);
+      updateDisplayedEvent && updateDisplayedEvent(event);
     }
     onOpenChange(false);
   };

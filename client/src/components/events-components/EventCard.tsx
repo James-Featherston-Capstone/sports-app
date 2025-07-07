@@ -57,7 +57,6 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           open={isEditing}
           onOpenChange={setIsEditing}
           baseEvent={displayedEvent}
-          isCreatingEvent={false}
           updateDisplayedEvent={setDisplayedEvent}
         />
       )}

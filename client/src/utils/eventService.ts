@@ -1,6 +1,6 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { EventFilters, EventWithRsvp } from "./interfaces";
+import type { EventFilters, EventWithRsvp, Event } from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
@@ -21,7 +21,9 @@ const getAllEvents = async (
   }));
 };
 
-const createEvent = async (event: Event): Promise<Event> => {
+const createEvent = async (
+  event: Omit<Event, "id" | "rsvps">
+): Promise<Event> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
