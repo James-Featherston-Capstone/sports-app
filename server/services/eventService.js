@@ -61,6 +61,9 @@ exports.getAllEventsCreated = async (userId) => {
         },
       },
     },
+    orderBy: {
+      eventTime: "desc",
+    },
   });
 
   return events;

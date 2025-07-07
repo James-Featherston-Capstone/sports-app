@@ -1,6 +1,6 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { EventFilters, EventWithRsvp } from "./interfaces";
+import type { EventFilters, EventWithRsvp, Event } from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
@@ -21,10 +21,25 @@ const getAllEvents = async (
   }));
 };
 
-const createEvent = async (event: Event): Promise<Event> => {
+const createEvent = async (
+  event: Omit<Event, "id" | "rsvps">
+): Promise<Event> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(event),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const editEvent = async (event: Event): Promise<Event> => {
+  const path = `${BASE_URL}/events/${event.id}`;
+  const req = {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
@@ -58,4 +73,4 @@ const deleteEventRsvp = async (eventId: number): Promise<Event> => {
   return await fetchData(path, req);
 };
 
-export { getAllEvents, createEvent, eventRsvp, deleteEventRsvp };
+export { getAllEvents, createEvent, editEvent, eventRsvp, deleteEventRsvp };

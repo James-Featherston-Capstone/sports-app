@@ -11,6 +11,7 @@ const Events = () => {
   const [events, setEvents] = useState<EventWithRsvp[]>([]);
   const [isEventListLoading, setIsEventListLoading] = useState(true);
   const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
+  const [areEventsEditable, setAreEventsEditable] = useState(false);
 
   const fetchEvents = async () => {
     const retrievedEvents = await getAllEvents();
@@ -26,6 +27,11 @@ const Events = () => {
     setIsEventListLoading(true);
     const filteredEvents = await getAllEvents(filters);
     setEvents(filteredEvents);
+    if (filters.filter === "created") {
+      setAreEventsEditable(true);
+    } else {
+      setAreEventsEditable(false);
+    }
     setIsEventListLoading(false);
   };
 
@@ -41,11 +47,17 @@ const Events = () => {
         </Button>
         <SearchFilter handleSearchFilter={handleSearchFilter} />
       </div>
-      {isEventListLoading ? <h1>Loading...</h1> : <EventList events={events} />}
-      <EventModify
-        open={isShowingCreationForm}
-        onOpenChange={setIsShowingCreationForm}
-      />
+      {isEventListLoading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <EventList events={events} areEventsEditable={areEventsEditable} />
+      )}
+      {isShowingCreationForm && (
+        <EventModify
+          open={isShowingCreationForm}
+          onOpenChange={setIsShowingCreationForm}
+        />
+      )}
     </section>
   );
 };

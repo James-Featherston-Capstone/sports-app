@@ -7,11 +7,12 @@ import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 
 interface EventProps {
   event: EventWithRsvp;
-  editable: boolean;
+  eventEditable: boolean;
 }
 
-const EventCard = ({ event, editable }: EventProps) => {
+const EventCard = ({ event, eventEditable }: EventProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [displayedEvent, setDisplayedEvent] = useState(event);
   const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
     event.isRsvpCurrentUser
   );
@@ -29,15 +30,15 @@ const EventCard = ({ event, editable }: EventProps) => {
     <>
       <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
         <CardDescription>
-          <h1 className="text-black">{event.description}</h1>
+          <h1 className="text-black">{displayedEvent.description}</h1>
         </CardDescription>
         <CardContent>
-          <h1>Time: {event.eventTime}</h1>
-          <h1>Location: {event.location}</h1>
-          <h1>Sport: {event.sport}</h1>
+          <h1>Time: {displayedEvent.eventTime}</h1>
+          <h1>Location: {displayedEvent.location}</h1>
+          <h1>Sport: {displayedEvent.sport}</h1>
         </CardContent>
         <CardFooter>
-          {editable ? (
+          {eventEditable ? (
             <Button onClick={() => setIsEditing(true)}>Edit</Button>
           ) : (
             <></>
@@ -51,7 +52,14 @@ const EventCard = ({ event, editable }: EventProps) => {
           </Button>
         </CardFooter>
       </Card>
-      <EventModify open={isEditing} onOpenChange={setIsEditing} />
+      {isEditing && (
+        <EventModify
+          open={isEditing}
+          onOpenChange={setIsEditing}
+          baseEvent={displayedEvent}
+          updateDisplayedEvent={setDisplayedEvent}
+        />
+      )}
     </>
   );
 };
