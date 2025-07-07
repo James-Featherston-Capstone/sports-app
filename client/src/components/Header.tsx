@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 const Header = () => {
   const navigate = useNavigate();
   return (
-    <header className="min-h-15 flex justify-center sm:justify-end items-center bg-amber-700 w-screen p-5 absolute sm:relative bottom-0 z-1">
+    <header className="min-h-15 flex justify-center sm:justify-end items-center bg-amber-700 w-screen p-5 order-1 sm:order-0">
       <h1 className="justify-self-start text-2xl font-bold ml-5 hidden sm:block">
         Team Up
       </h1>
