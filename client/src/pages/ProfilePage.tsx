@@ -18,7 +18,7 @@ const ProfilePage = () => {
     fetchProfile();
   }, []);
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <h1 className="grow-1">Loading...</h1>;
   }
   return (
     <div className="grow-1 overflow-auto w-screen p-8 relative text-white display flex flex-col justify-start items-center">

@@ -19,6 +19,7 @@ import { getDateTime, getTimeOfDay } from "../../utils/utils";
 import { createEvent, editEvent } from "@/utils/eventService";
 import type { EventWithRsvp, Event } from "@/utils/interfaces";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { sportsOptions } from "../profile-components/SportsOptions";
 
 interface EventModifyProps {
   open: boolean;
@@ -26,21 +27,6 @@ interface EventModifyProps {
   baseEvent?: EventWithRsvp;
   updateDisplayedEvent?: Dispatch<SetStateAction<EventWithRsvp>>;
 }
-
-const sportsOptions = [
-  "SOCCER",
-  "FOOTBALL",
-  "BASKETBALL",
-  "BASEBALL",
-  "TENNIS",
-  "PICKLEBALL",
-  "SOFTBALL",
-  "RACQUETBALL",
-  "FRISBEE",
-  "VOLLEYBALL",
-  "GOLF",
-  "HOCKEY",
-];
 
 const EventModify = ({
   open,

@@ -53,4 +53,5 @@ const SportsOptions = ({ profile, setProfile }: SportProps) => {
   );
 };
 
+export { sportsOptions };
 export default SportsOptions;

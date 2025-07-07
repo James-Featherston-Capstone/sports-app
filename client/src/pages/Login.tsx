@@ -21,7 +21,7 @@ const Login = () => {
       setErrorMessage("Username or password Incorrect");
     } else {
       setLoginStatus(true);
-      navigate("/events");
+      navigate("/");
     }
   };
   useEffect(() => {
