@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
-import type { Event } from "@/utils/interfaces";
+import type { EventWithRsvp } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 
 interface EventProps {
-  event: Event;
+  event: EventWithRsvp;
   editable: boolean;
 }
 

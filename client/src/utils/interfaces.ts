@@ -21,7 +21,10 @@ interface Event {
   id: number;
   sport: string;
   updated_at?: string;
-  rsvps?: number[];
+}
+
+interface EventWithRsvp extends Event {
+  rsvps: number[] | null;
   isRsvpCurrentUser?: boolean;
 }
 
@@ -30,4 +33,4 @@ interface EventFilters {
   filter?: string;
 }
 
-export type { Profile, Event, EventFilters };
+export type { Profile, Event, EventFilters, EventWithRsvp };

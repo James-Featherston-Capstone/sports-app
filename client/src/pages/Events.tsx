@@ -3,17 +3,17 @@ import EventList from "../components/events-components/EventList";
 import { Button } from "@/components/ui/button";
 import { getAllEvents } from "@/utils/eventService";
 import { useEffect, useState } from "react";
-import type { Event } from "@/utils/interfaces";
+import type { EventWithRsvp } from "@/utils/interfaces";
 import EventModify from "@/components/events-components/EventModify";
 import type { EventFilters } from "@/utils/interfaces";
 
 const Events = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventWithRsvp[]>([]);
   const [isEventListLoading, setIsEventListLoading] = useState(true);
   const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
 
   const fetchEvents = async () => {
-    const retrievedEvents = await getAllEvents({} as EventFilters);
+    const retrievedEvents = await getAllEvents();
     setEvents(retrievedEvents);
     setIsEventListLoading(false);
   };

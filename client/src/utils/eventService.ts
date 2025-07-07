@@ -1,25 +1,27 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { Event, EventFilters } from "./interfaces";
-import { prepEvents, prepRsvpEvents } from "./prepEvents";
+import type { EventFilters, EventWithRsvp } from "./interfaces";
 
-const getAllEvents = async (filters: EventFilters): Promise<Event[]> => {
-  const urlParams = new URLSearchParams(Object.entries(filters));
+const getAllEvents = async (
+  filters?: EventFilters
+): Promise<EventWithRsvp[]> => {
+  let urlParams = {};
+  if (filters) {
+    urlParams = new URLSearchParams(Object.entries(filters));
+  }
   const path = `${BASE_URL}/events?${urlParams.toString()}`;
   const req = {
     method: "GET",
     credentials: "include",
   };
-  let events = await fetchData(path, req);
-  if (filters.filter === "rsvp") {
-    events = prepRsvpEvents(events);
-  } else {
-    events = prepEvents(events);
-  }
-  return events;
+  const events = await fetchData(path, req);
+  return events.map((event: EventWithRsvp) => ({
+    ...event,
+    isRsvpCurrentUser: event.rsvps !== null && event.rsvps?.length > 0,
+  }));
 };
 
-const createEvent = async <T = any>(event: Event): Promise<T> => {
+const createEvent = async (event: Event): Promise<Event> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
@@ -32,7 +34,7 @@ const createEvent = async <T = any>(event: Event): Promise<T> => {
   return await fetchData(path, req);
 };
 
-const eventRsvp = async <T = any>(eventId: number): Promise<T> => {
+const eventRsvp = async (eventId: number): Promise<Event> => {
   const path = `${BASE_URL}/events/${eventId}/rsvp`;
   const req = {
     method: "POST",
@@ -44,7 +46,7 @@ const eventRsvp = async <T = any>(eventId: number): Promise<T> => {
   return await fetchData(path, req);
 };
 
-const deleteEventRsvp = async <T = any>(eventId: number): Promise<T> => {
+const deleteEventRsvp = async (eventId: number): Promise<Event> => {
   const path = `${BASE_URL}/events/${eventId}/rsvp`;
   const req = {
     method: "DELETE",

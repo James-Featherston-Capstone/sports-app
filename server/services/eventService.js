@@ -31,7 +31,15 @@ exports.getAllEventRSVP = async (userId) => {
       userId: userId,
     },
     include: {
-      event: true,
+      event: {
+        include: {
+          rsvps: {
+            where: {
+              userId: userId,
+            },
+          },
+        },
+      },
     },
   });
   const eventArr = rsvps.map((rsvp) => rsvp.event);
