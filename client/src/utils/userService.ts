@@ -1,7 +1,8 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
+import type { Profile } from "./interfaces";
 
-const getUserProfile = async <T = any>(): Promise<T> => {
+const getUserProfile = async (): Promise<Profile> => {
   const path = `${BASE_URL}/users`;
   const req = {
     method: "GET",

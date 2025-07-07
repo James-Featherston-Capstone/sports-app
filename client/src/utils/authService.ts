@@ -2,10 +2,7 @@ import { BASE_URL } from "./service";
 import { fetchData } from "./service";
 import type { Profile } from "./interfaces";
 
-const register = async <T = any>(
-  data: Profile,
-  password: string
-): Promise<T> => {
+const register = async (data: Profile, password: string): Promise<Profile> => {
   const path = `${BASE_URL}/auth/register`;
   const req = {
     method: "POST",
@@ -18,7 +15,7 @@ const register = async <T = any>(
   return await fetchData(path, req);
 };
 
-const login = async <T = any>(data: Object): Promise<T> => {
+const login = async (data: Object): Promise<Profile> => {
   const path = `${BASE_URL}/auth/login`;
   const req = {
     method: "POST",

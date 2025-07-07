@@ -2,16 +2,30 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
-import type { Event } from "@/utils/interfaces";
+import type { EventWithRsvp } from "@/utils/interfaces";
+import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 
 interface EventProps {
-  event: Event;
+  event: EventWithRsvp;
   eventEditable: boolean;
 }
 
 const EventCard = ({ event, eventEditable }: EventProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [displayedEvent, setDisplayedEvent] = useState(event);
+  const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
+    event.isRsvpCurrentUser
+  );
+
+  const handleRsvp = () => {
+    if (!isRsvpByCurrentUser) {
+      eventRsvp(event.id);
+    } else {
+      deleteEventRsvp(event.id);
+    }
+    setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
+  };
+
   return (
     <>
       <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
@@ -29,7 +43,13 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           ) : (
             <></>
           )}
-          <Button>RSVP</Button>
+          <Button
+            variant={isRsvpByCurrentUser ? "checked" : "default"}
+            className="h-8"
+            onClick={handleRsvp}
+          >
+            RSVP
+          </Button>
         </CardFooter>
       </Card>
       {isEditing && (
