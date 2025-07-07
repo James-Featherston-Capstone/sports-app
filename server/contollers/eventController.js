@@ -13,7 +13,7 @@ exports.getAllEvents = async (req, res, next) => {
     } else if (filter === "created") {
       events = await eventService.getAllEventsCreated(user.id);
     } else {
-      events = await eventService.getAllEvents(searchQuery);
+      events = await eventService.getAllEvents(searchQuery, user.id);
     }
     res.json(events);
   } catch (error) {
@@ -58,9 +58,9 @@ exports.deleteEvent = async (req, res, next) => {
 exports.rsvpEvent = async (req, res, next) => {
   try {
     const eventId = req.params.eventId;
-    const { userId } = req.body;
+    const userId = req.session.user.id;
     if (!eventId || !userId) {
-      throw new ValidationError();
+      throw new ValidationError("User id or event id invalid");
     }
     const eId = parseInt(eventId);
     const uId = parseInt(userId);
@@ -74,8 +74,9 @@ exports.rsvpEvent = async (req, res, next) => {
 
 exports.removeRsvpEvent = async (req, res, next) => {
   try {
-    const rsvpId = parseInt(req.params.rsvpId);
-    const delRsvp = await eventService.removeRsvpEvent(rsvpId);
+    const eventId = parseInt(req.params.eventId);
+    const userId = req.session.user.id;
+    const delRsvp = await eventService.removeRsvpEvent(eventId, userId);
     res.json(delRsvp);
   } catch (error) {
     next(error);

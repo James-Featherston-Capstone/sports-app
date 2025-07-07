@@ -1,10 +1,20 @@
 const prisma = require("../prisma.js");
 
-exports.getAllEvents = async (query) => {
+exports.getAllEvents = async (query, userId) => {
   const events = await prisma.event.findMany({
     where: {
       description: {
         contains: query,
+      },
+    },
+    include: {
+      rsvps: {
+        where: {
+          userId: userId,
+        },
+        select: {
+          id: true,
+        },
       },
     },
     take: 10,
@@ -21,7 +31,15 @@ exports.getAllEventRSVP = async (userId) => {
       userId: userId,
     },
     include: {
-      event: true,
+      event: {
+        include: {
+          rsvps: {
+            where: {
+              userId: userId,
+            },
+          },
+        },
+      },
     },
   });
   const eventArr = rsvps.map((rsvp) => rsvp.event);
@@ -33,7 +51,18 @@ exports.getAllEventsCreated = async (userId) => {
     where: {
       organizerId: userId,
     },
+    include: {
+      rsvps: {
+        where: {
+          userId: userId,
+        },
+        select: {
+          id: true,
+        },
+      },
+    },
   });
+
   return events;
 };
 
@@ -66,9 +95,14 @@ exports.rsvpEvent = async (rsvpObj) => {
   return rsvp;
 };
 
-exports.removeRsvpEvent = async (rsvpId) => {
+exports.removeRsvpEvent = async (eventId, userId) => {
   const delRsvp = await prisma.eventRSVP.delete({
-    where: { id: rsvpId },
+    where: {
+      eventId_userId: {
+        userId: userId,
+        eventId: eventId,
+      },
+    },
   });
   return delRsvp;
 };

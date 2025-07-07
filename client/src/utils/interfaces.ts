@@ -18,9 +18,14 @@ interface Event {
   latitude?: number;
   longitude?: number;
   organizerId?: number;
-  id?: number;
+  id: number;
   sport: string;
   updated_at?: string;
+}
+
+interface EventWithRsvp extends Event {
+  rsvps: number[] | null;
+  isRsvpCurrentUser?: boolean;
 }
 
 interface EventFilters {
@@ -28,4 +33,4 @@ interface EventFilters {
   filter?: string;
 }
 
-export type { Profile, Event, EventFilters };
+export type { Profile, Event, EventFilters, EventWithRsvp };
