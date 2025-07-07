@@ -21,7 +21,7 @@ interface Event {
   id: number;
   sport: string;
   updated_at?: string;
-  rsvpList?: number[];
+  rsvps?: number[];
   isRsvpCurrentUser?: boolean;
 }
 

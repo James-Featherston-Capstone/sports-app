@@ -2,8 +2,7 @@ import type { Event } from "./interfaces";
 const prepEvents = (events: Event[]): Event[] => {
   const formatted = events.map((event: Event) => ({
     ...event,
-    isRsvpCurrentUser:
-      event.rsvpList !== undefined && event.rsvpList?.length > 0,
+    isRsvpCurrentUser: event.rsvps !== undefined && event.rsvps?.length > 0,
   }));
   return formatted;
 };
