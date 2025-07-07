@@ -6,10 +6,15 @@ const { validateNewEvent, validateNewComment } = require("../utils/validation");
 exports.getAllEvents = async (req, res, next) => {
   try {
     const user = req.session.user;
-    if (!user) {
-      throw new UnauthorizedError();
+    const { searchQuery, filter } = req.query;
+    let events = [];
+    if (filter === "rsvp") {
+      events = await eventService.getAllEventRSVP(user.id);
+    } else if (filter === "created") {
+      events = await eventService.getAllEventsCreated(user.id);
+    } else {
+      events = await eventService.getAllEvents(searchQuery);
     }
-    const events = await eventService.getAllEvents();
     res.json(events);
   } catch (error) {
     next(error);

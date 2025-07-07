@@ -5,24 +5,30 @@ import { getAllEvents } from "@/utils/eventService";
 import { useEffect, useState } from "react";
 import type { Event } from "@/utils/interfaces";
 import EventModify from "@/components/events-components/EventModify";
+import type { EventFilters } from "@/utils/interfaces";
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isEventListLoading, setIsEventListLoading] = useState(true);
   const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
 
+  const fetchEvents = async () => {
+    const retrievedEvents = await getAllEvents({});
+    setEvents(retrievedEvents);
+    setIsEventListLoading(false);
+  };
+
   useEffect(() => {
-    const fetchEvents = async () => {
-      const retrievedEvents = await getAllEvents();
-      setEvents(retrievedEvents);
-      setIsEventListLoading(false);
-    };
     fetchEvents();
   }, []);
 
-  if (isEventListLoading) {
-    return <h1>Loading...</h1>;
-  }
+  const handleSearchFilter = async (filters: EventFilters) => {
+    setIsEventListLoading(true);
+    const filteredEvents = await getAllEvents(filters);
+    setEvents(filteredEvents);
+    setIsEventListLoading(false);
+  };
+
   return (
     <section className="w-1/1 grow-1 overflow-auto">
       <div className="flex justify-center flex-wrap">
@@ -33,9 +39,9 @@ const Events = () => {
         >
           Create Event
         </Button>
-        <SearchFilter />
+        <SearchFilter handleSearchFilter={handleSearchFilter} />
       </div>
-      <EventList events={events} />
+      {isEventListLoading ? <h1>Loading...</h1> : <EventList events={events} />}
       <EventModify
         open={isShowingCreationForm}
         onOpenChange={setIsShowingCreationForm}
