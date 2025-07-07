@@ -36,7 +36,7 @@ const createEvent = async (
   return await fetchData(path, req);
 };
 
-const editEvent = async <T = any>(event: Event): Promise<T> => {
+const editEvent = async (event: Event): Promise<Event> => {
   const path = `${BASE_URL}/events/${event.id}`;
   const req = {
     method: "PUT",
