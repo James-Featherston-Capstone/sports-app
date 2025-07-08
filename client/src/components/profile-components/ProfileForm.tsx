@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import SportsOptions from "./SportsOptions";
 import type { Profile } from "@/utils/interfaces";
-import MapsInput from "../events-components/MapsInput";
+import MapsInput from "../MapsInput";
 
 interface ProfileFormComponents {
   onSubmit: (event: React.FormEvent) => void;

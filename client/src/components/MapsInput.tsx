@@ -4,9 +4,9 @@ import {
   GoogleMap,
 } from "@react-google-maps/api";
 import type { Libraries } from "@react-google-maps/api";
-import { Input } from "../ui/input";
+import { Input } from "./ui/input";
 import { useRef, useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 interface MapsInputProps {
   location: string;
   setLocation: (location: string) => void;
