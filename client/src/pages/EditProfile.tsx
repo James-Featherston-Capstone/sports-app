@@ -31,7 +31,7 @@ const EditProfile = ({
       const user = await createProfile(newProfile);
       if (user) {
         setLoginStatus(true);
-        navigate("/events");
+        navigate("/");
       }
     } else {
       const user = await createProfile(newProfile);

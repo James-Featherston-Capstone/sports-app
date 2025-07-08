@@ -1,7 +1,6 @@
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Events from "./pages/Events";
 import Header from "./components/Header";
@@ -15,10 +14,9 @@ function App() {
     <div className="app w-screen">
       {!hideLayout && <Header />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Events />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/events" element={<Events />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
       {!hideLayout && <Footer />}
