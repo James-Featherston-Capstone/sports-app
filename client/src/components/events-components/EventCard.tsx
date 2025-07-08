@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
+import EventModal from "./EventModal";
 
 interface EventProps {
   event: EventWithRsvp;
@@ -16,8 +17,10 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
   const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
     event.isRsvpCurrentUser
   );
+  const [isViewingEvent, setIsViewingEvent] = useState(false);
 
-  const handleRsvp = () => {
+  const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (!isRsvpByCurrentUser) {
       eventRsvp(event.id);
     } else {
@@ -25,10 +28,12 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
     }
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
-
   return (
     <>
-      <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
+      <Card
+        onClick={() => setIsViewingEvent(true)}
+        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
+      >
         <CardDescription>
           <h1 className="text-black">{displayedEvent.description}</h1>
         </CardDescription>
@@ -39,7 +44,14 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
         </CardContent>
         <CardFooter>
           {eventEditable ? (
-            <Button onClick={() => setIsEditing(true)}>Edit</Button>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                setIsEditing(true);
+              }}
+            >
+              Edit
+            </Button>
           ) : (
             <></>
           )}
@@ -58,6 +70,13 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           onOpenChange={setIsEditing}
           baseEvent={displayedEvent}
           updateDisplayedEvent={setDisplayedEvent}
+        />
+      )}
+      {isViewingEvent && (
+        <EventModal
+          open={isViewingEvent}
+          onOpenChange={setIsViewingEvent}
+          eventId={event.id}
         />
       )}
     </>
