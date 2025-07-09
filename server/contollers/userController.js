@@ -1,5 +1,6 @@
 const { UnauthorizedError } = require("../middleware/Errors");
 const userService = require("../services/userService");
+const locationService = require("../recommendations/locationService");
 
 const { buildProfile } = require("../utils/buildModel");
 
@@ -9,6 +10,11 @@ exports.updateUserProfile = async (req, res, next) => {
     const updatedAt = new Date();
     userObj.updated_at = updatedAt;
     const updatedUser = await userService.updateUser(userObj);
+    if (updatedUser.location) {
+      const coords = await locationService.getGeoCode(updatedUser.location);
+      updatedUser.latitude = coords.latitude;
+      updatedUser.longitude = coords.longitude;
+    }
     res.json(updatedUser);
   } catch (error) {
     next(error);

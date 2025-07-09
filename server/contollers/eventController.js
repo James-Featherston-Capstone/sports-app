@@ -1,5 +1,6 @@
 const { ValidationError, UnauthorizedError } = require("../middleware/Errors");
 const eventService = require("../services/eventService");
+const locationService = require("../recommendations/locationService");
 const { buildEvent, buildComment } = require("../utils/buildModel");
 const { validateNewEvent, validateNewComment } = require("../utils/validation");
 
@@ -25,6 +26,11 @@ exports.createEvent = async (req, res, next) => {
   try {
     validateNewEvent(req);
     const eventObj = buildEvent(req);
+    if (eventObj.location) {
+      const coords = await locationService.getGeoCode(eventObj.location);
+      eventObj.latitude = coords.latitude;
+      eventObj.longitude = coords.longitude;
+    }
     const event = await eventService.createEvent(eventObj);
     res.json(event);
   } catch (error) {
@@ -38,6 +44,11 @@ exports.updateEvent = async (req, res, next) => {
     const eventObj = buildEvent(req);
     const updatedAt = new Date();
     eventObj.updated_at = updatedAt;
+    if (eventObj.location) {
+      const coords = await locationService.getGeoCode(eventObj.location);
+      eventObj.latitude = coords.latitude;
+      eventObj.longitude = coords.longitude;
+    }
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);
   } catch (error) {
