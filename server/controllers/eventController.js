@@ -1,8 +1,14 @@
-const { ValidationError, UnauthorizedError } = require("../middleware/Errors");
-const eventService = require("../services/eventService");
-const locationService = require("../recommendations/locationService");
-const { buildEvent, buildComment } = require("../utils/buildModel");
-const { validateNewEvent, validateNewComment } = require("../utils/validation");
+const {
+  ValidationError,
+  UnauthorizedError,
+} = require("../middleware/Errors.js");
+const eventService = require("../services/eventService.js");
+const locationService = require("../recommendations/locationService.js");
+const { buildEvent, buildComment } = require("../utils/buildModel.js");
+const {
+  validateNewEvent,
+  validateNewComment,
+} = require("../utils/validation.js");
 const locationUtils = require("../recommendations/locationUtils.js");
 
 exports.getAllEvents = async (req, res, next) => {
@@ -28,15 +34,9 @@ exports.createEvent = async (req, res, next) => {
     validateNewEvent(req);
     const eventObj = buildEvent(req);
     if (eventObj.location) {
-      const coords = await locationService.getGeoCode(eventObj.location);
-      eventObj.latitude = coords.latitude;
-      eventObj.longitude = coords.longitude;
-      eventObj.latitudeKey = locationUtils.calculateLocationKey(
-        coords.longitude
-      );
-      eventObj.longitudeKey = locationUtils.calculateLocationKey(
-        coords.latitude
-      );
+      await locationService.extractLatLngFields(eventObj);
+    } else {
+      throw new ValidationError("Location missing");
     }
     const event = await eventService.createEvent(eventObj);
     res.json(event);
@@ -52,15 +52,9 @@ exports.updateEvent = async (req, res, next) => {
     const updatedAt = new Date();
     eventObj.updated_at = updatedAt;
     if (eventObj.location) {
-      const coords = await locationService.getGeoCode(eventObj.location);
-      eventObj.latitude = coords.latitude;
-      eventObj.longitude = coords.longitude;
-      eventObj.latitudeKey = locationUtils.calculateLocationKey(
-        coords.longitude
-      );
-      eventObj.longitudeKey = locationUtils.calculateLocationKey(
-        coords.latitude
-      );
+      await locationService.extractLatLngFields(eventObj);
+    } else {
+      throw new ValidationError("Location missing");
     }
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);

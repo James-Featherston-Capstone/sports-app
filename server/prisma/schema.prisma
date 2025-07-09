@@ -57,10 +57,10 @@ model Event {
   description  String         @default("")
   eventTime    DateTime
   location     String
-  latitude     Decimal        @default(0.0)
-  longitude    Decimal        @default(0.0)
-  latitudeKey  Int            @default(0)
-  longitudeKey Int            @default(0)
+  latitude     Decimal
+  longitude    Decimal
+  latitudeKey  Int
+  longitudeKey Int
   created_at   DateTime       @default(now())
   updated_at   DateTime       @default(now())
   rsvps        EventRSVP[]
