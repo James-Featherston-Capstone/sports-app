@@ -75,7 +75,6 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
               variant="secondary"
               onClick={(e) => {
                 e.preventDefault();
-                console.log();
                 setLocation("");
               }}
             >

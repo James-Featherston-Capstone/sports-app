@@ -1,7 +1,15 @@
-const { ValidationError, UnauthorizedError } = require("../middleware/Errors");
-const eventService = require("../services/eventService");
-const { buildEvent, buildComment } = require("../utils/buildModel");
-const { validateNewEvent, validateNewComment } = require("../utils/validation");
+const {
+  ValidationError,
+  UnauthorizedError,
+} = require("../middleware/Errors.js");
+const eventService = require("../services/eventService.js");
+const locationService = require("../recommendations/locationService.js");
+const { buildEvent, buildComment } = require("../utils/buildModel.js");
+const {
+  validateNewEvent,
+  validateNewComment,
+} = require("../utils/validation.js");
+const locationUtils = require("../recommendations/locationUtils.js");
 
 exports.getAllEvents = async (req, res, next) => {
   try {
@@ -25,6 +33,11 @@ exports.createEvent = async (req, res, next) => {
   try {
     validateNewEvent(req);
     const eventObj = buildEvent(req);
+    if (eventObj.location) {
+      await locationService.extractLatLngFields(eventObj);
+    } else {
+      throw new ValidationError("Location missing");
+    }
     const event = await eventService.createEvent(eventObj);
     res.json(event);
   } catch (error) {
@@ -38,6 +51,11 @@ exports.updateEvent = async (req, res, next) => {
     const eventObj = buildEvent(req);
     const updatedAt = new Date();
     eventObj.updated_at = updatedAt;
+    if (eventObj.location) {
+      await locationService.extractLatLngFields(eventObj);
+    } else {
+      throw new ValidationError("Location missing");
+    }
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);
   } catch (error) {

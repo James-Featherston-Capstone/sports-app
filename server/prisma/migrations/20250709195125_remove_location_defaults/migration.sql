@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Event" ALTER COLUMN "latitude" DROP DEFAULT,
+ALTER COLUMN "longitude" DROP DEFAULT,
+ALTER COLUMN "latitudeKey" DROP DEFAULT,
+ALTER COLUMN "longitudeKey" DROP DEFAULT;
