@@ -4,14 +4,14 @@ const locationUtils = require("../recommendations/locationUtils");
 Generates Events in a city
 */
 const generateEvents = async (baseLat, baseLng, city, count) => {
-  for (let i = 0; i <= count; i++) {
+  Array.from({ length: count }).forEach(async (_, i) => {
     const event = createEventObj(baseLat, baseLng, city, i);
     try {
       await eventService.createEvent(event);
     } catch (error) {
-      console.error("Events created incorrectly");
+      console.error("Events not created");
     }
-  }
+  });
 };
 
 const createEventObj = (baseLat, baseLng, city, i) => {
@@ -39,4 +39,4 @@ const getRandomCoord = () => {
   return (Math.random() * 2 - 1) * 0.05;
 };
 
-generateEvents(37.7749295, -122.4194155, "San Francisco", 30);
+generateEvents(37.7749295, -122.4194155, "San Francisco", 1);

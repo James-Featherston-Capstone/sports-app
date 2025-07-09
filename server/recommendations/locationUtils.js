@@ -12,18 +12,21 @@ const extractLatLngFields = async (obj) => {
 };
 
 const getAllKeys = (baseKey, keyOffset) => {
-  let keys = [];
-  for (let latKey = keyOffset * -1; latKey <= keyOffset; latKey++) {
-    for (let lngKey = keyOffset * -1; lngKey <= keyOffset; lngKey++) {
-      keys = [
-        ...keys,
-        {
-          latitudeKey: latKey + baseKey.latitudeKey,
-          longitudeKey: lngKey + baseKey.longitudeKey,
-        },
-      ];
-    }
-  }
+  const latLngOffsets = Array.from(
+    { length: keyOffset * 2 + 1 },
+    (_, i) => i - keyOffset
+  );
+  console.log(latLngOffsets);
+
+  const keyGen = latLngOffsets.map((latKey) => {
+    return latLngOffsets.map((lngKey) => {
+      return {
+        latitudeKey: latKey + baseKey.latitudeKey,
+        longitudeKey: lngKey + baseKey.longitudeKey,
+      };
+    });
+  });
+  const keys = keyGen.flat();
   return keys;
 };
 

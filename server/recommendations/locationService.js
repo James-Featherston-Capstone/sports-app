@@ -26,14 +26,16 @@ const getAllNearbyEvents = async (userId) => {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const keys = locationUtils.getAllKeys(baseKey, 2);
-  const events = [];
-  for (let key of keys) {
-    const eventSet = await prisma.event.findMany({
-      where: key,
-    });
-    events.push(...eventSet);
-  }
+  const keyOffset = 2;
+  const keys = locationUtils.getAllKeys(baseKey, keyOffset);
+  const results = await Promise.all(
+    keys.map(async (key) => {
+      return await prisma.event.findMany({
+        where: key,
+      });
+    })
+  );
+  const events = results.flat();
   return events;
 };
 
