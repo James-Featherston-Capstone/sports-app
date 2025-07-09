@@ -21,7 +21,7 @@ exports.getAllEvents = async (req, res, next) => {
     } else if (filter === "created") {
       events = await eventService.getAllEventsCreated(user.id);
     } else {
-      events = await eventService.getAllEvents(searchQuery, user.id);
+      events = await locationService.getAllNearbyEvents(user.id);
     }
     res.json(events);
   } catch (error) {
@@ -34,7 +34,7 @@ exports.createEvent = async (req, res, next) => {
     validateNewEvent(req);
     const eventObj = buildEvent(req);
     if (eventObj.location) {
-      await locationService.extractLatLngFields(eventObj);
+      await locationUtils.extractLatLngFields(eventObj);
     } else {
       throw new ValidationError("Location missing");
     }
@@ -52,7 +52,7 @@ exports.updateEvent = async (req, res, next) => {
     const updatedAt = new Date();
     eventObj.updated_at = updatedAt;
     if (eventObj.location) {
-      await locationService.extractLatLngFields(eventObj);
+      await locationUtils.extractLatLngFields(eventObj);
     } else {
       throw new ValidationError("Location missing");
     }
