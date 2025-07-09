@@ -3,6 +3,7 @@ const eventService = require("../services/eventService");
 const locationService = require("../recommendations/locationService");
 const { buildEvent, buildComment } = require("../utils/buildModel");
 const { validateNewEvent, validateNewComment } = require("../utils/validation");
+const locationUtils = require("../recommendations/locationUtils.js");
 
 exports.getAllEvents = async (req, res, next) => {
   try {
@@ -30,6 +31,12 @@ exports.createEvent = async (req, res, next) => {
       const coords = await locationService.getGeoCode(eventObj.location);
       eventObj.latitude = coords.latitude;
       eventObj.longitude = coords.longitude;
+      eventObj.latitudeKey = locationUtils.calculateLocationKey(
+        coords.longitude
+      );
+      eventObj.longitudeKey = locationUtils.calculateLocationKey(
+        coords.latitude
+      );
     }
     const event = await eventService.createEvent(eventObj);
     res.json(event);
@@ -48,6 +55,12 @@ exports.updateEvent = async (req, res, next) => {
       const coords = await locationService.getGeoCode(eventObj.location);
       eventObj.latitude = coords.latitude;
       eventObj.longitude = coords.longitude;
+      eventObj.latitudeKey = locationUtils.calculateLocationKey(
+        coords.longitude
+      );
+      eventObj.longitudeKey = locationUtils.calculateLocationKey(
+        coords.latitude
+      );
     }
     const event = await eventService.updateEvent(eventObj, eventId);
     res.json(event);
