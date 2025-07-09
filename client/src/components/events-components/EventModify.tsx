@@ -7,6 +7,7 @@ import {
 } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import MapsInput from "../MapsInput";
 import {
   Select,
   SelectContent,
@@ -83,60 +84,59 @@ const EventModify = ({
               Fill out the form to update an event
             </DialogDescription>
           </DialogHeader>
-          <Input
-            type="text"
-            value={description}
-            aria-describedby="Description"
-            onChange={(e) => setDescription(e.target.value)}
-            autoComplete="on"
-            placeholder="Event Description"
-            required
-            className="my-1"
-          />
-          <Select value={sport} onValueChange={setSport}>
-            <SelectTrigger className="w-1/1 my-0.5">
-              <SelectValue placeholder="Choose Sport" />
-            </SelectTrigger>
-            <SelectContent>
-              {sportsOptions.map((sport) => {
-                return (
-                  <SelectItem key={sport} value={sport}>
-                    {sport}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          <Input
-            type="text"
-            value={eventImage}
-            onChange={(e) => setEventImage(e.target.value)}
-            autoComplete="on"
-            placeholder="Set Event Image URL"
-            className="my-1"
-          />
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="rounded-lg border bg-white"
-            disabled={(date) => date < new Date()}
-          />
-          <Input
-            type="time"
-            value={eventTime}
-            onChange={(e) => setEventTime(e.target.value)}
-            className="my-1"
-          />
-          <Input
-            type="text"
-            value={eventLocation}
-            onChange={(e) => setEventLocation(e.target.value)}
-            autoComplete="on"
-            placeholder="Set Location"
-            required
-            className="my-1"
-          />
+          <div className="overflow-auto h-150">
+            <Input
+              type="text"
+              value={description}
+              aria-describedby="Description"
+              onChange={(e) => setDescription(e.target.value)}
+              autoComplete="on"
+              placeholder="Event Description"
+              required
+              className="my-1"
+            />
+            <Select value={sport} onValueChange={setSport}>
+              <SelectTrigger className="w-1/1 my-0.5">
+                <SelectValue placeholder="Choose Sport" />
+              </SelectTrigger>
+              <SelectContent>
+                {sportsOptions.map((sport) => {
+                  return (
+                    <SelectItem key={sport} value={sport}>
+                      {sport}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+            <Input
+              type="text"
+              value={eventImage}
+              onChange={(e) => setEventImage(e.target.value)}
+              autoComplete="on"
+              placeholder="Set Event Image URL"
+              className="my-1"
+            />
+            <MapsInput
+              location={eventLocation}
+              setLocation={(location) => {
+                setEventLocation(location);
+              }}
+            />
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-lg border bg-white"
+              disabled={(date) => date < new Date()}
+            />
+            <Input
+              type="time"
+              value={eventTime}
+              onChange={(e) => setEventTime(e.target.value)}
+              className="my-1"
+            />
+          </div>
           <Button className="w-1/1 mx-0 my-1" type="submit">
             Submit
           </Button>
