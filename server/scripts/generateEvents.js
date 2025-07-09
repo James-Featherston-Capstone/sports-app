@@ -6,10 +6,8 @@ Generates Events in a city
 const generateEvents = async (baseLat, baseLng, city, count) => {
   for (let i = 0; i <= count; i++) {
     const event = createEventObj(baseLat, baseLng, city, i);
-    console.log(event);
     try {
       await eventService.createEvent(event);
-      console.log("success");
     } catch (error) {
       console.error("Events created incorrectly");
     }
