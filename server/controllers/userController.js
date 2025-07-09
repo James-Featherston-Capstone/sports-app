@@ -1,6 +1,5 @@
 const { UnauthorizedError } = require("../middleware/Errors.js");
 const userService = require("../services/userService.js");
-const locationService = require("../recommendations/locationService.js");
 const locationUtils = require("../recommendations/locationUtils.js");
 
 const { buildProfile } = require("../utils/buildModel.js");
@@ -11,7 +10,7 @@ exports.updateUserProfile = async (req, res, next) => {
     const updatedAt = new Date();
     userObj.updated_at = updatedAt;
     if (userObj.location) {
-      await locationService.extractLatLngFields(userObj);
+      await locationUtils.extractLatLngFields(userObj);
     } else {
       throw new ValidationError("Location missing");
     }

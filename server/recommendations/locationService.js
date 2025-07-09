@@ -1,4 +1,7 @@
-const locationUtils = require("./locationUtils");
+const prisma = require("../prisma.js");
+const userService = require("../services/userService.js");
+const locationUtils = require("./locationUtils.js");
+
 const getGeoCode = async (location) => {
   try {
     const response = await fetch(
@@ -17,12 +20,23 @@ const getGeoCode = async (location) => {
   }
 };
 
-const extractLatLngFields = async (obj) => {
-  const coords = await getGeoCode(obj.location);
-  obj.latitude = coords.latitude;
-  obj.longitude = coords.longitude;
-  obj.latitudeKey = locationUtils.calculateLocationKey(coords.latitude);
-  obj.longitudeKey = locationUtils.calculateLocationKey(coords.longitude);
+const getAllNearbyEvents = async (userId) => {
+  const user = await userService.getUser(userId);
+  const baseKey = {
+    latitudeKey: user.latitudeKey,
+    longitudeKey: user.longitudeKey,
+  };
+  const keyOffset = 2;
+  const keys = locationUtils.getAllKeys(baseKey, keyOffset);
+  const results = await Promise.all(
+    keys.map(async (key) => {
+      return await prisma.event.findMany({
+        where: key,
+      });
+    })
+  );
+  const events = results.flat();
+  return events;
 };
 
-module.exports = { extractLatLngFields };
+module.exports = { getGeoCode, getAllNearbyEvents };
