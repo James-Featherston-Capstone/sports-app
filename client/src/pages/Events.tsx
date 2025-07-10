@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import EventModify from "@/components/events-components/EventModify";
 import type { EventFilters } from "@/utils/interfaces";
-import { useDialogContext } from "@/contexts/modalContext";
+import { useDialogContext } from "@/contexts/globalDialogContext";
 
 const Events = () => {
   const { openDialog } = useDialogContext();

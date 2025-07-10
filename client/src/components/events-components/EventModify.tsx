@@ -19,7 +19,7 @@ import { getDateTime, getTimeOfDay } from "../../utils/utils";
 import { createEvent, editEvent } from "@/utils/eventService";
 import type { EventWithRsvp, Event } from "@/utils/interfaces";
 import { sportsOptions } from "../profile-components/SportsOptions";
-import { useDialogContext } from "@/contexts/modalContext";
+import { useDialogContext } from "@/contexts/globalDialogContext";
 
 interface EventModifyProps {
   baseEvent?: EventWithRsvp;

@@ -5,7 +5,7 @@ import EventModify from "./EventModify";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 import { getEvent } from "@/utils/eventService";
-import { useDialogContext } from "@/contexts/modalContext";
+import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
 
 interface EventProps {
@@ -29,12 +29,8 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
     }
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
-  const fetchEvent = async () => {
-    const fetchedEvent = await getEvent(event.id);
-    return fetchedEvent;
-  };
   const handleOpenEventViewModal = async () => {
-    const fullEvent = await fetchEvent();
+    const fullEvent = await getEvent(event.id);
     openDialog({
       title: `${fullEvent.sport} at ${fullEvent.location}`,
       description: fullEvent.description,

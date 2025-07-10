@@ -6,7 +6,7 @@ import Events from "./pages/Events";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProfilePage from "./pages/ProfilePage";
-import { DialogProvider } from "./contexts/modalContext";
+import { DialogProvider } from "./contexts/globalDialogContext";
 
 function App() {
   const location = useLocation();
