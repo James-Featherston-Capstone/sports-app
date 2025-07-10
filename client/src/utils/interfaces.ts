@@ -18,6 +18,7 @@ interface Event {
   latitude?: number;
   longitude?: number;
   organizerId?: number;
+  distance?: number;
   id: number;
   sport: string;
   updated_at?: string;

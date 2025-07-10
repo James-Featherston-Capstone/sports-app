@@ -1,6 +1,7 @@
 const prisma = require("../prisma.js");
 const userService = require("../services/userService.js");
 const locationUtils = require("./locationUtils.js");
+const rankEvents = require("./rankEvents.js");
 
 const getGeoCode = async (location) => {
   try {
@@ -26,7 +27,7 @@ const getAllNearbyEvents = async (userId) => {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const keyOffset = 2;
+  const keyOffset = 5;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
   const results = await Promise.all(
     keys.map(async (key) => {
@@ -36,7 +37,14 @@ const getAllNearbyEvents = async (userId) => {
     })
   );
   const events = results.flat();
-  return events;
+  const userDate = new Date();
+  const futureEvents = events.filter((event) => {
+    const eventDate = new Date(event.eventTime);
+    return eventDate >= userDate;
+  });
+  const userLocation = { latitude: user.latitude, longitude: user.longitude };
+  const rankedEvents = rankEvents(futureEvents, userLocation);
+  return rankedEvents;
 };
 
 module.exports = { getGeoCode, getAllNearbyEvents };
