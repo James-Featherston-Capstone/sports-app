@@ -1,4 +1,4 @@
-import SearchFilter from "../components/events-components/SearchFilter";
+import Filter from "@/components/events-components/Filter";
 import EventList from "../components/events-components/EventList";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
@@ -32,7 +32,7 @@ const Events = () => {
         >
           Create Event
         </Button>
-        <SearchFilter />
+        <Filter />
       </div>
       {isEventListLoading ? <h1>Loading...</h1> : <EventList />}
     </section>

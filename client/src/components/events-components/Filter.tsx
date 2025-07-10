@@ -8,22 +8,48 @@ import {
 import type { EventFilters } from "@/utils/interfaces";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { useDialogContext } from "@/contexts/globalDialogContext";
+import CustomEventFilters from "./CustomEventFilters";
+import { useEventContext } from "@/contexts/eventContext";
 
-interface filterProps {
-  handleFilter: (filter: EventFilters) => void;
-}
-
-const Filter = ({ handleFilter }: filterProps) => {
-  const [selectedEventOption, setSelectedEventOption] = useState("all");
+const Filter = () => {
+  const [eventFilters, setEventFilters] = useState<EventFilters>({
+    filter: "all",
+  });
+  const { fetchEvents } = useEventContext();
+  const { openDialog } = useDialogContext();
 
   const onFilterChange = (value: string) => {
     handleFilter({ filter: value });
-    setSelectedEventOption(value);
+  };
+
+  const handleFilter = (filtersChange: EventFilters) => {
+    const newSearchFilters = { ...eventFilters, ...filtersChange };
+    setEventFilters(newSearchFilters);
+    fetchEvents(newSearchFilters);
+  };
+
+  const clearFilters = () => {
+    setEventFilters({ filter: "all" });
+    fetchEvents({ filter: "all" });
+  };
+
+  const openCustomFilters = () => {
+    openDialog({
+      title: "Filters",
+      description: "Choose your custom filters...",
+      reactChildren: (
+        <CustomEventFilters
+          handleFilter={handleFilter}
+          baseFilters={eventFilters}
+        />
+      ),
+    });
   };
 
   return (
     <article className="m-3 flex order-2">
-      <Select value={selectedEventOption} onValueChange={onFilterChange}>
+      <Select value={eventFilters.filter} onValueChange={onFilterChange}>
         <SelectTrigger className="w-35">
           <SelectValue />
         </SelectTrigger>
@@ -33,6 +59,20 @@ const Filter = ({ handleFilter }: filterProps) => {
           <SelectItem value="created">My Created</SelectItem>
         </SelectContent>
       </Select>
+      {eventFilters.filter === "all" && (
+        <>
+          <Button
+            variant="secondary"
+            className="mx-3"
+            onClick={openCustomFilters}
+          >
+            Custom Filters
+          </Button>
+          <Button variant="secondary" onClick={clearFilters}>
+            Clear Filters
+          </Button>
+        </>
+      )}
     </article>
   );
 };
