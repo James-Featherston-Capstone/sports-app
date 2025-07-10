@@ -24,25 +24,21 @@ const CustomEventFilters = ({
   const [date, setDate] = useState<Date | undefined>(
     baseFilters.date ? new Date(baseFilters.date) : new Date()
   );
-  const [sport, setSport] = useState(
+  const [sport, setSport] = useState<string>(
     baseFilters.sport ? baseFilters.sport : ""
   );
-  const [location, setLocation] = useState(
+  const [location, setLocation] = useState<string>(
     baseFilters.location ? baseFilters.location : ""
   );
 
-  const getFilters = () => {
+  const onConfirmation = (e: FormEvent) => {
+    e.preventDefault();
     const filters: EventFilters = {
       filter: "all",
       sport: sport,
       location: location,
       date: date?.toISOString(),
     };
-    return filters;
-  };
-  const onConfirmation = (e: FormEvent) => {
-    e.preventDefault();
-    const filters = getFilters();
     handleFilter(filters);
     closeDialog();
   };
