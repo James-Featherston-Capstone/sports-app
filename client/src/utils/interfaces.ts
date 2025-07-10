@@ -40,7 +40,7 @@ interface DisplayEvent extends EventModel {
 }
 
 interface EventFilters {
-  searchQuery?: string;
+  location?: string;
   date?: string; //toISOString(Date)
   sport?: string;
   filter: string;

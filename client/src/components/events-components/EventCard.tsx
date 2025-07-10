@@ -22,7 +22,7 @@ const EventCard = ({ event }: EventProps) => {
   );
 
   const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    e.stopPropagation();
     if (!isRsvpByCurrentUser) {
       eventRsvp(event.id);
     } else {
