@@ -22,11 +22,7 @@ const EventProvider = ({ children }: { children: ReactNode }) => {
     setIsEventListLoading(true);
     const retrievedEvents = await getAllEvents(filters);
     setEvents(retrievedEvents);
-    if (filters.filter === "created") {
-      setAreEventsEditable(true);
-    } else {
-      setAreEventsEditable(false);
-    }
+    setAreEventsEditable(filters.filter === "created");
     setIsEventListLoading(false);
   };
 
