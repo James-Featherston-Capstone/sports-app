@@ -24,6 +24,8 @@ model User {
   location           String         @default("")
   latitude           Decimal        @default(0.0)
   longitude          Decimal        @default(0.0)
+  latitudeKey        Int            @default(0)
+  longitudeKey       Int            @default(0)
   sports             Sports[]       @default([])
   created_at         DateTime       @default(now())
   updated_at         DateTime       @default(now())
@@ -32,6 +34,8 @@ model User {
   comments           EventComment[]
   friendshipSent     Friendship[]   @relation("UserToFriend")
   friendshipReceived Friendship[]   @relation("FriendToUser")
+
+  @@index([latitudeKey, longitudeKey])
 }
 
 model Friendship {
@@ -45,20 +49,24 @@ model Friendship {
 }
 
 model Event {
-  id          Int            @id @default(autoincrement())
-  organizer   User           @relation(fields: [organizerId], references: [id])
-  organizerId Int
-  eventImage  String         @default("")
-  sport       String         @default("")
-  description String         @default("")
-  eventTime   DateTime
-  location    String
-  latitude    Decimal        @default(0.0)
-  longitude   Decimal        @default(0.0)
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @default(now())
-  rsvps       EventRSVP[]
-  comments    EventComment[]
+  id           Int            @id @default(autoincrement())
+  organizer    User           @relation(fields: [organizerId], references: [id])
+  organizerId  Int
+  eventImage   String         @default("")
+  sport        String         @default("")
+  description  String         @default("")
+  eventTime    DateTime
+  location     String
+  latitude     Decimal
+  longitude    Decimal
+  latitudeKey  Int
+  longitudeKey Int
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @default(now())
+  rsvps        EventRSVP[]
+  comments     EventComment[]
+
+  @@index([latitudeKey, longitudeKey])
 }
 
 model EventRSVP {

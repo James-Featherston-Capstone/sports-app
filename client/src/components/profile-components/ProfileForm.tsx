@@ -2,6 +2,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import SportsOptions from "./SportsOptions";
 import type { Profile } from "@/utils/interfaces";
+import MapsInput from "../MapsInput";
 
 interface ProfileFormComponents {
   onSubmit: (event: React.FormEvent) => void;
@@ -30,14 +31,13 @@ const ProfileForm = ({
         required
       />
       <label className="self-start ml-1">Location:</label>
-      <Input
-        type="text"
-        value={profile.location}
-        onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-        autoComplete="on"
-        placeholder="Location"
-        required
+      <MapsInput
+        location={profile.location}
+        setLocation={(location) =>
+          setProfile({ ...profile, location: location })
+        }
       />
+
       <label className="self-start ml-1">Profile Picture URL (Optional):</label>
       <Input
         type="text"

@@ -41,6 +41,9 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           <h1>Time: {displayedEvent.eventTime}</h1>
           <h1>Location: {displayedEvent.location}</h1>
           <h1>Sport: {displayedEvent.sport}</h1>
+          {displayedEvent.distance !== undefined && (
+            <h1>Distance: {displayedEvent.distance} Miles</h1>
+          )}
         </CardContent>
         <CardFooter>
           {eventEditable ? (
