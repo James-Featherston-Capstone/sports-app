@@ -9,7 +9,7 @@ interface Profile {
   profile_image_url: string;
 }
 
-interface Event {
+interface EventModel {
   created_at?: string;
   description: string;
   eventImage: string;
@@ -18,34 +18,32 @@ interface Event {
   latitude?: number;
   longitude?: number;
   organizerId?: number;
-  distance?: number;
   id: number;
   sport: string;
   updated_at?: string;
 }
 
-interface EventWithRsvp extends Event {
-  rsvps: number[] | null;
+interface DisplayEvent extends EventModel {
+  distance?: number;
+  rsvps:
+    | [
+        {
+          id: number;
+          user?: {
+            id: number;
+            username: string;
+          };
+        }
+      ]
+    | null;
   isRsvpCurrentUser?: boolean;
-}
-
-interface EventWithAllData extends Event {
-  organizer: Profile;
-  rsvps: [
-    {
-      id: number;
-      user: {
-        id: number;
-        username: string;
-      };
-    }
-  ];
-  isRsvpCurrentUser: boolean;
 }
 
 interface EventFilters {
   searchQuery?: string;
-  filter?: string;
+  date?: string; //toISOString(Date)
+  sport?: string;
+  filter: string;
 }
 
-export type { Profile, Event, EventFilters, EventWithRsvp, EventWithAllData };
+export type { Profile, EventModel, EventFilters, DisplayEvent };

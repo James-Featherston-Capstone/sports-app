@@ -2,19 +2,20 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
-import type { EventWithRsvp } from "@/utils/interfaces";
+import type { DisplayEvent } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 import { getEvent } from "@/utils/eventService";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
+import { useEventContext } from "@/contexts/eventContext";
 
 interface EventProps {
-  event: EventWithRsvp;
-  eventEditable: boolean;
+  event: DisplayEvent;
 }
 
-const EventCard = ({ event, eventEditable }: EventProps) => {
+const EventCard = ({ event }: EventProps) => {
   const { openDialog } = useDialogContext();
+  const { areEventsEditable } = useEventContext();
   const [displayedEvent, setDisplayedEvent] = useState(event);
   const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
     event.isRsvpCurrentUser
@@ -67,7 +68,7 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           )}
         </CardContent>
         <CardFooter>
-          {eventEditable ? (
+          {areEventsEditable ? (
             <Button
               onClick={(e) => {
                 e.stopPropagation();

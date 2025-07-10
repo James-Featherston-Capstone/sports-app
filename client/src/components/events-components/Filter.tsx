@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import type { EventFilters } from "@/utils/interfaces";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface filterProps {
   handleFilter: (filter: EventFilters) => void;
