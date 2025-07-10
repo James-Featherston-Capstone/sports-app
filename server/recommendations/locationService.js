@@ -29,14 +29,14 @@ const getAllNearbyEvents = async (userId) => {
   };
   const keyOffset = 10;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
-  const results = await Promise.all(
-    keys.map(async (key) => {
-      return await prisma.event.findMany({
-        where: key,
-      });
-    })
-  );
-  const events = results.flat();
+  const events = await prisma.event.findMany({
+    where: {
+      OR: keys.map((key) => ({
+        latitudeKey: key.latitudeKey,
+        longitudeKey: key.longitudeKey,
+      })),
+    },
+  });
   const userDate = new Date();
   const futureEvents = events.filter((event) => {
     const eventDate = new Date(event.eventTime);
