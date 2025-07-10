@@ -4,7 +4,9 @@ import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
-import EventModal from "./EventModal";
+import { getEvent } from "@/utils/eventService";
+import { useDialogContext } from "@/contexts/modalContext";
+import EventModalContent from "./EventModalContent";
 
 interface EventProps {
   event: EventWithRsvp;
@@ -12,12 +14,11 @@ interface EventProps {
 }
 
 const EventCard = ({ event, eventEditable }: EventProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { openDialog } = useDialogContext();
   const [displayedEvent, setDisplayedEvent] = useState(event);
   const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
     event.isRsvpCurrentUser
   );
-  const [isViewingEvent, setIsViewingEvent] = useState(false);
 
   const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -28,10 +29,34 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
     }
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
+  const fetchEvent = async () => {
+    const fetchedEvent = await getEvent(event.id);
+    return fetchedEvent;
+  };
+  const handleOpenEventViewModal = async () => {
+    const fullEvent = await fetchEvent();
+    openDialog({
+      title: `${fullEvent.sport} at ${fullEvent.location}`,
+      description: fullEvent.description,
+      reactChildren: <EventModalContent event={fullEvent} />,
+    });
+  };
+  const handleOpenEventEditModal = () => {
+    openDialog({
+      title: "Modify an Event",
+      description: "Fill out the form to update an event",
+      reactChildren: (
+        <EventModify
+          baseEvent={event}
+          updateDisplayedEvent={setDisplayedEvent}
+        />
+      ),
+    });
+  };
   return (
     <>
       <Card
-        onClick={() => setIsViewingEvent(true)}
+        onClick={() => handleOpenEventViewModal()}
         className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
       >
         <CardDescription>
@@ -49,8 +74,8 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           {eventEditable ? (
             <Button
               onClick={(e) => {
-                e.preventDefault();
-                setIsEditing(true);
+                e.stopPropagation();
+                handleOpenEventEditModal();
               }}
             >
               Edit
@@ -67,21 +92,6 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           </Button>
         </CardFooter>
       </Card>
-      {isEditing && (
-        <EventModify
-          open={isEditing}
-          onOpenChange={setIsEditing}
-          baseEvent={displayedEvent}
-          updateDisplayedEvent={setDisplayedEvent}
-        />
-      )}
-      {isViewingEvent && (
-        <EventModal
-          open={isViewingEvent}
-          onOpenChange={setIsViewingEvent}
-          eventId={event.id}
-        />
-      )}
     </>
   );
 };
