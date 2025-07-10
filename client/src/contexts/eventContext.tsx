@@ -28,7 +28,6 @@ const EventProvider = ({ children }: { children: ReactNode }) => {
 
   const onMount = async () => {
     const retrievedEvents = await getAllEvents({ filter: "all" });
-    console.log(retrievedEvents);
     setEvents(retrievedEvents);
     setIsEventListLoading(false);
   };
