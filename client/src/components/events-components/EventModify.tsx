@@ -17,13 +17,13 @@ import {
 } from "../ui/select";
 import { getDateTime, getTimeOfDay } from "../../utils/utils";
 import { createEvent, editEvent } from "@/utils/eventService";
-import type { EventWithRsvp, Event } from "@/utils/interfaces";
+import type { DisplayEvent, EventModel } from "@/utils/interfaces";
 import { sportsOptions } from "../profile-components/SportsOptions";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 
 interface EventModifyProps {
-  baseEvent?: EventWithRsvp;
-  updateDisplayedEvent?: Dispatch<SetStateAction<EventWithRsvp>>;
+  baseEvent?: DisplayEvent;
+  updateDisplayedEvent?: Dispatch<SetStateAction<DisplayEvent>>;
 }
 
 const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
@@ -57,11 +57,11 @@ const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
       location: eventLocation,
     };
     if (!baseEvent) {
-      type CreateEvent = Omit<Event, "id" | "rsvps">;
+      type CreateEvent = Omit<EventModel, "id" | "rsvps">;
       const event: CreateEvent = eventChanges;
       createEvent(event);
     } else {
-      const event: EventWithRsvp = { ...baseEvent, ...eventChanges };
+      const event: DisplayEvent = { ...baseEvent, ...eventChanges };
       editEvent(event);
       updateDisplayedEvent && updateDisplayedEvent(event);
     }

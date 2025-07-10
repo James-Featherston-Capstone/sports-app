@@ -1,40 +1,18 @@
 import SearchFilter from "../components/events-components/SearchFilter";
 import EventList from "../components/events-components/EventList";
 import { Button } from "@/components/ui/button";
-import { getAllEvents } from "@/utils/eventService";
-import { useEffect, useState } from "react";
-import type { EventWithRsvp } from "@/utils/interfaces";
+import { useEffect } from "react";
 import EventModify from "@/components/events-components/EventModify";
-import type { EventFilters } from "@/utils/interfaces";
 import { useDialogContext } from "@/contexts/globalDialogContext";
+import { useEventContext } from "@/contexts/eventContext";
 
 const Events = () => {
   const { openDialog } = useDialogContext();
-  const [events, setEvents] = useState<EventWithRsvp[]>([]);
-  const [isEventListLoading, setIsEventListLoading] = useState(true);
-  const [areEventsEditable, setAreEventsEditable] = useState(false);
-
-  const fetchEvents = async () => {
-    const retrievedEvents = await getAllEvents();
-    setEvents(retrievedEvents);
-    setIsEventListLoading(false);
-  };
+  const { onMount, isEventListLoading } = useEventContext();
 
   useEffect(() => {
-    fetchEvents();
+    onMount();
   }, []);
-
-  const handleSearchFilter = async (filters: EventFilters) => {
-    setIsEventListLoading(true);
-    const filteredEvents = await getAllEvents(filters);
-    setEvents(filteredEvents);
-    if (filters.filter === "created") {
-      setAreEventsEditable(true);
-    } else {
-      setAreEventsEditable(false);
-    }
-    setIsEventListLoading(false);
-  };
 
   const openEventCreationModal = () => {
     openDialog({
@@ -54,13 +32,9 @@ const Events = () => {
         >
           Create Event
         </Button>
-        <SearchFilter handleSearchFilter={handleSearchFilter} />
+        <SearchFilter />
       </div>
-      {isEventListLoading ? (
-        <h1>Loading...</h1>
-      ) : (
-        <EventList events={events} areEventsEditable={areEventsEditable} />
-      )}
+      {isEventListLoading ? <h1>Loading...</h1> : <EventList />}
     </section>
   );
 };

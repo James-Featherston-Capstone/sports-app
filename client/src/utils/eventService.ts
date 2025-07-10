@@ -1,15 +1,10 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type {
-  EventFilters,
-  EventWithRsvp,
-  Event,
-  EventWithAllData,
-} from "./interfaces";
+import type { EventFilters, DisplayEvent, EventModel } from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
-): Promise<EventWithRsvp[]> => {
+): Promise<DisplayEvent[]> => {
   let urlParams = {};
   if (filters) {
     urlParams = new URLSearchParams(Object.entries(filters));
@@ -20,13 +15,13 @@ const getAllEvents = async (
     credentials: "include",
   };
   const events = await fetchData(path, req);
-  return events.map((event: EventWithRsvp) => ({
+  return events.map((event: DisplayEvent) => ({
     ...event,
     isRsvpCurrentUser: event.rsvps !== null && event.rsvps?.length > 0,
   }));
 };
 
-const getEvent = async (eventId: number): Promise<EventWithAllData> => {
+const getEvent = async (eventId: number): Promise<EventModel> => {
   const path = `${BASE_URL}/events/${eventId}`;
   const req = {
     method: "GET",
@@ -37,8 +32,8 @@ const getEvent = async (eventId: number): Promise<EventWithAllData> => {
 };
 
 const createEvent = async (
-  event: Omit<Event, "id" | "rsvps">
-): Promise<Event> => {
+  event: Omit<EventModel, "id" | "rsvps">
+): Promise<EventModel> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
@@ -51,7 +46,7 @@ const createEvent = async (
   return await fetchData(path, req);
 };
 
-const editEvent = async (event: Event): Promise<Event> => {
+const editEvent = async (event: EventModel): Promise<EventModel> => {
   const path = `${BASE_URL}/events/${event.id}`;
   const req = {
     method: "PUT",
@@ -64,7 +59,7 @@ const editEvent = async (event: Event): Promise<Event> => {
   return await fetchData(path, req);
 };
 
-const eventRsvp = async (eventId: number): Promise<Event> => {
+const eventRsvp = async (eventId: number): Promise<EventModel> => {
   const path = `${BASE_URL}/events/${eventId}/rsvp`;
   const req = {
     method: "POST",
@@ -76,7 +71,7 @@ const eventRsvp = async (eventId: number): Promise<Event> => {
   return await fetchData(path, req);
 };
 
-const deleteEventRsvp = async (eventId: number): Promise<Event> => {
+const deleteEventRsvp = async (eventId: number): Promise<EventModel> => {
   const path = `${BASE_URL}/events/${eventId}/rsvp`;
   const req = {
     method: "DELETE",

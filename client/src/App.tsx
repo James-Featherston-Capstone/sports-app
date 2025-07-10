@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProfilePage from "./pages/ProfilePage";
 import { DialogProvider } from "./contexts/globalDialogContext";
+import { EventProvider } from "./contexts/eventContext";
 
 function App() {
   const location = useLocation();
@@ -16,7 +17,14 @@ function App() {
       <div className="app w-screen">
         {!hideLayout && <Header />}
         <Routes>
-          <Route path="/" element={<Events />} />
+          <Route
+            path="/"
+            element={
+              <EventProvider>
+                <Events />
+              </EventProvider>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<ProfilePage />} />

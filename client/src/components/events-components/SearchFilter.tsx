@@ -2,12 +2,10 @@ import Search from "./Search";
 import Filter from "./Filter";
 import type { EventFilters } from "@/utils/interfaces";
 import { useState } from "react";
+import { useEventContext } from "@/contexts/eventContext";
 
-interface SearchFilterProps {
-  handleSearchFilter: (filters: EventFilters) => void;
-}
-
-const SearchFilter = ({ handleSearchFilter }: SearchFilterProps) => {
+const SearchFilter = () => {
+  const { fetchEvents } = useEventContext();
   const [searchFilters, setSearchFilters] = useState<EventFilters>({
     filter: "all",
   });
@@ -15,7 +13,7 @@ const SearchFilter = ({ handleSearchFilter }: SearchFilterProps) => {
   const onSearchFilterChange = (filtersChange: EventFilters) => {
     const newSearchFilters = { ...searchFilters, ...filtersChange };
     setSearchFilters(newSearchFilters);
-    handleSearchFilter(newSearchFilters);
+    fetchEvents(newSearchFilters);
   };
   return (
     <section className="flex flex-row items-start justify-center ml-1 mr-1 sm:ml-10 sm:mr-10 flex-wrap">

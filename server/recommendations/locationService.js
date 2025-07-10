@@ -36,6 +36,16 @@ const getAllNearbyEvents = async (userId) => {
         longitudeKey: key.longitudeKey,
       })),
     },
+    include: {
+      rsvps: {
+        where: {
+          userId: userId,
+        },
+        select: {
+          id: true,
+        },
+      },
+    },
   });
   const userDate = new Date();
   const futureEvents = events.filter((event) => {
