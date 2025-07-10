@@ -1,7 +1,7 @@
 const prisma = require("../prisma.js");
 const userService = require("../services/userService.js");
 const locationUtils = require("./locationUtils.js");
-const rankEvents = require("./rankEvents.js");
+const { rankEvents } = require("./rankEvents.js");
 
 const getGeoCode = async (location) => {
   try {
@@ -53,7 +53,7 @@ const getAllNearbyEvents = async (userId) => {
     return eventDate >= userDate;
   });
   const userLocation = { latitude: user.latitude, longitude: user.longitude };
-  const rankedEvents = rankEvents(futureEvents, userLocation);
+  const rankedEvents = rankEvents(futureEvents, userLocation, user.sports);
   return rankedEvents;
 };
 
