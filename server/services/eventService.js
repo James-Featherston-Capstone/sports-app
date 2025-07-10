@@ -25,6 +25,29 @@ exports.getAllEvents = async (query, userId) => {
   return events;
 };
 
+exports.getEvent = async (eventId) => {
+  const event = await prisma.event.findUnique({
+    where: {
+      id: eventId,
+    },
+    include: {
+      rsvps: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
+      organizer: true,
+    },
+  });
+  return event;
+};
+
 exports.getAllEventRSVP = async (userId) => {
   const rsvps = await prisma.eventRSVP.findMany({
     where: {

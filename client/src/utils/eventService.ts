@@ -1,6 +1,11 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { EventFilters, EventWithRsvp, Event } from "./interfaces";
+import type {
+  EventFilters,
+  EventWithRsvp,
+  Event,
+  EventWithAllData,
+} from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
@@ -19,6 +24,16 @@ const getAllEvents = async (
     ...event,
     isRsvpCurrentUser: event.rsvps !== null && event.rsvps?.length > 0,
   }));
+};
+
+const getEvent = async (eventId: number): Promise<EventWithAllData> => {
+  const path = `${BASE_URL}/events/${eventId}`;
+  const req = {
+    method: "GET",
+    credentials: "include",
+  };
+  const events = await fetchData(path, req);
+  return events;
 };
 
 const createEvent = async (
@@ -73,4 +88,11 @@ const deleteEventRsvp = async (eventId: number): Promise<Event> => {
   return await fetchData(path, req);
 };
 
-export { getAllEvents, createEvent, editEvent, eventRsvp, deleteEventRsvp };
+export {
+  getAllEvents,
+  getEvent,
+  createEvent,
+  editEvent,
+  eventRsvp,
+  deleteEventRsvp,
+};

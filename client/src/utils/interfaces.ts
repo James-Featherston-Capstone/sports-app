@@ -29,9 +29,23 @@ interface EventWithRsvp extends Event {
   isRsvpCurrentUser?: boolean;
 }
 
+interface EventWithAllData extends Event {
+  organizer: Profile;
+  rsvps: [
+    {
+      id: number;
+      user: {
+        id: number;
+        username: string;
+      };
+    }
+  ];
+  isRsvpCurrentUser: boolean;
+}
+
 interface EventFilters {
   searchQuery?: string;
   filter?: string;
 }
 
-export type { Profile, Event, EventFilters, EventWithRsvp };
+export type { Profile, Event, EventFilters, EventWithRsvp, EventWithAllData };

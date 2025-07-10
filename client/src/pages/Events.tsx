@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import EventModify from "@/components/events-components/EventModify";
 import type { EventFilters } from "@/utils/interfaces";
+import { useDialogContext } from "@/contexts/globalDialogContext";
 
 const Events = () => {
+  const { openDialog } = useDialogContext();
   const [events, setEvents] = useState<EventWithRsvp[]>([]);
   const [isEventListLoading, setIsEventListLoading] = useState(true);
-  const [isShowingCreationForm, setIsShowingCreationForm] = useState(false);
   const [areEventsEditable, setAreEventsEditable] = useState(false);
 
   const fetchEvents = async () => {
@@ -35,13 +36,21 @@ const Events = () => {
     setIsEventListLoading(false);
   };
 
+  const openEventCreationModal = () => {
+    openDialog({
+      title: "Create an Event",
+      description: "Fill out the form to create an event",
+      reactChildren: <EventModify />,
+    });
+  };
+
   return (
     <section className="w-1/1 grow-1 overflow-auto">
       <div className="flex justify-center flex-wrap">
         <Button
           variant="secondary"
           className="order-0 sm:order-4 w-8/10 sm:w-auto m-3"
-          onClick={() => setIsShowingCreationForm(true)}
+          onClick={() => openEventCreationModal()}
         >
           Create Event
         </Button>
@@ -51,12 +60,6 @@ const Events = () => {
         <h1>Loading...</h1>
       ) : (
         <EventList events={events} areEventsEditable={areEventsEditable} />
-      )}
-      {isShowingCreationForm && (
-        <EventModify
-          open={isShowingCreationForm}
-          onOpenChange={setIsShowingCreationForm}
-        />
       )}
     </section>
   );

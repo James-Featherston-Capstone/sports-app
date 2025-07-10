@@ -29,6 +29,16 @@ exports.getAllEvents = async (req, res, next) => {
   }
 };
 
+exports.getEvent = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    const event = await eventService.getEvent(eventId);
+    res.json(event);
+  } catch (error) {
+    next();
+  }
+};
+
 exports.createEvent = async (req, res, next) => {
   try {
     validateNewEvent(req);

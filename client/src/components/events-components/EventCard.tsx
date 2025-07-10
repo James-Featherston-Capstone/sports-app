@@ -4,6 +4,9 @@ import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { EventWithRsvp } from "@/utils/interfaces";
 import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
+import { getEvent } from "@/utils/eventService";
+import { useDialogContext } from "@/contexts/globalDialogContext";
+import EventModalContent from "./EventModalContent";
 
 interface EventProps {
   event: EventWithRsvp;
@@ -11,13 +14,14 @@ interface EventProps {
 }
 
 const EventCard = ({ event, eventEditable }: EventProps) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const { openDialog } = useDialogContext();
   const [displayedEvent, setDisplayedEvent] = useState(event);
   const [isRsvpByCurrentUser, setIsRsvpByCurrentUser] = useState(
     event.isRsvpCurrentUser
   );
 
-  const handleRsvp = () => {
+  const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     if (!isRsvpByCurrentUser) {
       eventRsvp(event.id);
     } else {
@@ -25,10 +29,32 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
     }
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
-
+  const handleOpenEventViewModal = async () => {
+    const fullEvent = await getEvent(event.id);
+    openDialog({
+      title: `${fullEvent.sport} at ${fullEvent.location}`,
+      description: fullEvent.description,
+      reactChildren: <EventModalContent event={fullEvent} />,
+    });
+  };
+  const handleOpenEventEditModal = () => {
+    openDialog({
+      title: "Modify an Event",
+      description: "Fill out the form to update an event",
+      reactChildren: (
+        <EventModify
+          baseEvent={event}
+          updateDisplayedEvent={setDisplayedEvent}
+        />
+      ),
+    });
+  };
   return (
     <>
-      <Card className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black">
+      <Card
+        onClick={() => handleOpenEventViewModal()}
+        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
+      >
         <CardDescription>
           <h1 className="text-black">{displayedEvent.description}</h1>
         </CardDescription>
@@ -42,7 +68,14 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
         </CardContent>
         <CardFooter>
           {eventEditable ? (
-            <Button onClick={() => setIsEditing(true)}>Edit</Button>
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpenEventEditModal();
+              }}
+            >
+              Edit
+            </Button>
           ) : (
             <></>
           )}
@@ -55,14 +88,6 @@ const EventCard = ({ event, eventEditable }: EventProps) => {
           </Button>
         </CardFooter>
       </Card>
-      {isEditing && (
-        <EventModify
-          open={isEditing}
-          onOpenChange={setIsEditing}
-          baseEvent={displayedEvent}
-          updateDisplayedEvent={setDisplayedEvent}
-        />
-      )}
     </>
   );
 };
