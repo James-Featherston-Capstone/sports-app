@@ -21,8 +21,12 @@ const getGeoCode = async (location) => {
   }
 };
 
-const getAllNearbyEvents = async (userId) => {
+const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await userService.getUser(userId);
+  if (userInputs.location) {
+    user.location = userInputs.location;
+    await locationUtils.extractLatLngFields(user);
+  }
   const baseKey = {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
@@ -47,13 +51,21 @@ const getAllNearbyEvents = async (userId) => {
       },
     },
   });
-  const userDate = new Date();
+  const userDate = userInputs.date ? new Date(userInputs.date) : new Date();
   const futureEvents = events.filter((event) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
   });
-  const userLocation = { latitude: user.latitude, longitude: user.longitude };
-  const rankedEvents = rankEvents(futureEvents, userLocation, user.sports);
+  const userSports = userInputs.sports ? [userInputs.sport] : user.sports;
+  const rankedEvents = rankEvents(
+    futureEvents,
+    { latitude: user.latitude, longitude: user.longitude },
+    userSports,
+    userDate
+  );
+  rankedEvents.map((event) => {
+    delete event.weight;
+  });
   return rankedEvents;
 };
 

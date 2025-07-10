@@ -14,14 +14,18 @@ const locationUtils = require("../recommendations/locationUtils.js");
 exports.getAllEvents = async (req, res, next) => {
   try {
     const user = req.session.user;
-    const { searchQuery, filter } = req.query;
+    const { filter, date, sport, location } = req.query;
     let events = [];
     if (filter === "rsvp") {
       events = await eventService.getAllEventRSVP(user.id);
     } else if (filter === "created") {
       events = await eventService.getAllEventsCreated(user.id);
     } else {
-      events = await locationService.getAllNearbyEvents(user.id);
+      events = await locationService.getAllNearbyEvents(user.id, {
+        date,
+        sport,
+        location,
+      });
     }
     res.json(events);
   } catch (error) {

@@ -1,5 +1,5 @@
 const { performHaversine } = require("./locationUtils");
-const rankEvents = (events, userLocation, sports) => {
+const rankEvents = (events, userLocation, sports, userDate) => {
   events.map((event) => {
     event.distance =
       Math.round(
@@ -13,24 +13,26 @@ const rankEvents = (events, userLocation, sports) => {
     return event;
   });
   events.map((event) => {
-    event.weight = getEventWeight(event, sports);
+    event.weight = getEventWeight(event, sports, userDate);
     return event;
   });
   events.sort((a, b) => (a.weight < b.weight ? 1 : -1));
   return events;
 };
 
-const getEventWeight = (event, sports) => {
+const getEventWeight = (event, sports, userDate) => {
   const maxDist = 8;
-  const weights = { location: 1, date: 0.7, sport: 1 };
+  const weights = { location: 1.3, date: 0.4, sport: 2 };
   let totalWeight = 0;
   if (sports.includes(event.sport)) {
     totalWeight += weights.sport;
   }
   totalWeight += (maxDist - event.distance) * weights.location;
   const eventDate = new Date(event.eventTime);
-  const now = new Date();
-  totalWeight += getDaysDifference(eventDate, now) * weights.date;
+  const dayDifference = getDaysDifference(eventDate, userDate);
+  if (dayDifference < 7) {
+    totalWeight += Math.min((7 / dayDifference) * weights.date, 3);
+  }
   return totalWeight;
 };
 

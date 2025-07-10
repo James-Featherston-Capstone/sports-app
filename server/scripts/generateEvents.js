@@ -32,10 +32,10 @@ const sportsOptions = [
 const createEventObj = (baseLat, baseLng, city, i) => {
   const latitude = baseLat + getRandomCoord();
   const longitude = baseLng + getRandomCoord();
-  const sportIndex = Math.round(Math.random() * sportsOptions.length);
+  const sportIndex = Math.floor(Math.random() * sportsOptions.length);
   return {
     organizerId: 1,
-    eventTime: oneWeekFromNow(),
+    eventTime: randomDateWithinOneWeek(),
     location: `Generated Event: ${city}: ${i}`,
     latitude: latitude,
     longitude: longitude,
@@ -45,9 +45,9 @@ const createEventObj = (baseLat, baseLng, city, i) => {
   };
 };
 
-const oneWeekFromNow = () => {
+const randomDateWithinOneWeek = () => {
   const date = new Date();
-  date.setDate(date.getDate() + 7);
+  date.setDate(date.getDate() + Math.random() * 7);
   return date;
 };
 
