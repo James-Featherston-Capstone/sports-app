@@ -27,7 +27,7 @@ const getAllNearbyEvents = async (userId) => {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const keyOffset = 11;
+  const keyOffset = 10;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
   const results = await Promise.all(
     keys.map(async (key) => {
