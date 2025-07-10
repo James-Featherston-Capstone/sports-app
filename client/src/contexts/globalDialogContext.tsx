@@ -7,15 +7,15 @@ import {
 } from "../components/ui/dialog";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type DialogContextType = {
+interface DialogContextType {
   openDialog: (options: DialogOptions) => void;
   closeDialog: () => void;
-};
-type DialogOptions = {
+}
+interface DialogOptions {
   title: string;
   description: string;
   reactChildren: ReactNode;
-};
+}
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
 

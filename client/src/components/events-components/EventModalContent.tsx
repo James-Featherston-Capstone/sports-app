@@ -1,8 +1,8 @@
 import type { EventWithAllData } from "@/utils/interfaces";
 
-type EventModalContentType = {
+interface EventModalContentType {
   event: EventWithAllData;
-};
+}
 
 const EventModalContent = ({ event }: EventModalContentType) => {
   return (
