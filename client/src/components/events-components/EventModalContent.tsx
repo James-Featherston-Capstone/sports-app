@@ -1,7 +1,7 @@
-import type { EventWithAllData } from "@/utils/interfaces";
+import type { DisplayEvent } from "@/utils/interfaces";
 
 interface EventModalContentType {
-  event: EventWithAllData;
+  event: DisplayEvent;
 }
 
 const EventModalContent = ({ event }: EventModalContentType) => {
@@ -12,11 +12,12 @@ const EventModalContent = ({ event }: EventModalContentType) => {
         <h3>Sport: {event.sport}</h3>
         <div className="flex">
           <h3>Rsvps:</h3>
-          {event.rsvps.slice(0, 10).map((rsvp, index) => (
-            <h3 className="mx-1" key={index}>
-              {rsvp.user.username},
-            </h3>
-          ))}
+          {event.rsvps &&
+            event.rsvps.slice(0, 10).map((rsvp, index) => (
+              <h3 className="mx-1" key={index}>
+                {rsvp.user?.username},
+              </h3>
+            ))}
           ...
         </div>
       </div>

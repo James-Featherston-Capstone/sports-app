@@ -5,8 +5,22 @@ exports.getUser = async (userId) => {
   const profile = await prisma.user.findUnique({
     where: { id: userId },
     include: {
-      eventsCreated: true,
-      eventsRSVP: true,
+      eventsCreated: {
+        select: {
+          id: true,
+          sport: true,
+        },
+      },
+      eventsRSVP: {
+        select: {
+          eventId: true,
+          event: {
+            select: {
+              sport: true,
+            },
+          },
+        },
+      },
     },
   });
   if (!profile) {

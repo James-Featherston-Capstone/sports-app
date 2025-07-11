@@ -21,7 +21,7 @@ const getAllEvents = async (
   }));
 };
 
-const getEvent = async (eventId: number): Promise<EventModel> => {
+const getEvent = async (eventId: number): Promise<DisplayEvent> => {
   const path = `${BASE_URL}/events/${eventId}`;
   const req = {
     method: "GET",
