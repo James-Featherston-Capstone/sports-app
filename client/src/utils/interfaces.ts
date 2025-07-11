@@ -37,6 +37,12 @@ interface DisplayEvent extends EventModel {
       ]
     | null;
   isRsvpCurrentUser?: boolean;
+  comments: [
+    {
+      id: number;
+      comment: string;
+    }
+  ];
 }
 
 interface EventFilters {
