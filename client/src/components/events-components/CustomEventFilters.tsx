@@ -22,7 +22,7 @@ const CustomEventFilters = ({
 }: AllEventFiltersProps) => {
   const { closeDialog } = useDialogContext();
   const [date, setDate] = useState<Date | undefined>(
-    baseFilters.date ? new Date(baseFilters.date) : new Date()
+    baseFilters.date ? new Date(baseFilters.date) : undefined
   );
   const [sport, setSport] = useState<string>(
     baseFilters.sport ? baseFilters.sport : ""
@@ -52,7 +52,7 @@ const CustomEventFilters = ({
         selected={date}
         onSelect={setDate}
         className="rounded-lg border bg-white"
-        disabled={(date) => date < new Date()}
+        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
       />
       <Select value={sport} onValueChange={setSport}>
         <SelectTrigger className="w-1/1 my-0.5">
