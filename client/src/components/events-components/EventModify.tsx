@@ -24,9 +24,14 @@ import { useDialogContext } from "@/contexts/globalDialogContext";
 interface EventModifyProps {
   baseEvent?: DisplayEvent;
   updateDisplayedEvent?: Dispatch<SetStateAction<DisplayEvent>>;
+  addEvent?: (event: DisplayEvent) => void;
 }
 
-const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
+const EventModify = ({
+  baseEvent,
+  updateDisplayedEvent,
+  addEvent,
+}: EventModifyProps) => {
   const { closeDialog } = useDialogContext();
   const [description, setDescription] = useState(
     baseEvent ? baseEvent.description : ""
@@ -59,7 +64,8 @@ const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
     if (!baseEvent) {
       type CreateEvent = Omit<EventModel, "id" | "rsvps">;
       const event: CreateEvent = eventChanges;
-      createEvent(event);
+      const createdEvent = await createEvent(event);
+      if (addEvent) addEvent(createdEvent);
     } else {
       const event: DisplayEvent = { ...baseEvent, ...eventChanges };
       editEvent(event);

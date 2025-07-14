@@ -40,9 +40,9 @@ const buildEvent = (req) => {
 const buildComment = (req) => {
   const eventId = parseInt(req.params.eventId);
   const commentObj = { eventId: eventId };
-  const { authorId, comment } = req.body;
-  const intAId = parseInt(authorId);
-  addIfPresent(intAId, "authorId", commentObj);
+  const { comment } = req.body;
+  const authorId = req.session.user.id;
+  addIfPresent(authorId, "authorId", commentObj);
   addIfPresent(comment, "comment", commentObj);
   return commentObj;
 };

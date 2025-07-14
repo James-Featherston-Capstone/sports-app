@@ -1,6 +1,11 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { EventFilters, DisplayEvent, EventModel } from "./interfaces";
+import type {
+  EventFilters,
+  DisplayEvent,
+  EventModel,
+  Comment,
+} from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
@@ -33,7 +38,7 @@ const getEvent = async (eventId: number): Promise<DisplayEvent> => {
 
 const createEvent = async (
   event: Omit<EventModel, "id" | "rsvps">
-): Promise<EventModel> => {
+): Promise<DisplayEvent> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
@@ -83,6 +88,22 @@ const deleteEventRsvp = async (eventId: number): Promise<EventModel> => {
   return await fetchData(path, req);
 };
 
+const createComment = async (
+  eventId: number,
+  comment: string
+): Promise<Comment> => {
+  const path = `${BASE_URL}/events/${eventId}/comments`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ comment }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
 export {
   getAllEvents,
   getEvent,
@@ -90,4 +111,5 @@ export {
   editEvent,
   eventRsvp,
   deleteEventRsvp,
+  createComment,
 };

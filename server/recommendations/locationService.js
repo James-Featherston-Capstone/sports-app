@@ -42,7 +42,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const keyOffset = 10;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
   const filters = {};
-  if (userInputs.date) {
+  if (userInputs.date && userInputs.date !== "undefined") {
     const start = new Date(userInputs.date);
     start.setHours(0, 0, 0, 0);
     const end = new Date(userInputs.date);
@@ -74,7 +74,10 @@ const getAllNearbyEvents = async (userId, userInputs) => {
       },
     },
   });
-  const userDate = userInputs.date ? new Date(userInputs.date) : new Date();
+  const userDate =
+    userInputs.date && userInputs.date !== "undefined"
+      ? new Date(userInputs.date)
+      : new Date();
   const futureEvents = events.filter((event) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
