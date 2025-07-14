@@ -41,8 +41,23 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   };
   const keyOffset = 10;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
+  const filters = {};
+  if (userInputs.date) {
+    const start = new Date(userInputs.date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(userInputs.date);
+    end.setHours(23, 59, 59, 999);
+    filters.eventTime = {
+      gte: start,
+      lte: end,
+    };
+  }
+  if (userInputs.sport) {
+    filters.sport = userInputs.sport;
+  }
   const events = await prisma.event.findMany({
     where: {
+      ...filters,
       OR: keys.map((key) => ({
         latitudeKey: key.latitudeKey,
         longitudeKey: key.longitudeKey,
