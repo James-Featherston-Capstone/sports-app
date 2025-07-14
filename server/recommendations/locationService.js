@@ -3,6 +3,10 @@ const userService = require("../services/userService.js");
 const locationUtils = require("./locationUtils.js");
 const { rankEvents } = require("./rankEvents.js");
 
+/*
+Input: Location
+Ouput: Latitude and longitude of that location 
+*/
 const getGeoCode = async (location) => {
   try {
     const response = await fetch(
@@ -21,6 +25,10 @@ const getGeoCode = async (location) => {
   }
 };
 
+/*
+Input: user id and user filters
+Output: List of nearby events sorted by most recommended -> least recommended
+*/
 const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await userService.getUser(userId);
   if (userInputs.location) {
@@ -56,7 +64,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
   });
-  const userSports = userInputs.sports ? [userInputs.sport] : user.sports;
+  const userSports = userInputs.sport ? [userInputs.sport] : user.sports;
   const rankedEvents = rankEvents(
     futureEvents,
     { latitude: user.latitude, longitude: user.longitude },
