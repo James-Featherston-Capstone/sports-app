@@ -37,7 +37,7 @@ const Login = () => {
       >
         <label> Email: </label>
         <Input
-          type="text"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"

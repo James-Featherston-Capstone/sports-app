@@ -61,7 +61,7 @@ const Register = () => {
         <label> Email: </label>
         <Input
           className="mb-3 mt-.5"
-          type="text"
+          type="email"
           value={profile.email}
           onChange={(e) => setProfile({ ...profile, email: e.target.value })}
           autoComplete="on"
