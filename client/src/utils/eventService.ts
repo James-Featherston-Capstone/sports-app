@@ -38,7 +38,7 @@ const getEvent = async (eventId: number): Promise<DisplayEvent> => {
 
 const createEvent = async (
   event: Omit<EventModel, "id" | "rsvps">
-): Promise<EventModel> => {
+): Promise<DisplayEvent> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",

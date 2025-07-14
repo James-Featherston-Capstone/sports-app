@@ -8,7 +8,7 @@ import { useEventContext } from "@/contexts/eventContext";
 
 const Events = () => {
   const { openDialog } = useDialogContext();
-  const { onMount, isEventListLoading } = useEventContext();
+  const { onMount, isEventListLoading, addEvent } = useEventContext();
 
   useEffect(() => {
     onMount();
@@ -18,7 +18,7 @@ const Events = () => {
     openDialog({
       title: "Create an Event",
       description: "Fill out the form to create an event",
-      reactChildren: <EventModify />,
+      reactChildren: <EventModify addEvent={addEvent} />,
     });
   };
 

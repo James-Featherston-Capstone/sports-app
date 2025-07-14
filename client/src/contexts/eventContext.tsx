@@ -6,6 +6,7 @@ import type { EventFilters } from "@/utils/interfaces";
 interface EventContextType {
   onMount: () => void;
   fetchEvents: (filters: EventFilters) => void;
+  addEvent: (event: DisplayEvent) => void;
   events: DisplayEvent[];
   isEventListLoading: boolean;
   areEventsEditable: boolean;
@@ -25,6 +26,9 @@ const EventProvider = ({ children }: { children: ReactNode }) => {
     setAreEventsEditable(filters.filter === "created");
     setIsEventListLoading(false);
   };
+  const addEvent = (event: DisplayEvent) => {
+    setEvents([event, ...events]);
+  };
 
   const onMount = async () => {
     const retrievedEvents = await getAllEvents({ filter: "all" });
@@ -40,6 +44,7 @@ const EventProvider = ({ children }: { children: ReactNode }) => {
         events,
         isEventListLoading,
         areEventsEditable,
+        addEvent,
       }}
     >
       {children}

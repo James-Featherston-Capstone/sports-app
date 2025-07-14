@@ -50,11 +50,11 @@ const Filter = () => {
   return (
     <article className="m-3 flex order-2">
       <Select value={eventFilters.filter} onValueChange={onFilterChange}>
-        <SelectTrigger className="w-35">
+        <SelectTrigger className="w-37">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Events</SelectItem>
+          <SelectItem value="all">Nearby Events</SelectItem>
           <SelectItem value="rsvp">My RSVP's</SelectItem>
           <SelectItem value="created">My Created</SelectItem>
         </SelectContent>
