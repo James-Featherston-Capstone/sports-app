@@ -1,8 +1,12 @@
 const prisma = require("../prisma.js");
 const userService = require("../services/userService.js");
 const locationUtils = require("./locationUtils.js");
-const rankEvents = require("./rankEvents.js");
+const { rankEvents } = require("./rankEvents.js");
 
+/*
+Input: Location
+Ouput: Latitude and longitude of that location 
+*/
 const getGeoCode = async (location) => {
   try {
     const response = await fetch(
@@ -21,16 +25,39 @@ const getGeoCode = async (location) => {
   }
 };
 
-const getAllNearbyEvents = async (userId) => {
+/*
+Input: user id and user filters
+Output: List of nearby events sorted by most recommended -> least recommended
+*/
+const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await userService.getUser(userId);
+  if (userInputs.location) {
+    user.location = userInputs.location;
+    await locationUtils.extractLatLngFields(user);
+  }
   const baseKey = {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
   const keyOffset = 10;
   const keys = locationUtils.getAllKeys(baseKey, keyOffset);
+  const filters = {};
+  if (userInputs.date) {
+    const start = new Date(userInputs.date);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(userInputs.date);
+    end.setHours(23, 59, 59, 999);
+    filters.eventTime = {
+      gte: start,
+      lte: end,
+    };
+  }
+  if (userInputs.sport) {
+    filters.sport = userInputs.sport;
+  }
   const events = await prisma.event.findMany({
     where: {
+      ...filters,
       OR: keys.map((key) => ({
         latitudeKey: key.latitudeKey,
         longitudeKey: key.longitudeKey,
@@ -47,13 +74,21 @@ const getAllNearbyEvents = async (userId) => {
       },
     },
   });
-  const userDate = new Date();
+  const userDate = userInputs.date ? new Date(userInputs.date) : new Date();
   const futureEvents = events.filter((event) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
   });
-  const userLocation = { latitude: user.latitude, longitude: user.longitude };
-  const rankedEvents = rankEvents(futureEvents, userLocation);
+  const userSports = userInputs.sport ? [userInputs.sport] : user.sports;
+  const rankedEvents = rankEvents(
+    futureEvents,
+    { latitude: user.latitude, longitude: user.longitude },
+    userSports,
+    userDate
+  );
+  rankedEvents.map((event) => {
+    delete event.weight;
+  });
   return rankedEvents;
 };
 
