@@ -15,6 +15,20 @@ const register = async (data: Profile, password: string): Promise<Profile> => {
   return await fetchData(path, req);
 };
 
+const checkEmail = async (email: String): Promise<boolean> => {
+  const path = `${BASE_URL}/auth/register/email`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+    credentials: "include",
+  };
+  const res = await fetchData(path, req);
+  return res.emailInUse;
+};
+
 const login = async (data: Object): Promise<Profile> => {
   const path = `${BASE_URL}/auth/login`;
   const req = {
@@ -23,6 +37,15 @@ const login = async (data: Object): Promise<Profile> => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const logout = async (): Promise<Profile> => {
+  const path = `${BASE_URL}/auth/logout`;
+  const req = {
+    method: "POST",
     credentials: "include",
   };
   return await fetchData(path, req);
@@ -37,4 +60,4 @@ const loginStatus = async () => {
   return await fetchData(path, req);
 };
 
-export { register, login, loginStatus };
+export { register, login, loginStatus, logout, checkEmail };
