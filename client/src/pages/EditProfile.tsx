@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProfileForm from "@/components/profile-components/ProfileForm";
 import type { Profile } from "@/utils/interfaces";
 import { createProfile } from "@/utils/profileService";
+import { register } from "../utils/authService";
 import { useState } from "react";
 
 interface ProfileProps {
@@ -11,7 +12,7 @@ interface ProfileProps {
   onReturn: (status: boolean) => void;
   profile: Profile;
   setProfile: (current: Profile) => void;
-  password: string;
+  password?: string;
 }
 
 const EditProfile = ({
@@ -20,6 +21,7 @@ const EditProfile = ({
   onReturn,
   profile,
   setProfile,
+  password,
 }: ProfileProps) => {
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
@@ -28,6 +30,9 @@ const EditProfile = ({
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (type === "create") {
+      if (password) {
+        await register(newProfile, password);
+      }
       const user = await createProfile(newProfile);
       if (user) {
         setLoginStatus(true);

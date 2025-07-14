@@ -28,6 +28,24 @@ exports.register = async (req, res, next) => {
   }
 };
 
+exports.checkEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new ValidationError("Missing email");
+    }
+    const filters = { email: email };
+    const existingUser = await authService.getUser(filters);
+    if (existingUser) {
+      res.json({ emailInUse: true });
+    } else {
+      res.json({ emailInUse: false });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password: plainPassword } = req.body;

@@ -71,9 +71,9 @@ model Event {
 
 model EventRSVP {
   id         Int      @id @default(autoincrement())
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId    Int
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
@@ -84,9 +84,9 @@ model EventRSVP {
 model EventComment {
   id         Int      @id @default(autoincrement())
   comment    String
-  author     User     @relation(fields: [authorId], references: [id])
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId   Int
-  Event      Event    @relation(fields: [eventId], references: [id])
+  Event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId    Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())

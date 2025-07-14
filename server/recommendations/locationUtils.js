@@ -1,8 +1,16 @@
+/*
+Input: Latitude or longitude
+Ouput: Key that corresponds with the input
+*/
 const calculateLocationKey = (value) => {
   return Math.round(value * 100);
 };
 
-// https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
+/*
+Input: Latitude and longitude of 2 different locations in degrees
+Output: Distance between location 1 and location 2 
+Reference: https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
+*/
 const performHaversine = (
   lat1Degrees,
   lng1Degrees,
@@ -30,6 +38,10 @@ const performHaversine = (
   return EARTHRADIUSMILES * c;
 };
 
+/*
+Input: Object with its location set
+Output: Object with it's latitude, longitude, and location indexes set.
+*/
 const extractLatLngFields = async (obj) => {
   const locationService = require("./locationService");
   const coords = await locationService.getGeoCode(obj.location);
@@ -39,6 +51,10 @@ const extractLatLngFields = async (obj) => {
   obj.longitudeKey = calculateLocationKey(coords.longitude);
 };
 
+/*
+Input: Center latitude and longitude keys, and the number of surrounding loops to retrieve
+Output: List of keys
+*/
 const getAllKeys = (baseKey, keyOffset) => {
   const latLngOffsets = Array.from(
     { length: keyOffset * 2 + 1 },
