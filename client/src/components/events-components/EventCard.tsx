@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { DisplayEvent } from "@/utils/interfaces";
@@ -8,6 +8,7 @@ import { getEvent } from "@/utils/eventService";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
 import { useEventContext } from "@/contexts/eventContext";
+import { getDisplayDate } from "@/utils/utils";
 
 interface EventProps {
   event: DisplayEvent;
@@ -54,15 +55,13 @@ const EventCard = ({ event }: EventProps) => {
     <>
       <Card
         onClick={() => handleOpenEventViewModal()}
-        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
+        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 min-h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
       >
-        <CardDescription>
-          <h1 className="text-black">{displayedEvent.description}</h1>
-        </CardDescription>
+        <CardTitle className="mt-2">{displayedEvent.sport}</CardTitle>
         <CardContent>
-          <h1>Time: {displayedEvent.eventTime}</h1>
-          <h1>Location: {displayedEvent.location}</h1>
-          <h1>Sport: {displayedEvent.sport}</h1>
+          <h1>{getDisplayDate(displayedEvent.eventTime)}</h1>
+          <h1>{displayedEvent.location}</h1>
+          <h1></h1>
           {displayedEvent.distance !== undefined && (
             <h1>Distance: {displayedEvent.distance} Miles</h1>
           )}

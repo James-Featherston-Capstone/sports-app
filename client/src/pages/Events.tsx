@@ -23,11 +23,11 @@ const Events = () => {
   };
 
   return (
-    <section className="w-1/1 grow-1 overflow-auto">
+    <section className="w-screen grow-1 overflow-auto">
       <div className="flex justify-center flex-wrap">
         <Button
           variant="secondary"
-          className="order-0 sm:order-4 w-8/10 sm:w-auto m-3"
+          className="order-0 sm:order-4 w-8/10 sm:w-auto mt-3 mb-1"
           onClick={() => openEventCreationModal()}
         >
           Create Event

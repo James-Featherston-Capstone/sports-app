@@ -48,9 +48,9 @@ const Filter = () => {
   };
 
   return (
-    <article className="m-3 flex order-2">
+    <article className="m-1 flex order-2 flex-wrap items-center justify-center">
       <Select value={eventFilters.filter} onValueChange={onFilterChange}>
-        <SelectTrigger className="w-35">
+        <SelectTrigger className="w-35 mt-2">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -60,7 +60,7 @@ const Filter = () => {
         </SelectContent>
       </Select>
       {eventFilters.filter === "all" && (
-        <>
+        <div className="mt-2">
           <Button
             variant="secondary"
             className="mx-3"
@@ -71,7 +71,7 @@ const Filter = () => {
           <Button variant="secondary" onClick={clearFilters}>
             Clear Filters
           </Button>
-        </>
+        </div>
       )}
     </article>
   );

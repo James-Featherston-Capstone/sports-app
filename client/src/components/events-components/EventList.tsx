@@ -4,6 +4,7 @@ import type { DisplayEvent } from "@/utils/interfaces";
 
 const EventList = () => {
   const { events } = useEventContext();
+  console.log(events);
   return (
     <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center w-screen">
       {events.map((event: DisplayEvent) => {
