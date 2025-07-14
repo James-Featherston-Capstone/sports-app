@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EditProfile from "./EditProfile";
 import type { Profile } from "@/utils/interfaces";
-import { login, register } from "../utils/authService";
+import { checkEmail, login } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -24,18 +24,18 @@ const Register = () => {
     profile_image_url: "",
   });
 
-  const handleRegister = async (event: React.FormEvent) => {
+  const handleNext = async (event: React.FormEvent) => {
     event.preventDefault();
     if (password !== testPassword) {
       setError(true);
       setErrorMessage("Passwords Do Not Match");
     } else {
-      const user = await register(profile, password);
-      if (user) {
-        setCreatingProfile(true);
-      } else {
+      const emailInUse = await checkEmail(profile.email);
+      if (emailInUse) {
         setError(true);
-        setErrorMessage("Email is already in use");
+        setErrorMessage("Email is in use");
+      } else {
+        setCreatingProfile(true);
       }
     }
   };
@@ -47,7 +47,7 @@ const Register = () => {
       <h1 className="text-xl mx-3">Create a Team Up Account</h1>
       <form
         className="flex justify-center flex-col items-start w-9/10"
-        onSubmit={handleRegister}
+        onSubmit={handleNext}
       >
         <label className="my-3"> Username: </label>
         <Input
@@ -86,7 +86,7 @@ const Register = () => {
           placeholder="Password"
         />
         <Button type="submit" className="w-1/1 mx-0 my-1.5" variant="secondary">
-          Register
+          Next
         </Button>
         {error ? (
           <p className="text-red-500 self-center">{errorMessage}</p>
@@ -104,14 +104,16 @@ const Register = () => {
           Login
         </Button>
       </p>
-      <EditProfile
-        onReturn={setCreatingProfile}
-        editing={creatingProfile}
-        type="create"
-        profile={profile}
-        setProfile={setProfile}
-        password={password}
-      />
+      {creatingProfile && (
+        <EditProfile
+          onReturn={setCreatingProfile}
+          editing={creatingProfile}
+          type="create"
+          profile={profile}
+          setProfile={setProfile}
+          password={password}
+        />
+      )}
     </div>
   );
 };
