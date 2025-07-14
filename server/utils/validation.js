@@ -15,7 +15,8 @@ const validateNewEvent = (req) => {
 
 const validateNewComment = (req) => {
   const eventId = req.params.eventId;
-  const { authorId, comment } = req.body;
+  const { comment } = req.body;
+  const authorId = req.session.user.id;
   if ((!eventId || !authorId, !comment)) {
     throw new ValidationError(
       "Must include authorId, eventId, and the comment"

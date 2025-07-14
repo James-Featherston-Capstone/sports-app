@@ -37,12 +37,15 @@ interface DisplayEvent extends EventModel {
       ]
     | null;
   isRsvpCurrentUser?: boolean;
-  comments: [
-    {
-      id: number;
-      comment: string;
-    }
-  ];
+  comments: Comment[];
+}
+interface Comment {
+  id: number;
+  comment: string;
+  author: {
+    id: number;
+    username: string;
+  };
 }
 
 interface EventFilters {
@@ -52,4 +55,4 @@ interface EventFilters {
   filter: string;
 }
 
-export type { Profile, EventModel, EventFilters, DisplayEvent };
+export type { Profile, EventModel, EventFilters, DisplayEvent, Comment };

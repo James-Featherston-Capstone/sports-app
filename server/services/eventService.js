@@ -43,6 +43,18 @@ exports.getEvent = async (eventId) => {
         },
       },
       organizer: true,
+      comments: {
+        select: {
+          id: true,
+          comment: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+        },
+      },
     },
   });
   return event;
@@ -136,6 +148,16 @@ exports.removeRsvpEvent = async (eventId, userId) => {
 exports.createComment = async (commentObj) => {
   const comment = await prisma.eventComment.create({
     data: commentObj,
+    select: {
+      id: true,
+      comment: true,
+      author: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+    },
   });
   return comment;
 };
