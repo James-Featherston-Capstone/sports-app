@@ -10,9 +10,10 @@ import { Button } from "./ui/button";
 interface MapsInputProps {
   location: string;
   setLocation: (location: string) => void;
+  useMap: boolean;
 }
 const libraries: Libraries = ["places"];
-const MapsInput = ({ location, setLocation }: MapsInputProps) => {
+const MapsInput = ({ location, setLocation, useMap }: MapsInputProps) => {
   const [coords, setCoords] = useState<google.maps.LatLngLiteral>({
     lat: 0,
     lng: 0,
@@ -47,15 +48,17 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
     <div className="w-1/1 flex justify-center items-center flex-col">
       {isLoaded && (
         <>
-          <GoogleMap
-            mapContainerStyle={{
-              width: "100%",
-              height: "250px",
-              maxWidth: "600px",
-            }}
-            center={coords}
-            zoom={15}
-          ></GoogleMap>
+          {useMap && (
+            <GoogleMap
+              mapContainerStyle={{
+                width: "100%",
+                height: "250px",
+                maxWidth: "600px",
+              }}
+              center={coords}
+              zoom={15}
+            ></GoogleMap>
+          )}
           <div className="w-1/1 m-2 flex">
             <div className="w-1/1">
               <StandaloneSearchBox
@@ -64,7 +67,7 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
               >
                 <Input
                   type="text"
-                  placeholder="Enter your address..."
+                  placeholder="Enter address..."
                   className="w-1/1"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -72,6 +75,7 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
               </StandaloneSearchBox>
             </div>
             <Button
+              className="mr-0"
               variant="secondary"
               onClick={(e) => {
                 e.preventDefault();
