@@ -10,6 +10,7 @@ const {
   validateNewComment,
 } = require("../utils/validation.js");
 const locationUtils = require("../recommendations/locationUtils.js");
+const meetingPointService = require("../meetingPoints/meetingPointService.js");
 
 exports.getAllEvents = async (req, res, next) => {
   try {
@@ -175,6 +176,21 @@ exports.preferenceUpvote = async (req, res, next) => {
     }
     const updatedPreference = await eventService.preferenceUpvote(preferenceId);
     res.json(updatedPreference);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getRecommendedMeetingPoints = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    if (!eventId) {
+      throw new ValidationError("Event id required");
+    }
+    const recommendations = await meetingPointService.suggestMeetingPoints(
+      eventId
+    );
+    res.json(recommendations);
   } catch (error) {
     next(error);
   }
