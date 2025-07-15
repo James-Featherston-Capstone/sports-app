@@ -10,10 +10,10 @@ import { Button } from "./ui/button";
 interface MapsInputProps {
   location: string;
   setLocation: (location: string) => void;
-  useMap: boolean;
+  showMap: boolean;
 }
 const libraries: Libraries = ["places"];
-const MapsInput = ({ location, setLocation, useMap }: MapsInputProps) => {
+const MapsInput = ({ location, setLocation, showMap }: MapsInputProps) => {
   const [coords, setCoords] = useState<google.maps.LatLngLiteral>({
     lat: 0,
     lng: 0,
@@ -48,7 +48,7 @@ const MapsInput = ({ location, setLocation, useMap }: MapsInputProps) => {
     <div className="w-1/1 flex justify-center items-center flex-col">
       {isLoaded && (
         <>
-          {useMap && (
+          {showMap && (
             <GoogleMap
               mapContainerStyle={{
                 width: "100%",

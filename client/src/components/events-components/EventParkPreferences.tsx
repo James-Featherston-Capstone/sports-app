@@ -8,7 +8,6 @@ interface EventParkPreferencesProps {
   setPreferenceList: (preferences: string[]) => void;
 }
 const EventParkPreferences = ({
-  eventId,
   preferenceList,
   setPreferenceList,
 }: EventParkPreferencesProps) => {
@@ -22,7 +21,7 @@ const EventParkPreferences = ({
         <MapsInput
           location={newPreference}
           setLocation={setNewPreference}
-          useMap={false}
+          showMap={false}
         />
         <Button className="w-1/1 mx-0" onClick={handleNewParkPreference}>
           Submit

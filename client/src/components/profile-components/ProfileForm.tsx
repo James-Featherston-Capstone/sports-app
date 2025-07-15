@@ -36,7 +36,7 @@ const ProfileForm = ({
         setLocation={(location) =>
           setProfile({ ...profile, location: location })
         }
-        useMap={true}
+        showMap={true}
       />
 
       <label className="self-start ml-1">Profile Picture URL (Optional):</label>
