@@ -55,4 +55,18 @@ interface EventFilters {
   filter: string;
 }
 
-export type { Profile, EventModel, EventFilters, DisplayEvent, Comment };
+interface ParkPreference {
+  id: number;
+  location: string;
+  upvotes: number;
+  eventId: number;
+}
+
+export type {
+  Profile,
+  EventModel,
+  EventFilters,
+  DisplayEvent,
+  Comment,
+  ParkPreference,
+};
