@@ -166,3 +166,16 @@ exports.createEventPreference = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.preferenceUpvote = async (req, res, next) => {
+  try {
+    const preferenceId = parseInt(req.params.preferenceId);
+    if (!preferenceId) {
+      throw new ValidationError("Preference id required");
+    }
+    const updatedPreference = await eventService.preferenceUpvote(preferenceId);
+    res.json(updatedPreference);
+  } catch (error) {
+    next(error);
+  }
+};

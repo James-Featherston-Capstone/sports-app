@@ -13,5 +13,6 @@ router.get("/:eventId/comments", eventController.getComments);
 router.post("/:eventId/comments", eventController.createComment);
 router.get("/:eventId/preferences", eventController.getEventPreferences);
 router.post("/:eventId/preferences", eventController.createEventPreference);
+router.put("/preferences/:preferenceId", eventController.preferenceUpvote);
 
 module.exports = router;

@@ -194,3 +194,15 @@ exports.createEventPreference = async (preferenceObj) => {
   });
   return preference;
 };
+
+exports.preferenceUpvote = async (preferenceId) => {
+  const updatedPreference = await prisma.eventParkPreference.update({
+    where: { id: preferenceId },
+    data: {
+      upvotes: {
+        increment: 1,
+      },
+    },
+  });
+  return updatedPreference;
+};
