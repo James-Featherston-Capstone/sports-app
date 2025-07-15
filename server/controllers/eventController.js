@@ -135,3 +135,47 @@ exports.createComment = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getEventPreferences = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    if (!eventId) {
+      throw new ValidationError("Event id missing");
+    }
+    const preferences = await eventService.getEventPreferences(eventId);
+    res.json(preferences);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createEventPreference = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    const { location } = req.body;
+    if (!location || !eventId) {
+      throw new ValidationError("Location required");
+    }
+    const preferenceObj = { eventId: eventId, location: location };
+    await locationUtils.extractLatLngFields(preferenceObj);
+    delete preferenceObj.latitudeKey;
+    delete preferenceObj.longitudeKey;
+    const preference = await eventService.createEventPreference(preferenceObj);
+    res.json(preference);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.preferenceUpvote = async (req, res, next) => {
+  try {
+    const preferenceId = parseInt(req.params.preferenceId);
+    if (!preferenceId) {
+      throw new ValidationError("Preference id required");
+    }
+    const updatedPreference = await eventService.preferenceUpvote(preferenceId);
+    res.json(updatedPreference);
+  } catch (error) {
+    next(error);
+  }
+};

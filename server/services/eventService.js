@@ -168,3 +168,41 @@ exports.getComments = async (eventId) => {
   });
   return comments;
 };
+
+exports.getEventPreferences = async (eventId) => {
+  const preferences = await prisma.eventParkPreference.findMany({
+    where: { eventId: eventId },
+    orderBy: {
+      upvotes: "desc",
+    },
+  });
+  return preferences;
+};
+
+exports.createEventPreference = async (preferenceObj) => {
+  const existingPreference = await prisma.eventParkPreference.findFirst({
+    where: {
+      eventId: preferenceObj.eventId,
+      location: preferenceObj.location,
+    },
+  });
+  if (existingPreference) {
+    return { message: "Park already in the preferences" };
+  }
+  const preference = await prisma.eventParkPreference.create({
+    data: preferenceObj,
+  });
+  return preference;
+};
+
+exports.preferenceUpvote = async (preferenceId) => {
+  const updatedPreference = await prisma.eventParkPreference.update({
+    where: { id: preferenceId },
+    data: {
+      upvotes: {
+        increment: 1,
+      },
+    },
+  });
+  return updatedPreference;
+};

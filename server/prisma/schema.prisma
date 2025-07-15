@@ -49,24 +49,37 @@ model Friendship {
 }
 
 model Event {
-  id           Int            @id @default(autoincrement())
-  organizer    User           @relation(fields: [organizerId], references: [id])
+  id           Int                   @id @default(autoincrement())
+  organizer    User                  @relation(fields: [organizerId], references: [id])
   organizerId  Int
-  eventImage   String         @default("")
-  sport        String         @default("")
-  description  String         @default("")
+  eventImage   String                @default("")
+  sport        String                @default("")
+  description  String                @default("")
   eventTime    DateTime
   location     String
   latitude     Decimal
   longitude    Decimal
   latitudeKey  Int
   longitudeKey Int
-  created_at   DateTime       @default(now())
-  updated_at   DateTime       @default(now())
+  created_at   DateTime              @default(now())
+  updated_at   DateTime              @default(now())
   rsvps        EventRSVP[]
   comments     EventComment[]
+  preferences  EventParkPreference[]
 
   @@index([latitudeKey, longitudeKey])
+}
+
+model EventParkPreference {
+  id         Int      @id @default(autoincrement())
+  location   String
+  latitude   Decimal
+  longitude  Decimal
+  upvotes    Int      @default(0)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  Event      Event    @relation(fields: [eventId], references: [id])
+  eventId    Int
 }
 
 model EventRSVP {
