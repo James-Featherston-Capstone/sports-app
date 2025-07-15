@@ -17,7 +17,6 @@ const viewTypes = {
 const EventModalContent = ({ event }: EventModalContentType) => {
   const [commentList, setCommentList] = useState<Comment[]>(event.comments);
   const [preferenceList, setPreferenceList] = useState<string[]>([]);
-  const [recommendationList, setRecommendationList] = useState<string[]>([]);
   const [viewType, setViewType] = useState<number>(viewTypes.comments);
   const handleCommentToggle = () => {
     setViewType(viewTypes.comments);
