@@ -1,22 +1,32 @@
 import type { DisplayEvent, Comment } from "@/utils/interfaces";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useState, type FormEvent } from "react";
-import { createComment } from "@/utils/eventService";
-import CommentBox from "./CommentBox";
+import { useState } from "react";
+import EventComments from "./EventComments";
+import EventParkPreferences from "./EventParkPreferences";
 
 interface EventModalContentType {
   event: DisplayEvent;
 }
 
+const viewTypes = {
+  comments: 0,
+  enterPreferences: 1,
+  viewRecommendedParks: 2,
+};
+
 const EventModalContent = ({ event }: EventModalContentType) => {
-  const [comment, setComment] = useState("");
   const [commentList, setCommentList] = useState<Comment[]>(event.comments);
-  const handleCommentSubmission = async (e: FormEvent) => {
-    e.preventDefault();
-    const createdComment = await createComment(event.id, comment);
-    setCommentList([createdComment, ...commentList]);
-    setComment("");
+  const [preferenceList, setPreferenceList] = useState<string[]>([]);
+  const [viewType, setViewType] = useState<number>(viewTypes.comments);
+  const handleCommentToggle = () => {
+    setViewType(viewTypes.comments);
+  };
+
+  const handlePreferenceViewToggle = () => {
+    setViewType(viewTypes.enterPreferences);
+  };
+  const handleRecommendParksToggle = () => {
+    setViewType(viewTypes.viewRecommendedParks);
   };
   return (
     <div className="flex flex-col md:flex-row w-9/10 h-9/10 grow-1 overflow-auto">
@@ -35,23 +45,46 @@ const EventModalContent = ({ event }: EventModalContentType) => {
         </div>
       </div>
       <div className="grow-1 mt-2 flex flex-col">
-        <form className="flex" onSubmit={handleCommentSubmission}>
-          <Input
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            type="text"
-            placeholder="Enter a comment"
-            className=""
-          />
-          <Button type="submit">Comment</Button>
-        </form>
-        <div className="w-1/1 h-1/1 flex flex-col">
-          {commentList.map((commentInstance) => {
-            return (
-              <CommentBox key={commentInstance.id} comment={commentInstance} />
-            );
-          })}
+        <div className="w-1/1 flex flex-row justify-around my-2 flex-wrap">
+          <Button
+            onClick={handleCommentToggle}
+            className="m-1"
+            disabled={viewType === viewTypes.comments}
+          >
+            Comments
+          </Button>
+          <Button
+            onClick={handlePreferenceViewToggle}
+            className="m-1"
+            disabled={viewType === viewTypes.enterPreferences}
+          >
+            Park Preferences
+          </Button>
+          <Button
+            onClick={handleRecommendParksToggle}
+            className="m-1"
+            disabled={viewType === viewTypes.viewRecommendedParks}
+          >
+            Park Recommendations
+          </Button>
         </div>
+        {viewType === viewTypes.comments && (
+          <EventComments
+            eventId={event.id}
+            commentList={commentList}
+            setCommentList={setCommentList}
+          />
+        )}
+        {viewType === viewTypes.enterPreferences && (
+          <EventParkPreferences
+            eventId={event.id}
+            preferenceList={preferenceList}
+            setPreferenceList={setPreferenceList}
+          />
+        )}
+        {viewType === viewTypes.viewRecommendedParks && (
+          <div>These parks are recommended</div>
+        )}
       </div>
     </div>
   );

@@ -113,6 +113,7 @@ const EventModify = ({
           setLocation={(location) => {
             setEventLocation(location);
           }}
+          showMap={true}
         />
         <Calendar
           mode="single"

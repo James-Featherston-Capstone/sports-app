@@ -68,7 +68,7 @@ const CustomEventFilters = ({
           })}
         </SelectContent>
       </Select>
-      <MapsInput location={location} setLocation={setLocation} />
+      <MapsInput location={location} setLocation={setLocation} showMap={true} />
       <Button type="submit" className="w-1/1">
         Submit
       </Button>
