@@ -15,12 +15,19 @@ const EventParkPreferences = ({
   eventId,
 }: EventParkPreferencesProps) => {
   const [newPreferenceLocation, setNewPreferenceLocation] = useState("");
+  const [message, setMessage] = useState("");
   const handleNewParkPreference = async () => {
     const newPreference = await createEventPreference(
       eventId,
       newPreferenceLocation
     );
-    setPreferenceList([newPreference, ...preferenceList]);
+    if (!newPreference.id) {
+      setMessage("This park is already listed");
+    } else {
+      console.log(newPreference);
+      setMessage("");
+      setPreferenceList([newPreference, ...preferenceList]);
+    }
   };
 
   const handleUpvote = async (preferenceId: number) => {
@@ -41,10 +48,14 @@ const EventParkPreferences = ({
         <Button className="w-1/1 mx-0" onClick={handleNewParkPreference}>
           Submit
         </Button>
+        {message && <p>{message}</p>}
       </div>
       {preferenceList.map((preference) => {
         return (
-          <div className="bg-white rounded-sm my-0.5 p-0.5 flex">
+          <div
+            key={preference.id}
+            className="bg-white rounded-sm my-0.5 p-0.5 flex"
+          >
             <div className="grow-1">
               <h1>{preference.location}</h1>
             </div>
