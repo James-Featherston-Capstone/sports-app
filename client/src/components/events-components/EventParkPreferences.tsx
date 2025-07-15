@@ -24,7 +24,6 @@ const EventParkPreferences = ({
     if (!newPreference.id) {
       setMessage("This park is already listed");
     } else {
-      console.log(newPreference);
       setMessage("");
       setPreferenceList([newPreference, ...preferenceList]);
     }
