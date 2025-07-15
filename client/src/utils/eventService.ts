@@ -5,6 +5,7 @@ import type {
   DisplayEvent,
   EventModel,
   Comment,
+  ParkPreference,
 } from "./interfaces";
 
 const getAllEvents = async (
@@ -104,6 +105,44 @@ const createComment = async (
   return await fetchData(path, req);
 };
 
+const getAllEventPreferences = async (
+  eventId: number
+): Promise<ParkPreference[]> => {
+  const path = `${BASE_URL}/events/${eventId}/preferences`;
+  const req = {
+    method: "GET",
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const createEventPreference = async (
+  eventId: number,
+  location: string
+): Promise<ParkPreference> => {
+  const path = `${BASE_URL}/events/${eventId}/preferences`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ location }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const upvotePreference = async (
+  preferenceId: number
+): Promise<ParkPreference> => {
+  const path = `${BASE_URL}/events/preferences/${preferenceId}`;
+  const req = {
+    method: "PUT",
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
 export {
   getAllEvents,
   getEvent,
@@ -112,4 +151,7 @@ export {
   eventRsvp,
   deleteEventRsvp,
   createComment,
+  getAllEventPreferences,
+  createEventPreference,
+  upvotePreference,
 };

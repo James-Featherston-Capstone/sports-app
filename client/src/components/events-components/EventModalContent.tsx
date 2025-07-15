@@ -1,8 +1,9 @@
-import type { DisplayEvent, Comment } from "@/utils/interfaces";
+import type { DisplayEvent, Comment, ParkPreference } from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import EventComments from "./EventComments";
 import EventParkPreferences from "./EventParkPreferences";
+import { getAllEventPreferences } from "@/utils/eventService";
 
 interface EventModalContentType {
   event: DisplayEvent;
@@ -16,13 +17,19 @@ const viewTypes = {
 
 const EventModalContent = ({ event }: EventModalContentType) => {
   const [commentList, setCommentList] = useState<Comment[]>(event.comments);
-  const [preferenceList, setPreferenceList] = useState<string[]>([]);
+  const [preferenceList, setPreferenceList] = useState<ParkPreference[]>([]);
+  const [preferenceListSet, setPreferenceListSet] = useState(false);
   const [viewType, setViewType] = useState<number>(viewTypes.comments);
   const handleCommentToggle = () => {
     setViewType(viewTypes.comments);
   };
 
-  const handlePreferenceViewToggle = () => {
+  const handlePreferenceViewToggle = async () => {
+    if (!preferenceListSet) {
+      const retrievedPreferenceList = await getAllEventPreferences(event.id);
+      setPreferenceList(retrievedPreferenceList);
+      setPreferenceListSet(true);
+    }
     setViewType(viewTypes.enterPreferences);
   };
   const handleRecommendParksToggle = () => {
