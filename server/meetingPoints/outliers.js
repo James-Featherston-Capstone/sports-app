@@ -1,5 +1,10 @@
 const { performHaversine } = require("../recommendations/locationUtils");
 
+/*
+Removes outliers from consideration
+Inputs: users and outlier
+Output: a list of users to keep and drop
+*/
 const filterOutliers = (users, organizer, multiplier = 2) => {
   if (users.length < 3) {
     return { keptUsers: users, droppedUsers: [] };
@@ -26,6 +31,9 @@ const filterOutliers = (users, organizer, multiplier = 2) => {
   return { keptUsers, droppedUsers };
 };
 
+/*
+Finds the median of a list of distances
+*/
 const findMedian = (distances) => {
   const sortedDistances = distances.toSorted((a, b) => a - b);
   const midIndex = Math.floor(distances.length / 2);
