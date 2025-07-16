@@ -1,6 +1,7 @@
 const { NotFoundError } = require("../middleware/Errors.js");
 const prisma = require("../prisma.js");
 const meetingPointUtils = require("./meetingPointUtils.js");
+const rankingMeetingPoints = require("./rankingMeetingPoints.js");
 
 /*
 Entry point for the algorithm
@@ -46,10 +47,14 @@ const suggestPreferenceMeetingPoint = async (
     meetingPointUtils.computeDistanceAveragesAndMaximums(
       distancesFromUsersToParks
     );
-  return [...meetingPointsWithDistanceCalculations]; //Temporarily return all until ranking logic implemented
+  const recommendedMeetingPoints =
+    rankingMeetingPoints.recommendBestUserPreferences(
+      meetingPointsWithDistanceCalculations
+    );
+  return recommendedMeetingPoints;
 };
 
-/* 
+/*
 Retrieves the full event, including event details, rsvps, and user preferences
 */
 const getFullEventWithId = async (eventId) => {
@@ -78,6 +83,7 @@ const getFullEventWithId = async (eventId) => {
             latitude: true,
             longitude: true,
             eventId: true,
+            upvotes: true,
           },
         },
       },
@@ -103,7 +109,7 @@ const _parseFullEvent = (fullEvent) => {
   return { event, userSetMeetingPoints, users };
 };
 
-/* 
+/*
 Uses the google maps routes API to find the distance from a user to a meeting point.
 Uses the event time to determine the travel time based on when the event is.
 Returns an object with the travel time, travel distance, and user id.
@@ -154,7 +160,7 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
   }
 };
 
-/* 
+/*
 Formats the google maps response
 */
 const _formatGoogleMapsResponse = (data, userId) => {
