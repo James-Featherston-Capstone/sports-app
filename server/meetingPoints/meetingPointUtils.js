@@ -66,10 +66,12 @@ const findMaxDistance = (meetingPointsData) => {
 Finds average time in minutes from each user to a meeting point
 */
 const findAverageTravelTime = (meetingPointsData) => {
-  const averageTravelTime = meetingPointsData.userDistances.reduce(
+  const totalTravelTime = meetingPointsData.userDistances.reduce(
     (sum, distance) => sum + distance.minutes,
     0
   );
+  const averageTravelTime =
+    totalTravelTime / meetingPointsData.userDistances.length;
   return averageTravelTime;
 };
 

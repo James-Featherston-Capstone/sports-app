@@ -33,7 +33,7 @@ const suggestPreferenceMeetingPoint = async (
   userSetMeetingPoints,
   users
 ) => {
-  if (!userSetMeetingPoints) {
+  if (!userSetMeetingPoints || !users) {
     return null;
   }
   const distancesFromUsersToParks =
@@ -172,5 +172,4 @@ const formatGoogleMapsResponse = (data, userId) => {
   return distanceObj;
 };
 
-suggestMeetingPoints(277);
 module.exports = { suggestMeetingPoints, fetchOptimalRoute };
