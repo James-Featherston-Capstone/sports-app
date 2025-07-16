@@ -2,6 +2,7 @@ const { NotFoundError } = require("../middleware/Errors.js");
 const prisma = require("../prisma.js");
 const meetingPointUtils = require("./meetingPointUtils.js");
 const rankingMeetingPoints = require("./rankingMeetingPoints.js");
+const { filterOutliers } = require("./outliers.js");
 
 /*
 Entry point for the algorithm
@@ -37,10 +38,11 @@ const suggestPreferenceMeetingPoint = async (
   if (!userSetMeetingPoints || !users) {
     return null;
   }
+  const { keptUsers, droppedUsers } = filterOutliers(users, event.organizer);
   const distancesFromUsersToParks =
     await meetingPointUtils.getDistancesFromUsersToParks(
       userSetMeetingPoints,
-      users,
+      keptUsers,
       event
     );
   const meetingPointsWithDistanceCalculations =
@@ -64,6 +66,14 @@ const getFullEventWithId = async (eventId) => {
       select: {
         id: true,
         eventTime: true,
+        organizer: {
+          select: {
+            id: true,
+            location: true,
+            latitude: true,
+            longitude: true,
+          },
+        },
         rsvps: {
           select: {
             user: {
@@ -101,6 +111,7 @@ const _parseFullEvent = (fullEvent) => {
   const event = {
     id: fullEvent.id,
     eventTime: fullEvent.eventTime,
+    organizer: fullEvent.organizer,
   };
   const userSetMeetingPoints = fullEvent.preferences;
   const users = fullEvent.rsvps.map((userRSVP) => {
@@ -170,8 +181,8 @@ const _formatGoogleMapsResponse = (data, userId) => {
   const minutes = Math.round(seconds / 60);
   const distanceObj = {
     user: userId,
-    meters: meters,
-    miles: miles,
+    meters: meters ? meters : 0, //Fixes bug where no distance is returned when the locations are the same
+    miles: miles ? miles : 0,
     minutes: minutes,
     seconds: seconds,
   };
