@@ -9,7 +9,7 @@ Output: List of recommended parks that used different ranking algorithms
 */
 const suggestMeetingPoints = async (eventId) => {
   const fullEvent = await getFullEventWithId(eventId);
-  const { event, userSetMeetingPoints, users } = parseFullEvent(fullEvent);
+  const { event, userSetMeetingPoints, users } = _parseFullEvent(fullEvent);
   const preferenceMeetingPoints = await suggestPreferenceMeetingPoint(
     event,
     userSetMeetingPoints,
@@ -84,14 +84,14 @@ const getFullEventWithId = async (eventId) => {
     });
     return event;
   } catch (error) {
-    throw new NotFoundError("The event you are querying does not exist");
+    throw error;
   }
 };
 
 /*
 Parses the event to break it down into event, user set meeting points, and users.
 */
-const parseFullEvent = (fullEvent) => {
+const _parseFullEvent = (fullEvent) => {
   const event = {
     id: fullEvent.id,
     eventTime: fullEvent.eventTime,
@@ -147,7 +147,7 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
       throw new Error("Something went wrong");
     }
     const data = await response.json();
-    const formattedRoute = formatGoogleMapsResponse(data, user.id);
+    const formattedRoute = _formatGoogleMapsResponse(data, user.id);
     return formattedRoute;
   } catch (error) {
     console.error(error);
@@ -157,7 +157,7 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
 /* 
 Formats the google maps response
 */
-const formatGoogleMapsResponse = (data, userId) => {
+const _formatGoogleMapsResponse = (data, userId) => {
   const meters = data.routes[0].distanceMeters;
   const miles = meters * 0.000621371; // Meters to miles calculation
   const seconds = parseInt(data.routes[0].duration.replace("s", ""));
