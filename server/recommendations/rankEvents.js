@@ -28,7 +28,6 @@ const rankEvents = (
     event.weight = getEventWeight(
       event,
       sportsMap,
-      userDate,
       bounds,
       userPreferedTimesMap
     );
@@ -53,14 +52,14 @@ const getBounds = (events, sportMap, userPreferedTimesMap) => {
   const dateRange = maxDate - minDate;
   const maxTimeValue = Math.max(...userPreferedTimesMap.values());
   return {
-    maxSportValue,
+    maxSportValue: maxSportValue > 0 ? maxSportValue : 1,
     minDistance,
     maxDistance,
     minDate,
     maxDate,
     distanceRange,
     dateRange,
-    maxTimeValue,
+    maxTimeValue: maxTimeValue > 0 ? maxTimeValue : 1,
   };
 };
 
@@ -70,13 +69,7 @@ the higher the event should be recommended.
 Input: Takes event, user date, and user's sports preferences
 Ouput: A weight for the event
 */
-const getEventWeight = (
-  event,
-  sportsMap,
-  userDate,
-  bounds,
-  userPreferedTimesMap
-) => {
+const getEventWeight = (event, sportsMap, bounds, userPreferedTimesMap) => {
   const LOCATION_WEIGHT = 0.5; // 50%
   const DATE_WEIGHT = 0.25; // 25%
   const SPORT_WEIGHT = 0.15; // 15%
@@ -89,7 +82,7 @@ const getEventWeight = (
   const distanceWeight =
     1 - (event.distance - bounds.minDistance) / bounds.distanceRange;
   const dateWeight =
-    1 - (new Date(userDate) - bounds.minDate) / bounds.dateRange;
+    1 - (new Date(event.eventTime) - bounds.minDate) / bounds.dateRange;
   const eventDate = new Date(event.eventTime);
   const minutes = eventDate.getMinutes();
   const roundUp = Math.floor(minutes / 30);
