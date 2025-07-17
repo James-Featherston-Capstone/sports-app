@@ -23,6 +23,35 @@ const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
 };
 
 /* 
+Gets the median coordiante to find the fairest central point
+for all the users.
+Input: Users list with locations
+Output: Central coordinate.
+*/
+const getUsersCenterCoordinate = (users) => {
+  if (users.length === 0) {
+    throw new Error("Users required");
+  }
+  const latitudes = users
+    .map((user) => parseFloat(user.latitude))
+    .toSorted((lat1, lat2) => lat1 - lat2);
+  const longitudes = users
+    .map((user) => parseFloat(user.longitude))
+    .toSorted((lng1, lng2) => lng1 - lng2);
+
+  const midPoint = Math.floor(users.length / 2);
+  const odd = users.length % 2;
+
+  const medianLatitude = odd
+    ? latitudes[midPoint]
+    : (latitudes[midPoint] + latitudes[midPoint - 1]) / 2;
+  const medianLongitude = odd
+    ? longitudes[midPoint]
+    : (longitudes[midPoint] + longitudes[midPoint - 1]) / 2;
+  return { latitude: medianLatitude, longitude: medianLongitude };
+};
+
+/* 
 Computes distance metrics for each meeting points and adds them to the object
 */
 const computeDistanceAveragesAndMaximums = (meetingPoints) => {
@@ -89,4 +118,5 @@ const findMaxTravelTime = (meetingPointsData) => {
 module.exports = {
   getDistancesFromUsersToParks,
   computeDistanceAveragesAndMaximums,
+  getUsersCenterCoordinate,
 };
