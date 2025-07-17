@@ -67,7 +67,6 @@ const suggestGeneratedMeetingPoints = async (event, users) => {
     centerCoordinate,
     event.sport
   );
-  console.log(generatedMeetingPoints);
   if (generatedMeetingPoints.length === 0) {
     return null;
   }
@@ -244,7 +243,7 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
   const BASE_SEARCH_URL = `https://places.googleapis.com/v1/places:searchText?key=${process.env.GOOGLE_MAPS_API}`;
   try {
     const reqBody = {
-      maxResultCount: 10,
+      maxResultCount: 15,
       textQuery: sport,
       locationBias: {
         circle: {
@@ -252,7 +251,7 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
             latitude: centerCoordinate.latitude,
             longitude: centerCoordinate.longitude,
           },
-          radius: 500.0,
+          radius: 5000.0, //5 Kilometers
         },
       },
     };
