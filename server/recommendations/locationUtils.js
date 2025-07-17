@@ -56,7 +56,6 @@ Input: Center latitude and longitude keys, and the number of surrounding loops t
 Output: List of keys
 */
 const getAllKeys = (baseKey, offsets) => {
-  console.log(offsets);
   const latitudeOffsets = Array.from(
     { length: offsets.latitudeKeyOffset * 2 + 1 },
     (_, i) => i - offsets.latitudeKeyOffset
