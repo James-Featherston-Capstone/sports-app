@@ -1,7 +1,3 @@
-const UPVOTE_WEIGHT = 0.3; // 30%
-const MAX_DISTANCE_WEIGHT = 0.2; // 20%
-const AVERAGE_DISTANCE_WEIGHT = 0.5; // 50 %
-
 /*
 Fetchs a list of meeting points with certain qualities such as most optimal,
 smallest average distance, and smallest max distance
@@ -17,7 +13,10 @@ const recommendBestUserPreferences = (meetingPoints) => {
     return [bestUserPreference];
   }
   const bounds = _getNormalizationBounds(meetingPoints);
-  const weightedMeetingPoints = _weightMeetingPoints(meetingPoints, bounds);
+  const weightedMeetingPoints = _weightPreferencedMeetingPoints(
+    meetingPoints,
+    bounds
+  );
   const preferenceWithLargestWeight = weightedMeetingPoints.reduce(
     (bestPreference, currPreference) =>
       bestPreference && bestPreference.weight >= currPreference.weight
@@ -33,28 +32,83 @@ const recommendBestUserPreferences = (meetingPoints) => {
 };
 
 /*
+Recommends generated events based on certain qualities
+Input: Potential Meeting points
+Output: Recommended meeting points
+*/
+const recommendBestGeneratedEvent = (meetingPoints) => {
+  if (meetingPoints.length === 1) {
+    const bestGeneratedMeetingPoint = {
+      recommendationTitle: "Optimal Generated Meeting Point",
+      ...meetingPoints[0],
+    };
+    return [bestGeneratedMeetingPoint];
+  }
+  const bounds = _getNormalizationBounds(meetingPoints);
+  const weightedMeetingPoints = _weightGeneratedMeetingPoints(
+    meetingPoints,
+    bounds
+  );
+  const generatedWithLargestWeight = weightedMeetingPoints.reduce(
+    (bestPreference, currPreference) =>
+      bestPreference && bestPreference.weight >= currPreference.weight
+        ? bestPreference
+        : currPreference
+  );
+  const optimalGeneratedMeetingPoint = {
+    recommendationTitle: "Optimal Generated Meeting Point",
+    ...generatedWithLargestWeight,
+  };
+  return [optimalGeneratedMeetingPoint];
+};
+
+/*
+Weights meeting points based on certain qualities
+Input: Meeting points list and bounds
+Output: List of meeting points with weights
+*/
+const _weightGeneratedMeetingPoints = (meetingPoints, bounds) => {
+  const MAX_DISTANCE_WEIGHT = 0.3; // 30%
+  const AVERAGE_DISTANCE_WEIGHT = 0.7; // 70%
+  return meetingPoints.map((point) => {
+    const maxDistanceScore =
+      1 -
+      (point.maximumDistance - bounds.minMaxDistance) /
+        bounds.maximumDistanceRange;
+    const averageDistanceScore =
+      1 -
+      (point.averageDistance - bounds.minAvgDistance) /
+        bounds.averageDistanceRange;
+    const weight =
+      maxDistanceScore * MAX_DISTANCE_WEIGHT +
+      averageDistanceScore * AVERAGE_DISTANCE_WEIGHT;
+    return {
+      ...point,
+      weight,
+    };
+  });
+};
+
+/*
 Weights meeting points by normalizing the values and using weight constants.
 Input: Meeting points list and a bounds object
 Output: Meeting points list with weights
 */
-const _weightMeetingPoints = (meetingPoints, bounds) => {
-  const averageDistanceRange = Math.max(
-    bounds.maxAvgDistance - bounds.minAvgDistance,
-    1
-  );
-  const maximumDistanceRange = Math.max(
-    bounds.maxMaxDistance - bounds.minMaxDistance,
-    1
-  );
-  const upvotesRange = Math.max(bounds.maxUpvotes - bounds.minUpvotes, 1);
+const _weightPreferencedMeetingPoints = (meetingPoints, bounds) => {
+  const UPVOTE_WEIGHT = 0.3; // 30%
+  const MAX_DISTANCE_WEIGHT = 0.2; // 20%
+  const AVERAGE_DISTANCE_WEIGHT = 0.5; // 50 %
   return meetingPoints.map((point) => {
-    const upvotesScore = (point.upvotes - bounds.minUpvotes) / upvotesRange;
+    const upvotesScore =
+      (point.upvotes - bounds.minUpvotes) / bounds.upvotesRange;
     const maxDistanceScore =
       1 -
-      (point.maximumDistance - bounds.minMaxDistance) / maximumDistanceRange;
+      (point.maximumDistance - bounds.minMaxDistance) /
+        bounds.maximumDistanceRange;
     const averageDistance =
       1 -
-      (point.averageDistance - bounds.minAvgDistance) / averageDistanceRange;
+      (point.averageDistance - bounds.minAvgDistance) /
+        bounds.averageDistanceRange;
     const weight =
       upvotesScore * UPVOTE_WEIGHT +
       maxDistanceScore * MAX_DISTANCE_WEIGHT +
@@ -89,6 +143,11 @@ const _getNormalizationBounds = (meetingPoints) => {
   const maxUpvotes = meetingPoints[0].upvotes
     ? Math.max(...meetingPoints.map((point) => point.upvotes))
     : 0;
+  const averageDistanceRange = Math.max(maxAvgDistance - minAvgDistance, 1);
+  const maximumDistanceRange = Math.max(maxMaxDistance - minMaxDistance, 1);
+  const upvotesRange = meetingPoints[0].upvotes
+    ? Math.max(maxUpvotes - minUpvotes, 1)
+    : 1;
   return {
     minAvgDistance,
     maxAvgDistance,
@@ -96,9 +155,13 @@ const _getNormalizationBounds = (meetingPoints) => {
     maxMaxDistance,
     minUpvotes,
     maxUpvotes,
+    averageDistanceRange,
+    maximumDistanceRange,
+    upvotesRange,
   };
 };
 
 module.exports = {
   recommendBestUserPreferences,
+  recommendBestGeneratedEvent,
 };

@@ -75,7 +75,9 @@ const suggestGeneratedMeetingPoints = async (event, users) => {
     users,
     event
   );
-  return preppedMeetingPoints;
+  const recommendations =
+    rankingMeetingPoints.recommendBestGeneratedEvent(preppedMeetingPoints);
+  return recommendations;
 };
 
 /*
