@@ -41,6 +41,9 @@ exports.getEvent = async (eventId) => {
             },
           },
         },
+        orderBy: {
+          updated_at: "desc",
+        },
       },
       organizer: true,
       comments: {
