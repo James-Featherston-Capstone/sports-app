@@ -39,8 +39,9 @@ const getAllNearbyEvents = async (userId, userInputs) => {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const keyOffset = 10;
-  const keys = locationUtils.getAllKeys(baseKey, keyOffset);
+  const radius = userInputs.radius ? userInputs.radius : 10; // In miles
+  const offsets = locationUtils.calculateKeyOffsets(radius, user.latitude);
+  const keys = locationUtils.getAllKeys(baseKey, offsets);
   const filters = {};
   if (userInputs.date && userInputs.date !== "undefined") {
     const start = new Date(userInputs.date);
