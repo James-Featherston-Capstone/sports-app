@@ -15,25 +15,26 @@ datasource db {
 }
 
 model User {
-  id                 Int            @id @default(autoincrement())
+  id                 Int             @id @default(autoincrement())
   username           String
   email              String
   password           String
-  profile_image_url  String         @default("")
-  bio                String         @default("")
-  location           String         @default("")
-  latitude           Decimal        @default(0.0)
-  longitude          Decimal        @default(0.0)
-  latitudeKey        Int            @default(0)
-  longitudeKey       Int            @default(0)
-  sports             Sports[]       @default([])
-  created_at         DateTime       @default(now())
-  updated_at         DateTime       @default(now())
+  profile_image_url  String          @default("")
+  bio                String          @default("")
+  location           String          @default("")
+  latitude           Decimal         @default(0.0)
+  longitude          Decimal         @default(0.0)
+  latitudeKey        Int             @default(0)
+  longitudeKey       Int             @default(0)
+  sports             Sports[]        @default([])
+  created_at         DateTime        @default(now())
+  updated_at         DateTime        @default(now())
   eventsCreated      Event[]
   eventsRSVP         EventRSVP[]
   comments           EventComment[]
-  friendshipSent     Friendship[]   @relation("UserToFriend")
-  friendshipReceived Friendship[]   @relation("FriendToUser")
+  friendshipSent     Friendship[]    @relation("UserToFriend")
+  friendshipReceived Friendship[]    @relation("FriendToUser")
+  clickedEvents      ClickedEvents[]
 
   @@index([latitudeKey, longitudeKey])
 }
@@ -68,6 +69,13 @@ model Event {
   preferences  EventParkPreference[]
 
   @@index([latitudeKey, longitudeKey])
+}
+
+model ClickedEvents {
+  id            Int     @id @default(autoincrement())
+  eventDistance Decimal
+  user          User    @relation(fields: [userId], references: [id])
+  userId        Int
 }
 
 model EventParkPreference {
