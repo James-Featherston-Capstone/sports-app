@@ -67,15 +67,20 @@ model Event {
   rsvps        EventRSVP[]
   comments     EventComment[]
   preferences  EventParkPreference[]
+  clicks       ClickedEvents[]
 
   @@index([latitudeKey, longitudeKey])
 }
 
 model ClickedEvents {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   eventDistance Decimal
-  user          User    @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
+  event         Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId       Int
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
 }
 
 model EventParkPreference {
