@@ -26,8 +26,9 @@ const getGeoCode = async (location) => {
 };
 
 /*
+Gets nearby events and recommends them based on user characteristics
 Input: user id and user filters
-Output: List of nearby events sorted by most recommended -> least recommended
+Output: List of events
 */
 const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await getNeededUserData(userId, userInputs);
@@ -76,6 +77,11 @@ const getEvents = async (filters, keys, userId) => {
   return events;
 };
 
+/*
+Gets the user data needed to retrieve nearby events
+Input: userId, userInputs
+Output: User object 
+*/
 const getNeededUserData = async (userId, userInputs) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -105,6 +111,11 @@ const getNeededUserData = async (userId, userInputs) => {
   return user;
 };
 
+/*
+Creates a filter object that is used for the event db query
+Input: User inputs
+Output: Filter object
+*/
 const _getEventsFilters = (userInputs) => {
   const filters = {};
   if (userInputs.date && userInputs.date !== "undefined") {
@@ -123,6 +134,11 @@ const _getEventsFilters = (userInputs) => {
   return filters;
 };
 
+/*
+Calculates the keys need for searching events by location
+Input: User, User inputs
+Output: 2D Array of keys
+*/
 const _getEventKeys = (user, userInputs) => {
   const baseKey = {
     latitudeKey: user.latitudeKey,

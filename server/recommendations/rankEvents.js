@@ -62,7 +62,7 @@ const getBounds = (events, preferenceMaps) => {
 /*
 Gets an event weight for an event where the higher the weight is, 
 the higher the event should be recommended.
-Input: Takes event, user date, and user's sports preferences
+Input: Takes event, user date, and preference maps
 Ouput: A weight for the event
 */
 const getEventWeight = (event, bounds, preferenceMaps) => {
@@ -102,6 +102,9 @@ const getEventWeight = (event, bounds, preferenceMaps) => {
   );
 };
 
+/*
+Gets the distance value for a given distance
+*/
 const _getDistanceValue = (distance, userDistanceMap) => {
   const index = DISTANCE_RANGES.findIndex(
     (currDistance) => distance <= currDistance
