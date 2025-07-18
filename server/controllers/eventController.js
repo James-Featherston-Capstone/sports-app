@@ -209,7 +209,6 @@ exports.createEventClick = async (req, res, next) => {
       eventDistance,
       userId,
     });
-    console.log(clickEvent);
     res.json(clickEvent);
   } catch (error) {
     next(error);
