@@ -36,7 +36,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const events = await getEvents(filters, keys, userId);
   const preparedEvents = _prepareEvents(events, userInputs);
   const userSportsMap = userInputs.sport
-    ? new Map([userInputs.sport, 1])
+    ? new Map([[userInputs.sport, 1]])
     : _getUserSportPreferences(user);
   const userTimesMap = _getUserPreferredTimes(user);
   const userDistanceMap = _getUserPreferredDistance(user);
