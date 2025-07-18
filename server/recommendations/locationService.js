@@ -38,10 +38,10 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
   const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const userSportsMap = userInputs.sport
-    ? new Map([userInputs.sport, 1])
-    : _getUserSportPreferences(recentRSVPs, user.sports);
-  const userTimesMap = _getUserPreferredTimes(recentRSVPs);
-  const userDistanceMap = _getUserPreferredDistance(recentClicks);
+    ? new Map([[userInputs.sport, 1]])
+    : _getUserSportPreferences(user);
+  const userTimesMap = _getUserPreferredTimes(user);
+  const userDistanceMap = _getUserPreferredDistance(user);
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
