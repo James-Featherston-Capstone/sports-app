@@ -2,6 +2,7 @@ const prisma = require("../prisma.js");
 const meetingPointUtils = require("./meetingPointUtils.js");
 const rankingMeetingPoints = require("./rankingMeetingPoints.js");
 const { filterOutliers } = require("./outliers.js");
+const { GOOGLE_MAPS_RADIUS } = require("../config.js");
 
 /*
 Entry point for the algorithm
@@ -23,13 +24,10 @@ const suggestMeetingPoints = async (eventId) => {
     event,
     users
   );
-  const recommendedMeetingPointsListWithNulls = [
+  const recommendedMeetingPointsList = [
     ...preferenceMeetingPoints,
     ...generatedMeetingPoints,
   ];
-  // Filters out possible nulls (i.e. when no user preferences are set that suggestion will be null)
-  const recommendedMeetingPointsList =
-    recommendedMeetingPointsListWithNulls.filter((obj) => obj);
   return recommendedMeetingPointsList;
 };
 
@@ -44,7 +42,7 @@ const suggestPreferenceMeetingPoint = async (
   users
 ) => {
   if (!userSetMeetingPoints || !users) {
-    return null;
+    return [];
   }
   const preppedMeetingPoints = await _handleMeetingPointsPrep(
     userSetMeetingPoints,
@@ -68,7 +66,7 @@ const suggestGeneratedMeetingPoints = async (event, users) => {
     event.sport
   );
   if (generatedMeetingPoints.length === 0) {
-    return null;
+    return [];
   }
   const preppedMeetingPoints = await _handleMeetingPointsPrep(
     generatedMeetingPoints,
@@ -251,7 +249,7 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
             latitude: centerCoordinate.latitude,
             longitude: centerCoordinate.longitude,
           },
-          radius: 5000.0, //5 Kilometers
+          radius: GOOGLE_MAPS_RADIUS,
         },
       },
     };
