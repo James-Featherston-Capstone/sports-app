@@ -31,7 +31,9 @@ const EventCard = ({ event }: EventProps) => {
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
   const handleOpenEventViewModal = async () => {
-    clickEvent(event.id, event.distance);
+    if (event.distance !== undefined) {
+      await clickEvent(event.id, event.distance);
+    }
     const fullEvent = await getEvent(event.id);
     openDialog({
       title: `${fullEvent.sport} at ${fullEvent.location}`,

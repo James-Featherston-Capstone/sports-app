@@ -6,6 +6,7 @@ import type {
   EventModel,
   Comment,
   ParkPreference,
+  ClickEvent,
 } from "./interfaces";
 
 const getAllEvents = async (
@@ -146,7 +147,7 @@ const upvotePreference = async (
 const clickEvent = async (
   eventId: number,
   distance: number | undefined
-): Promise<Object> => {
+): Promise<ClickEvent> => {
   const path = `${BASE_URL}/events/${eventId}/event-click`;
   const req = {
     method: "POST",

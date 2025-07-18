@@ -201,7 +201,12 @@ exports.createEventClick = async (req, res, next) => {
     const eventId = parseInt(req.params.eventId);
     const eventDistance = parseFloat(req.body.eventDistance);
     const userId = req.session.user.id;
-    if (!eventId || !userId || !eventDistance) {
+    if (
+      !eventId ||
+      !userId ||
+      eventDistance === undefined ||
+      eventDistance === null
+    ) {
       throw new ValidationError("Event id and event distance required");
     }
     const clickEvent = await eventService.createClickEvent({
