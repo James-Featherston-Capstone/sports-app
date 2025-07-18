@@ -35,11 +35,13 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const keys = _getEventKeys(user, userInputs);
   const events = await getEvents(filters, keys, userId);
   const preparedEvents = _prepareEvents(events, userInputs);
+  const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
+  const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const userSportsMap = userInputs.sport
     ? new Map([userInputs.sport, 1])
-    : _getUserSportPreferences(user);
-  const userTimesMap = _getUserPreferredTimes(user);
-  const userDistanceMap = _getUserPreferredDistance(user);
+    : _getUserSportPreferences(recentRSVPs, user.sports);
+  const userTimesMap = _getUserPreferredTimes(recentRSVPs);
+  const userDistanceMap = _getUserPreferredDistance(recentClicks);
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
@@ -154,20 +156,18 @@ Finds sports the user prefers by looking at their profile and old RSVPs
 Input: user
 Output: Map - key: sport value: Rsvps for sport
 */
-const _getUserSportPreferences = (user) => {
+const _getUserSportPreferences = (rsvps, sports) => {
   const PROFILE_SPORT_WEIGHT_MULTIPLIER = 10; // Give profile sports 10x value of RSVP'd sports
-  const profileSports = user.sports;
-  const previousRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
   const profileSportWeight = Math.max(
-    previousRSVPs.length / PROFILE_SPORT_WEIGHT_MULTIPLIER,
+    rsvps.length / PROFILE_SPORT_WEIGHT_MULTIPLIER,
     3 // Minimum value of 3 for a profile sport weight
   );
   const sportMap = new Map();
-  for (const rsvp of previousRSVPs) {
+  for (const rsvp of rsvps) {
     const sport = rsvp.event.sport;
     sportMap.set(sport, (sportMap.get(sport) || 0) + 1);
   }
-  for (const sport of profileSports) {
+  for (const sport of sports) {
     sportMap.set(sport, (sportMap.get(sport) || 0) + profileSportWeight);
   }
   return sportMap;
@@ -178,10 +178,9 @@ Finds times the user prefers to play by looking at old RSVPs
 Input: User
 Output: Map: key: time (hour) value: rsvps for that hour
 */
-const _getUserPreferredTimes = (user) => {
-  const previousRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
+const _getUserPreferredTimes = (rsvps) => {
   const timeOfDayMap = new Map();
-  for (const rsvp of previousRSVPs) {
+  for (const rsvp of rsvps) {
     const eventTime = new Date(rsvp.event.eventTime);
     const minutes = eventTime.getMinutes();
     const roundUp = Math.floor(minutes / 30);
@@ -195,11 +194,10 @@ const _getUserPreferredTimes = (user) => {
 Finds distance the user prefers by looking at user clicks
 Input
 */
-const _getUserPreferredDistance = (user) => {
+const _getUserPreferredDistance = (clicks) => {
   const rangesLength = DISTANCE_RANGES.length;
-  const userClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const distanceMap = new Map();
-  for (const click of userClicks) {
+  for (const click of clicks) {
     const distance = click.eventDistance;
     for (const range of DISTANCE_RANGES) {
       if (distance <= range) {
