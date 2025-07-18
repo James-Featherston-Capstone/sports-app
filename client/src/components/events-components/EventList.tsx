@@ -9,7 +9,7 @@ const EventList = () => {
     <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center w-screen">
       {events.map((event: DisplayEvent) => {
         return (
-          <ul className="flex justify-center" key={event.id}>
+          <ul className="flex justify-center grow-1" key={event.id}>
             <EventCard event={event} />
           </ul>
         );

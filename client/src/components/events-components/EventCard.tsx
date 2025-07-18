@@ -55,7 +55,7 @@ const EventCard = ({ event }: EventProps) => {
     <>
       <Card
         onClick={() => handleOpenEventViewModal()}
-        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 min-h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
+        className="flex flex-col justify-around items-center w-9/10 sm:w-75 m-w-50 min-h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
       >
         <CardTitle className="mt-2">{displayedEvent.sport}</CardTitle>
         <CardContent>
