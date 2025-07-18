@@ -1,6 +1,7 @@
 const prisma = require("../prisma.js");
 const locationUtils = require("./locationUtils.js");
 const { rankEvents } = require("./rankEvents.js");
+const { DISTANCE_RANGES } = require("../config.js");
 
 /*
 Input: Location
@@ -42,6 +43,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
     ? new Map([userInputs.sport, 1])
     : _getUserSportPreferences(user);
   const userPreferedTimesMap = _getUserPreferredTimes(user);
+  const userDistanceMap = _getUserPreferredDistance(user);
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
@@ -195,9 +197,24 @@ const _getUserPreferredTimes = (user) => {
 Finds distance the user prefers by looking at user clicks
 Input
 */
-const _userPreferredDistance = (user) => {
+const _getUserPreferredDistance = (user) => {
+  const rangesLength = DISTANCE_RANGES.length;
   const userClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const distanceMap = new Map();
+  for (const click of userClicks) {
+    const distance = click.eventDistance;
+    for (const range of DISTANCE_RANGES) {
+      if (distance <= range) {
+        distanceMap.set(range, (distanceMap.get(range) || 0) + 1);
+        break;
+      }
+    }
+    const lastRange = DISTANCE_RANGES[rangesLength - 1];
+    if (distance > lastRange) {
+      distanceMap.set(lastRange + 1, (distanceMap.get(lastRange + 1) || 0) + 1);
+    }
+  }
+  return distanceMap;
 };
 
 /*
