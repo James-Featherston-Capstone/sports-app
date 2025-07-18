@@ -14,7 +14,7 @@ const suggestMeetingPoints = async (eventId) => {
   const { event, userSetMeetingPoints, fetchedUsers } =
     _parseFullEvent(fullEvent);
   const { keptUsers } = filterOutliers(fetchedUsers, event.organizer);
-  const users = keptUsers.length === 0 ? event.organizer : fetchedUsers;
+  const users = keptUsers.length === 0 ? [event.organizer] : fetchedUsers;
   const preferenceMeetingPoints = await suggestPreferenceMeetingPoint(
     event,
     userSetMeetingPoints,
