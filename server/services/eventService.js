@@ -79,6 +79,9 @@ exports.getAllEventRSVP = async (userId) => {
         },
       },
     },
+    orderBy: {
+      updated_at: "desc",
+    },
   });
   const eventArr = rsvps.map((rsvp) => rsvp.event);
   return eventArr;
