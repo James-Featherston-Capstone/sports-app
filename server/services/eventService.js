@@ -208,6 +208,7 @@ exports.preferenceUpvote = async (preferenceId) => {
 };
 
 exports.createClickEvent = async (data) => {
+  // Not using upsert because a unique field is required in the query.
   const existingClickEvent = await prisma.clickedEvents.findFirst({
     where: {
       userId: data.userId,
@@ -219,6 +220,11 @@ exports.createClickEvent = async (data) => {
       data: data,
     });
     return newClickEvent;
+  } else {
+    const updatedClick = await prisma.clickedEvents.update({
+      where: { id: existingClickEvent.id },
+      data: { eventDistance: data.eventDistance },
+    });
+    return updatedClick;
   }
-  return { message: "Event click already exists" };
 };
