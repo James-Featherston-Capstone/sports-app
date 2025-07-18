@@ -206,3 +206,19 @@ exports.preferenceUpvote = async (preferenceId) => {
   });
   return updatedPreference;
 };
+
+exports.createClickEvent = async (data) => {
+  const existingClickEvent = await prisma.clickedEvents.findFirst({
+    where: {
+      userId: data.userId,
+      eventId: data.eventId,
+    },
+  });
+  if (!existingClickEvent) {
+    const newClickEvent = await prisma.clickedEvents.create({
+      data: data,
+    });
+    return newClickEvent;
+  }
+  return { message: "Event click already exists" };
+};
