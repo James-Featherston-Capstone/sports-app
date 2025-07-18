@@ -62,6 +62,13 @@ interface ParkPreference {
   eventId: number;
 }
 
+interface ClickEvent {
+  id: number;
+  userId: number;
+  eventId: number;
+  eventDistance: number;
+}
+
 export type {
   Profile,
   EventModel,
@@ -69,4 +76,5 @@ export type {
   DisplayEvent,
   Comment,
   ParkPreference,
+  ClickEvent,
 };

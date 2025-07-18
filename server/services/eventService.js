@@ -41,6 +41,9 @@ exports.getEvent = async (eventId) => {
             },
           },
         },
+        orderBy: {
+          updated_at: "desc",
+        },
       },
       organizer: true,
       comments: {
@@ -205,4 +208,26 @@ exports.preferenceUpvote = async (preferenceId) => {
     },
   });
   return updatedPreference;
+};
+
+exports.createClickEvent = async (data) => {
+  // Not using upsert because a unique field is required in the query.
+  const existingClickEvent = await prisma.clickedEvent.findFirst({
+    where: {
+      userId: data.userId,
+      eventId: data.eventId,
+    },
+  });
+  if (!existingClickEvent) {
+    const newClickEvent = await prisma.clickedEvent.create({
+      data: data,
+    });
+    return newClickEvent;
+  } else {
+    const updatedClick = await prisma.clickedEvent.update({
+      where: { id: existingClickEvent.id },
+      data: { eventDistance: data.eventDistance },
+    });
+    return updatedClick;
+  }
 };

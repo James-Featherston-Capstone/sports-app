@@ -55,14 +55,18 @@ const extractLatLngFields = async (obj) => {
 Input: Center latitude and longitude keys, and the number of surrounding loops to retrieve
 Output: List of keys
 */
-const getAllKeys = (baseKey, keyOffset) => {
-  const latLngOffsets = Array.from(
-    { length: keyOffset * 2 + 1 },
-    (_, i) => i - keyOffset
+const getAllKeys = (baseKey, offsets) => {
+  const latitudeOffsets = Array.from(
+    { length: offsets.latitudeKeyOffset * 2 + 1 },
+    (_, i) => i - offsets.latitudeKeyOffset
+  );
+  const longitudeOffsets = Array.from(
+    { length: offsets.longitudeKeyOffset * 2 + 1 },
+    (_, i) => i - offsets.longitudeKeyOffset
   );
 
-  const keyGen = latLngOffsets.map((latKey) => {
-    return latLngOffsets.map((lngKey) => {
+  const keyGen = latitudeOffsets.map((latKey) => {
+    return longitudeOffsets.map((lngKey) => {
       return {
         latitudeKey: latKey + baseKey.latitudeKey,
         longitudeKey: lngKey + baseKey.longitudeKey,
@@ -73,9 +77,31 @@ const getAllKeys = (baseKey, keyOffset) => {
   return keys;
 };
 
+/* 
+Input: Radius in miles
+Ouput: Latitude and longitude keys
+*/
+const calculateKeyOffsets = (radius, latitude) => {
+  const MILES_PER_DEGREE = 69.17;
+  const latitudeMultiplier = Math.cos(parseFloat(latitude)); // Due to the earth being round
+
+  const milesPerDegreeLatitude = MILES_PER_DEGREE * latitudeMultiplier;
+  const milesPerDegreeLongitude = MILES_PER_DEGREE;
+  const latitudeMilesPerKey = milesPerDegreeLatitude / 100;
+  const longitudeMilesPerKey = milesPerDegreeLongitude / 100;
+
+  const latitudeKeys = radius / latitudeMilesPerKey;
+  const longitudeKeys = radius / longitudeMilesPerKey;
+  return {
+    latitudeKeyOffset: Math.ceil(latitudeKeys),
+    longitudeKeyOffset: Math.ceil(longitudeKeys),
+  };
+};
+
 module.exports = {
   extractLatLngFields,
   calculateLocationKey,
   getAllKeys,
   performHaversine,
+  calculateKeyOffsets,
 };

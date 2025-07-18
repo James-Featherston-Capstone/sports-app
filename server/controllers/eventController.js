@@ -195,3 +195,27 @@ exports.getRecommendedMeetingPoints = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.createEventClick = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    const eventDistance = parseFloat(req.body.eventDistance);
+    const userId = req.session.user.id;
+    if (
+      !eventId ||
+      !userId ||
+      eventDistance === undefined ||
+      eventDistance === null
+    ) {
+      throw new ValidationError("Event id and event distance required");
+    }
+    const clickEvent = await eventService.createClickEvent({
+      eventId,
+      eventDistance,
+      userId,
+    });
+    res.json(clickEvent);
+  } catch (error) {
+    next(error);
+  }
+};

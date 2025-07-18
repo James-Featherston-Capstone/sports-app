@@ -18,5 +18,6 @@ router.get(
   "/:eventId/meeting-points",
   eventController.getRecommendedMeetingPoints
 );
+router.post("/:eventId/event-click", eventController.createEventClick);
 
 module.exports = router;

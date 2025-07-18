@@ -6,6 +6,7 @@ import type {
   EventModel,
   Comment,
   ParkPreference,
+  ClickEvent,
 } from "./interfaces";
 
 const getAllEvents = async (
@@ -143,6 +144,22 @@ const upvotePreference = async (
   return await fetchData(path, req);
 };
 
+const clickEvent = async (
+  eventId: number,
+  distance: number | undefined
+): Promise<ClickEvent> => {
+  const path = `${BASE_URL}/events/${eventId}/event-click`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ eventDistance: distance }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
 export {
   getAllEvents,
   getEvent,
@@ -154,4 +171,5 @@ export {
   getAllEventPreferences,
   createEventPreference,
   upvotePreference,
+  clickEvent,
 };
