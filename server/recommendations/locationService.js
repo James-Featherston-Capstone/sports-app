@@ -26,8 +26,9 @@ const getGeoCode = async (location) => {
 };
 
 /*
+Gets nearby events and recommends them based on user characteristics
 Input: user id and user filters
-Output: List of nearby events sorted by most recommended -> least recommended
+Output: List of events
 */
 const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await getNeededUserData(userId, userInputs);
@@ -35,11 +36,13 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const keys = _getEventKeys(user, userInputs);
   const events = await getEvents(filters, keys, userId);
   const preparedEvents = _prepareEvents(events, userInputs);
+  const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
+  const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const userSportsMap = userInputs.sport
     ? new Map([[userInputs.sport, 1]])
-    : _getUserSportPreferences(user);
-  const userTimesMap = _getUserPreferredTimes(user);
-  const userDistanceMap = _getUserPreferredDistance(user);
+    : _getUserSportPreferences(recentRSVPs, recentClicks, user.sports);
+  const userTimesMap = _getUserPreferredTimes(recentRSVPs, recentClicks);
+  const userDistanceMap = _getUserPreferredDistance(recentClicks);
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
@@ -74,6 +77,11 @@ const getEvents = async (filters, keys, userId) => {
   return events;
 };
 
+/*
+Gets the user data needed to retrieve nearby events
+Input: userId, userInputs
+Output: User object 
+*/
 const getNeededUserData = async (userId, userInputs) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -103,6 +111,11 @@ const getNeededUserData = async (userId, userInputs) => {
   return user;
 };
 
+/*
+Creates a filter object that is used for the event db query
+Input: User inputs
+Output: Filter object
+*/
 const _getEventsFilters = (userInputs) => {
   const filters = {};
   if (userInputs.date && userInputs.date !== "undefined") {
@@ -121,6 +134,11 @@ const _getEventsFilters = (userInputs) => {
   return filters;
 };
 
+/*
+Calculates the keys need for searching events by location
+Input: User, User inputs
+Output: 2D Array of keys
+*/
 const _getEventKeys = (user, userInputs) => {
   const baseKey = {
     latitudeKey: user.latitudeKey,
@@ -154,21 +172,21 @@ Finds sports the user prefers by looking at their profile and old RSVPs
 Input: user
 Output: Map - key: sport value: Rsvps for sport
 */
-const _getUserSportPreferences = (user) => {
-  const PROFILE_SPORT_WEIGHT_MULTIPLIER = 10; // Give profile sports 10x value of RSVP'd sports
-  const profileSports = user.sports;
-  const previousRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
-  const profileSportWeight = Math.max(
-    previousRSVPs.length / PROFILE_SPORT_WEIGHT_MULTIPLIER,
-    3 // Minimum value of 3 for a profile sport weight
-  );
+const _getUserSportPreferences = (rsvps, clicks, sports) => {
+  const PROFILE_SPORT_VALUE = 20;
+  const RSVP_SPORT_VALUE = 5;
+  const CLICKED_SPORT_VALUE = 1;
   const sportMap = new Map();
-  for (const rsvp of previousRSVPs) {
+  for (const rsvp of rsvps) {
     const sport = rsvp.event.sport;
-    sportMap.set(sport, (sportMap.get(sport) || 0) + 1);
+    sportMap.set(sport, (sportMap.get(sport) || 0) + RSVP_SPORT_VALUE);
   }
-  for (const sport of profileSports) {
-    sportMap.set(sport, (sportMap.get(sport) || 0) + profileSportWeight);
+  for (const sport of sports) {
+    sportMap.set(sport, (sportMap.get(sport) || 0) + PROFILE_SPORT_VALUE);
+  }
+  for (const click of clicks) {
+    const sport = click.event.sport;
+    sportMap.set(sport, (sportMap.get(sport) || 0) + CLICKED_SPORT_VALUE);
   }
   return sportMap;
 };
@@ -178,15 +196,23 @@ Finds times the user prefers to play by looking at old RSVPs
 Input: User
 Output: Map: key: time (hour) value: rsvps for that hour
 */
-const _getUserPreferredTimes = (user) => {
-  const previousRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
+const _getUserPreferredTimes = (rsvps, clicks) => {
+  const RSVP_TIME_VALUE = 10;
+  const CLICKED_TIME_VALUE = 1;
   const timeOfDayMap = new Map();
-  for (const rsvp of previousRSVPs) {
+  for (const rsvp of rsvps) {
     const eventTime = new Date(rsvp.event.eventTime);
     const minutes = eventTime.getMinutes();
     const roundUp = Math.floor(minutes / 30);
     const hour = roundUp ? eventTime.getHours() + 1 : eventTime.getHours();
-    timeOfDayMap.set(hour, (timeOfDayMap.get(hour) || 0) + 1);
+    timeOfDayMap.set(hour, (timeOfDayMap.get(hour) || 0) + RSVP_TIME_VALUE);
+  }
+  for (const click of clicks) {
+    const eventTime = new Date(click.event.eventTime);
+    const minutes = eventTime.getMinutes();
+    const roundUp = Math.floor(minutes / 30);
+    const hour = roundUp ? eventTime.getHours() + 1 : eventTime.getHours();
+    timeOfDayMap.set(hour, (timeOfDayMap.get(hour) || 0) + CLICKED_TIME_VALUE);
   }
   return timeOfDayMap;
 };
@@ -195,11 +221,10 @@ const _getUserPreferredTimes = (user) => {
 Finds distance the user prefers by looking at user clicks
 Input
 */
-const _getUserPreferredDistance = (user) => {
+const _getUserPreferredDistance = (clicks) => {
   const rangesLength = DISTANCE_RANGES.length;
-  const userClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const distanceMap = new Map();
-  for (const click of userClicks) {
+  for (const click of clicks) {
     const distance = click.eventDistance;
     for (const range of DISTANCE_RANGES) {
       if (distance <= range) {
