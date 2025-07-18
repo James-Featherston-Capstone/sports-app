@@ -34,22 +34,16 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const filters = _getEventsFilters(userInputs);
   const keys = _getEventKeys(user, userInputs);
   const events = await getEvents(filters, keys, userId);
-  const userDate =
-    userInputs.date && userInputs.date !== "undefined"
-      ? new Date(userInputs.date)
-      : new Date();
-  const preparedEvents = _prepareEvents(events, userDate);
+  const preparedEvents = _prepareEvents(events, userInputs);
   const userSportsMap = userInputs.sport
     ? new Map([userInputs.sport, 1])
     : _getUserSportPreferences(user);
-  const userPreferedTimesMap = _getUserPreferredTimes(user);
+  const userTimesMap = _getUserPreferredTimes(user);
   const userDistanceMap = _getUserPreferredDistance(user);
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
-    userSportsMap,
-    userDate,
-    userPreferedTimesMap
+    { userSportsMap, userTimesMap, userDistanceMap }
   );
   return rankedEvents;
 };
@@ -143,7 +137,11 @@ Prepares event data
 Input: Events
 Output: Prepared Events
 */
-const _prepareEvents = (events, userDate) => {
+const _prepareEvents = (events, userInputs) => {
+  const userDate =
+    userInputs.date && userInputs.date !== "undefined"
+      ? new Date(userInputs.date)
+      : new Date();
   const futureEvents = events.filter((event) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
