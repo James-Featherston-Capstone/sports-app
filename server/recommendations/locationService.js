@@ -3,10 +3,12 @@ const locationUtils = require("./locationUtils.js");
 const { rankEvents } = require("./rankEvents.js");
 const { DISTANCE_RANGES } = require("../config.js");
 
-/*
-Input: Location
-Ouput: Latitude and longitude of that location 
-*/
+/**
+ * Gets the coordinates for a location string using the
+ * Google Maps geocode api.
+ * @param {string} location - The locations
+ * @returns {Coordinate} - The coordinate for that location
+ */
 const getGeoCode = async (location) => {
   try {
     const response = await fetch(
@@ -30,6 +32,14 @@ Gets nearby events and recommends them based on user characteristics
 Input: user id and user filters
 Output: List of events
 */
+/**
+ * Recommends a list of events to a user based on their location,
+ * preferences, and activity. The user is able to add their
+ * own filters to get different results.
+ * @param {number} userId - The current users id
+ * @param {Object} userInputs - The inputs from the user for filtering
+ * @returns {Event[]} - List of events sorted
+ */
 const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await getNeededUserData(userId, userInputs);
   const filters = _getEventsFilters(userInputs);
@@ -39,7 +49,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
   const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const userSportsMap = userInputs.sport
-    ? new Map([[userInputs.sport, 1]])
+    ? new Map([[userInputs.sport, 1]]) // User inputted sport
     : _getUserSportPreferences(recentRSVPs, recentClicks, user.sports);
   const userTimesMap = _getUserPreferredTimes(recentRSVPs, recentClicks);
   const userDistanceMap = _getUserPreferredDistance(recentClicks);
@@ -51,9 +61,15 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   return rankedEvents;
 };
 
-/* 
-Retrieve events nearby to the user with the users filters
-*/
+/**
+ * Queries the events table using the keys to get
+ * events within a certain radius of the user and user
+ * filters.
+ * @param {Object} filters - Filters object
+ * @param {Key} keys - Indexes for nearby events
+ * @param {number} userId - The users id
+ * @returns
+ */
 const getEvents = async (filters, keys, userId) => {
   const events = await prisma.event.findMany({
     where: {
@@ -77,11 +93,14 @@ const getEvents = async (filters, keys, userId) => {
   return events;
 };
 
-/*
-Gets the user data needed to retrieve nearby events
-Input: userId, userInputs
-Output: User object 
-*/
+/**
+ * Queries the db, getting all necessary data needed for
+ * recommending events to the user such as past RSVPs,
+ * clickedEvents, and users preferences.
+ * @param {number} userId - The users id
+ * @param {Object} userInputs - The inputs from the user for filtering
+ * @returns {User} - The current user
+ */
 const getNeededUserData = async (userId, userInputs) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -111,11 +130,11 @@ const getNeededUserData = async (userId, userInputs) => {
   return user;
 };
 
-/*
-Creates a filter object that is used for the event db query
-Input: User inputs
-Output: Filter object
-*/
+/**
+ * Creates a filter object for the prisma event db query
+ * @param {Object} userInputs - The inputs from the user for filtering
+ * @returns {Object} Filters object
+ */
 const _getEventsFilters = (userInputs) => {
   const filters = {};
   if (userInputs.date && userInputs.date !== "undefined") {
@@ -134,11 +153,13 @@ const _getEventsFilters = (userInputs) => {
   return filters;
 };
 
-/*
-Calculates the keys need for searching events by location
-Input: User, User inputs
-Output: 2D Array of keys
-*/
+/**
+ * Calculates the keys needed for searching events by location using
+ * user inputs.
+ * @param {User} user - The user
+ * @param {Object} userInputs - The inputs from the user for filtering
+ * @returns {Key[]} - List of coordinate keys
+ */
 const _getEventKeys = (user, userInputs) => {
   const baseKey = {
     latitudeKey: user.latitudeKey,
@@ -150,11 +171,11 @@ const _getEventKeys = (user, userInputs) => {
   return keys;
 };
 
-/*
-Prepares event data
-Input: Events
-Output: Prepared Events
-*/
+/**
+ * @param {Event[]} events
+ * @param {Object} userInputs - The inputs from the user for filtering
+ * @returns {Event[]} - Prepared events
+ */
 const _prepareEvents = (events, userInputs) => {
   const userDate =
     userInputs.date && userInputs.date !== "undefined"
@@ -167,11 +188,14 @@ const _prepareEvents = (events, userInputs) => {
   return futureEvents;
 };
 
-/*
-Finds sports the user prefers by looking at their profile and old RSVPs
-Input: user
-Output: Map - key: sport value: Rsvps for sport
-*/
+/**
+ * Creates a map that tracks how much the user
+ * interacts/ preferences each sport.
+ * @param {RSVP[]} rsvps - Users previous RSVPs
+ * @param {Click[]} clicks - Users previous clicks
+ * @param {Sport[]} sports - Users preferred sports
+ * @returns {Map} - Sport preference map
+ */
 const _getUserSportPreferences = (rsvps, clicks, sports) => {
   const PROFILE_SPORT_VALUE = 20;
   const RSVP_SPORT_VALUE = 5;
@@ -191,11 +215,13 @@ const _getUserSportPreferences = (rsvps, clicks, sports) => {
   return sportMap;
 };
 
-/*
-Finds times the user prefers to play by looking at old RSVPs
-Input: User
-Output: Map: key: time (hour) value: rsvps for that hour
-*/
+/**
+ * Creates a Map that tracks how much the user interacts/
+ * preferences each hour of the day.
+ * @param {RSVP[]} rsvps - Users previous RSVPs
+ * @param {Click[]} clicks - Users previous clicks
+ * @returns {Map} - Preferred times map
+ */
 const _getUserPreferredTimes = (rsvps, clicks) => {
   const RSVP_TIME_VALUE = 10;
   const CLICKED_TIME_VALUE = 1;
@@ -217,10 +243,12 @@ const _getUserPreferredTimes = (rsvps, clicks) => {
   return timeOfDayMap;
 };
 
-/*
-Finds distance the user prefers by looking at user clicks
-Input
-*/
+/**
+ * Created a map that tracks how much a user clicks on events
+ * that lie within different radius ranges.
+ * @param {Click[]} clicks
+ * @returns {Map} - Preferred distance map
+ */
 const _getUserPreferredDistance = (clicks) => {
   const rangesLength = DISTANCE_RANGES.length;
   const distanceMap = new Map();
@@ -241,7 +269,7 @@ const _getUserPreferredDistance = (clicks) => {
 };
 
 /*
-Filters out RSVPs for events that happened over 3 months ago. 
+Filters out RSVPs or clicks for events that happened over 3 months ago. 
 */
 const _filterDataLastThreeMonths = (data) => {
   const now = new Date();
