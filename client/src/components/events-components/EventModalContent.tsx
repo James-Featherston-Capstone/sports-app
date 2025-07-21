@@ -63,7 +63,6 @@ const EventModalContent = ({
   };
   const updateLocation = (location: string) => {
     const updatedEvent: DisplayEvent = { ...event, location };
-    console.log(updatedEvent);
     editEvent(updatedEvent);
     updateDisplayedEvent(updatedEvent);
     setLocation(location);
