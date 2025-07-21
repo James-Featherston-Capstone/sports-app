@@ -8,7 +8,7 @@ const { performHaversine } = require("./locationUtils");
  * @param {Object} preferenceMaps - Object with preference Maps
  * @returns {Event[]} - Ranked events
  */
-const rankEvents = (events, userLocation, preferenceMaps) => {
+const rankEvents = (events, userLocation, preferenceMaps, radius) => {
   const eventsWithDistance = events.map((event) => {
     event.distance =
       Math.round(
@@ -21,8 +21,12 @@ const rankEvents = (events, userLocation, preferenceMaps) => {
       ) / 100;
     return event;
   });
-  const bounds = getBounds(eventsWithDistance, preferenceMaps);
-  const eventsWithWeights = eventsWithDistance.map((event) => {
+  const realRadius = radius ? radius : 10;
+  const filterFarEvents = eventsWithDistance.filter(
+    (event) => event.distance < realRadius
+  );
+  const bounds = getBounds(filterFarEvents, preferenceMaps);
+  const eventsWithWeights = filterFarEvents.map((event) => {
     event.weight = getEventWeight(event, bounds, preferenceMaps);
     return event;
   });

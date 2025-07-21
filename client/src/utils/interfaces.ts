@@ -50,8 +50,10 @@ interface Comment {
 
 interface EventFilters {
   location?: string;
-  date?: string; //toISOString(Date)
+  startDate?: string; //toISOString(Date)
+  endDate?: string;
   sport?: string;
+  radius?: number[];
   filter: string;
 }
 
