@@ -1,10 +1,13 @@
 const { DISTANCE_RANGES } = require("../config");
 const { performHaversine } = require("./locationUtils");
-/*
-Takes in a list of nearby events to the user and ranks them based on user preferences
-Input: events, user location, user sports preferences, date
-Ouput: Ranked list of events
-*/
+
+/**
+ * Ranks events based on user preferences/ activity and sorts.
+ * @param {Event[]} events - Events to rank
+ * @param {Coordinate} userLocation - User's location
+ * @param {Object} preferenceMaps - Object with preference Maps
+ * @returns {Event[]} - Ranked events
+ */
 const rankEvents = (events, userLocation, preferenceMaps) => {
   const eventsWithDistance = events.map((event) => {
     event.distance =
@@ -29,9 +32,13 @@ const rankEvents = (events, userLocation, preferenceMaps) => {
   return rankedEvents;
 };
 
-/*
-Calculates the bounds of a series of variables for normalization
-*/
+/**
+ * Finds the max, min, and ranges of multiple fields, such as
+ * distance, date, sport values, time values, and distance values.
+ * @param {Event[]} events
+ * @param {Object} preferenceMaps - Object with preference Maps
+ * @returns {Bound} - The bounds of the fields
+ */
 const getBounds = (events, preferenceMaps) => {
   const sportMap = preferenceMaps.userSportsMap;
   const userTimesMap = preferenceMaps.userTimesMap;
@@ -59,12 +66,14 @@ const getBounds = (events, preferenceMaps) => {
   };
 };
 
-/*
-Gets an event weight for an event where the higher the weight is, 
-the higher the event should be recommended.
-Input: Takes event, user date, and preference maps
-Ouput: A weight for the event
-*/
+/**
+ * Gets an event weight for an event where the higher the weight is,
+ * the higher the event should be recommended.
+ * @param {Event} event - The current event
+ * @param {Bound} bounds - Bounds of Fields for ranked events
+ * @param {Object} preferenceMaps - Object with preference Maps
+ * @returns {number} - Resulting weight for the object
+ */
 const getEventWeight = (event, bounds, preferenceMaps) => {
   const sportsMap = preferenceMaps.userSportsMap;
   const userTimesMap = preferenceMaps.userTimesMap;
