@@ -1,12 +1,19 @@
 const { performHaversine } = require("../recommendations/locationUtils");
+const REQUIRED_USERS_FOR_FILTER = 3;
+const SAFETY_RADIUS = 30; // miles
 
-/*
-Removes outliers from consideration
-Inputs: users and outlier
-Output: a list of users to keep and drop
-*/
+/**
+ * Removes outliers in a list of users. Uses the organizer as
+ * the center location and filters out users who are not within
+ * the multiplier times the median distance from the organizer or
+ * within a safety radius of the organizer.
+ * @param {User[]} users - A list of RSVP'd users for an event
+ * @param {User} organizer - The event organizer
+ * @param {number} multiplier - The radius multiplier
+ * @returns {Users[], Users[]} - Users kept and dropped
+ */
 const filterOutliers = (users, organizer, multiplier = 2) => {
-  if (users.length < 3) {
+  if (users.length < REQUIRED_USERS_FOR_FILTER) {
     return { keptUsers: users, droppedUsers: [] };
   }
   const distances = users.map((user) => {
@@ -19,7 +26,10 @@ const filterOutliers = (users, organizer, multiplier = 2) => {
   });
   const median = findMedian(distances);
   const keptUsers = users.filter((user, index) => {
-    if (distances[index] <= median * multiplier || distances[index] <= 50) {
+    if (
+      distances[index] <= median * multiplier ||
+      distances[index] <= SAFETY_RADIUS
+    ) {
       return user;
     }
   });
