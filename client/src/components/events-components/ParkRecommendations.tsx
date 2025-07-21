@@ -5,11 +5,13 @@ interface ParkRecommendationProps {
   recommendationList: ParkRecommendation[];
   isLoading: boolean;
   updateLocation: (location: string) => void;
+  regenerateRecommendations: () => void;
 }
 const ParkRecommendations = ({
   recommendationList,
   isLoading,
   updateLocation,
+  regenerateRecommendations,
 }: ParkRecommendationProps) => {
   const handleLocationChange = (location: string) => {
     updateLocation(location);
@@ -19,12 +21,12 @@ const ParkRecommendations = ({
     return <div>Unable to generate meeting locations.</div>;
   }
   return (
-    <div className="overflow-y-auto">
+    <div className="overflow-y-auto flex flex-col justify-center items-center">
       {recommendationList.map((recommendation: ParkRecommendation) => {
         return (
           <div
             key={recommendation.recommendationTitle}
-            className="bg-white rounded-md mt-2 p-3 flex justify-center flex-col items-center"
+            className="bg-white rounded-md mt-2 p-3 flex justify-center flex-col items-center w-1/1"
           >
             <h1 className="text-xl bold text-center my-3">
               {recommendation.recommendationTitle}
@@ -56,6 +58,9 @@ const ParkRecommendations = ({
           </div>
         );
       })}
+      <Button size="sm" className="my-2" onClick={regenerateRecommendations}>
+        <p className="text-xs">Regenerate</p>
+      </Button>
     </div>
   );
 };

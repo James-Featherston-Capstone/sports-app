@@ -54,12 +54,16 @@ const EventModalContent = ({
   const handleRecommendParksToggle = async () => {
     setViewType(viewTypes.viewRecommendedParks);
     if (!isRecommendationListSet) {
-      const retrievedRecommendations = await getEventLocationRecommendations(
-        event.id
-      );
-      setRecommendationList(retrievedRecommendations);
-      setIsRecommendationListSet(true);
+      await generateRecommendations();
     }
+  };
+  const generateRecommendations = async () => {
+    setIsRecommendationListSet(false);
+    const retrievedRecommendations = await getEventLocationRecommendations(
+      event.id
+    );
+    setRecommendationList(retrievedRecommendations);
+    setIsRecommendationListSet(true);
   };
   const updateLocation = (location: string) => {
     const updatedEvent: DisplayEvent = { ...event, location };
@@ -128,6 +132,7 @@ const EventModalContent = ({
             isLoading={!isRecommendationListSet}
             recommendationList={recommendationList}
             updateLocation={updateLocation}
+            regenerateRecommendations={generateRecommendations}
           />
         )}
       </div>
