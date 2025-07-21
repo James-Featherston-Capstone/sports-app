@@ -10,4 +10,9 @@ for locations near a center coordinate.
 */
 const GOOGLE_MAPS_RADIUS = 5000.0; //5 Kilometers
 
-module.exports = { GOOGLE_MAPS_RADIUS, DISTANCE_RANGES };
+/*
+Used to set the max age of the cookie
+*/
+const MAX_AGE = 1000 * 60 * 60; // 1 Hour
+
+module.exports = { GOOGLE_MAPS_RADIUS, DISTANCE_RANGES, MAX_AGE };

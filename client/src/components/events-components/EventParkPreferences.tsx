@@ -8,11 +8,13 @@ interface EventParkPreferencesProps {
   eventId: number;
   preferenceList: ParkPreference[];
   setPreferenceList: (preferences: ParkPreference[]) => void;
+  isLoading: boolean;
 }
 const EventParkPreferences = ({
   preferenceList,
   setPreferenceList,
   eventId,
+  isLoading,
 }: EventParkPreferencesProps) => {
   const [newPreferenceLocation, setNewPreferenceLocation] = useState("");
   const [message, setMessage] = useState("");
@@ -36,6 +38,9 @@ const EventParkPreferences = ({
     );
     setPreferenceList(updatedPreferenceList);
   };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <div className="flex flex-row flex-wrap">

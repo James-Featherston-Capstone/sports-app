@@ -7,6 +7,7 @@ import type {
   Comment,
   ParkPreference,
   ClickEvent,
+  ParkRecommendation,
 } from "./interfaces";
 
 const getAllEvents = async (
@@ -160,6 +161,17 @@ const clickEvent = async (
   return await fetchData(path, req);
 };
 
+const getEventLocationRecommendations = (
+  eventId: number
+): Promise<ParkRecommendation[]> => {
+  const path = `${BASE_URL}/events/${eventId}/meeting-points`;
+  const req = {
+    method: "GET",
+    credentials: "include",
+  };
+  return fetchData(path, req);
+};
+
 export {
   getAllEvents,
   getEvent,
@@ -172,4 +184,5 @@ export {
   createEventPreference,
   upvotePreference,
   clickEvent,
+  getEventLocationRecommendations,
 };

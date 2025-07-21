@@ -6,6 +6,7 @@ const cors = require("cors");
 const session = require("express-session");
 const { RedisStore } = require("connect-redis");
 const { createClient } = require("redis");
+const { MAX_AGE } = require("./config");
 
 const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
@@ -24,8 +25,9 @@ app.use(cors(corsObject));
 let sessionConfig = {
   name: "sessionId",
   secret: process.env.SESSION_SECRET,
+  rolling: true,
   cookie: {
-    maxAge: 1000 * 5 * 60,
+    maxAge: MAX_AGE,
     secure: process.env.RENDER === "production" ? true : false,
     httpOnly: false,
     sameSite: process.env.RENDER === "production" ? "none" : "lax",

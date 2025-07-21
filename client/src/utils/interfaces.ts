@@ -69,6 +69,14 @@ interface ClickEvent {
   eventDistance: number;
 }
 
+interface ParkRecommendation {
+  recommendationTitle: string;
+  displayName?: string;
+  location: string;
+  averageDistance: number;
+  maximumDistance: number;
+}
+
 export type {
   Profile,
   EventModel,
@@ -77,4 +85,5 @@ export type {
   Comment,
   ParkPreference,
   ClickEvent,
+  ParkRecommendation,
 };
