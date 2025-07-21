@@ -36,9 +36,14 @@ const EventCard = ({ event }: EventProps) => {
     }
     const fullEvent = await getEvent(event.id);
     openDialog({
-      title: `${fullEvent.sport} at ${fullEvent.location}`,
+      title: `${fullEvent.sport}`,
       description: fullEvent.description,
-      reactChildren: <EventModalContent event={fullEvent} />,
+      reactChildren: (
+        <EventModalContent
+          event={fullEvent}
+          updateDisplayedEvent={setDisplayedEvent}
+        />
+      ),
     });
   };
   const handleOpenEventEditModal = () => {

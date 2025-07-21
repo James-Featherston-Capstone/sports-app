@@ -4,11 +4,16 @@ import { Button } from "../ui/button";
 interface ParkRecommendationProps {
   recommendationList: ParkRecommendation[];
   isLoading: boolean;
+  updateLocation: (location: string) => void;
 }
 const ParkRecommendations = ({
   recommendationList,
   isLoading,
+  updateLocation,
 }: ParkRecommendationProps) => {
+  const handleLocationChange = (location: string) => {
+    updateLocation(location);
+  };
   if (isLoading) return <div>Loading...</div>;
   if (recommendationList.length === 0) {
     return <div>Unable to generate meeting locations.</div>;
@@ -41,7 +46,11 @@ const ParkRecommendations = ({
                 Miles
               </p>
             </div>
-            <Button className="py-0 mt-2" size="sm">
+            <Button
+              className="py-0 mt-2"
+              size="sm"
+              onClick={() => handleLocationChange(recommendation.location)}
+            >
               <p className="text-xs m-0 p-0">Make new location</p>
             </Button>
           </div>
