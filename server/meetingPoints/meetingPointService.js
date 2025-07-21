@@ -52,7 +52,7 @@ const suggestPreferenceMeetingPoint = async (
   users
 ) => {
   //No users or no meeting points
-  if (!userSetMeetingPoints || !users) {
+  if (userSetMeetingPoints.length === 0 || !users) {
     return [];
   }
   const preppedMeetingPoints = await _handleMeetingPointsPrep(
