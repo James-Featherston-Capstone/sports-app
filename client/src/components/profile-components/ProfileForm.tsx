@@ -32,7 +32,8 @@ const ProfileForm = ({
       />
       <label className="self-start ml-1">Location:</label>
       <MapsInput
-        location={profile.location}
+        baseLatitude={parseFloat(profile.latitude)}
+        baseLongitude={parseFloat(profile.longitude)}
         setLocation={(location) =>
           setProfile({ ...profile, location: location })
         }

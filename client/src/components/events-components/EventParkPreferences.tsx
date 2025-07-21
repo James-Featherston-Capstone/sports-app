@@ -19,15 +19,20 @@ const EventParkPreferences = ({
   const [newPreferenceLocation, setNewPreferenceLocation] = useState("");
   const [message, setMessage] = useState("");
   const handleNewParkPreference = async () => {
-    const newPreference = await createEventPreference(
-      eventId,
-      newPreferenceLocation
-    );
-    if (!newPreference.id) {
-      setMessage("This park is already listed");
+    if (newPreferenceLocation.length === 0) {
+      setMessage("Enter a valid location from the dropdown");
     } else {
-      setMessage("");
-      setPreferenceList([newPreference, ...preferenceList]);
+      const newPreference = await createEventPreference(
+        eventId,
+        newPreferenceLocation
+      );
+      if (!newPreference.id) {
+        setMessage("This park is already listed");
+      } else {
+        setMessage("");
+        setPreferenceList([newPreference, ...preferenceList]);
+        setNewPreferenceLocation("");
+      }
     }
   };
 
@@ -43,16 +48,16 @@ const EventParkPreferences = ({
   }
   return (
     <>
-      <div className="flex flex-row flex-wrap">
-        <MapsInput
-          location={newPreferenceLocation}
-          setLocation={setNewPreferenceLocation}
-          showMap={false}
-        />
+      <div className="flex flex-row flex-wrap justify-center">
+        <MapsInput setLocation={setNewPreferenceLocation} showMap={false} />
         <Button className="w-1/1 mx-0" onClick={handleNewParkPreference}>
           Submit
         </Button>
-        {message && <p>{message}</p>}
+        {message && (
+          <p className="text-red-500 text-center text-lg bg-white px-2 m-1 rounded-2xl">
+            {message}
+          </p>
+        )}
       </div>
       {preferenceList.map((preference) => {
         return (

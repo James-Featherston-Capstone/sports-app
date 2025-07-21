@@ -8,16 +8,24 @@ import { Input } from "./ui/input";
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 interface MapsInputProps {
-  location: string;
   setLocation: (location: string) => void;
   showMap: boolean;
+  baseLatitude?: number;
+  baseLongitude?: number;
 }
 const libraries: Libraries = ["places"];
-const MapsInput = ({ location, setLocation, showMap }: MapsInputProps) => {
-  const [coords, setCoords] = useState<google.maps.LatLngLiteral>({
-    lat: 0,
-    lng: 0,
-  });
+const MapsInput = ({
+  setLocation,
+  showMap,
+  baseLatitude,
+  baseLongitude,
+}: MapsInputProps) => {
+  const mapCenter: google.maps.LatLngLiteral = {
+    lat: baseLatitude ? baseLatitude : 0,
+    lng: baseLongitude ? baseLongitude : 0,
+  };
+  const [coords, setCoords] = useState<google.maps.LatLngLiteral>(mapCenter);
+  const [inputLocation, setInputLocation] = useState<string>("");
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
@@ -34,6 +42,7 @@ const MapsInput = ({ location, setLocation, showMap }: MapsInputProps) => {
         const selectedPlace = places[0];
         if (selectedPlace.formatted_address) {
           setLocation(selectedPlace.formatted_address);
+          setInputLocation(selectedPlace.formatted_address);
           if (selectedPlace.geometry?.location) {
             setCoords({
               lat: selectedPlace.geometry.location.lat(),
@@ -69,8 +78,8 @@ const MapsInput = ({ location, setLocation, showMap }: MapsInputProps) => {
                   type="text"
                   placeholder="Enter address..."
                   className="w-1/1"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={inputLocation}
+                  onChange={(e) => setInputLocation(e.target.value)}
                 />
               </StandaloneSearchBox>
             </div>
@@ -79,7 +88,7 @@ const MapsInput = ({ location, setLocation, showMap }: MapsInputProps) => {
               variant="secondary"
               onClick={(e) => {
                 e.preventDefault();
-                setLocation("");
+                setInputLocation("");
               }}
             >
               Clear
