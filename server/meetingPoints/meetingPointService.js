@@ -4,16 +4,21 @@ const rankingMeetingPoints = require("./rankingMeetingPoints.js");
 const { filterOutliers } = require("./outliers.js");
 const { GOOGLE_MAPS_RADIUS } = require("../config.js");
 
-/*
-Entry point for the algorithm
-Input: eventId
-Output: List of recommended parks that used different ranking algorithms
-*/
+/**
+ * This algorithm recommends meeting points for a specific event based
+ * on where the rsvp'd users are located. It has two types of meeting points
+ * that it recommends: user inputed meeting points, and generated meeting
+ * points. It filters out users that have a location that is an outlier
+ * to the other users.
+ * @param {number} eventId - The event ID
+ * @returns { MeetingPoint[] } -  A list of recommended meeting points
+ */
 const suggestMeetingPoints = async (eventId) => {
   const fullEvent = await getFullEventWithId(eventId);
   const { event, userSetMeetingPoints, fetchedUsers } =
     _parseFullEvent(fullEvent);
   const { keptUsers } = filterOutliers(fetchedUsers, event.organizer);
+  // If there are no RSVP's, it sets the users to only the organizer.
   const users = keptUsers.length === 0 ? [event.organizer] : fetchedUsers;
   const preferenceMeetingPoints = await suggestPreferenceMeetingPoint(
     event,
@@ -31,16 +36,22 @@ const suggestMeetingPoints = async (eventId) => {
   return recommendedMeetingPointsList;
 };
 
-/*
-Suggests meeting points based on the users entered events
-Input: event, userSetMeetingPoints, users
-Output: Lists of recommended meeting points
-*/
+/**
+ * The function recommends user inputed meeting points by finding the
+ * distance from each meeting point to each user, finding the max and average distance
+ * from the meeting points to the users, and recommending the meeting point with
+ * the best combination of minimum average distance and minimum max distance.
+ * @param {Event} event - The event to recommend meeting points for
+ * @param {MeetingPoint[]} userSetMeetingPoints - A list of preset meeting points
+ * @param {User[]} users - A list of users that RSVP'd for the event
+ * @returns
+ */
 const suggestPreferenceMeetingPoint = async (
   event,
   userSetMeetingPoints,
   users
 ) => {
+  //No users or no meeting points
   if (!userSetMeetingPoints || !users) {
     return [];
   }
@@ -54,17 +65,23 @@ const suggestPreferenceMeetingPoint = async (
   return recommendedMeetingPoints;
 };
 
-/*
-Suggests generated meeting points for the users
-Input: event, users
-Output: List of recommended meeting points
-*/
+/**
+ * The function recommends the most optimal generated meeting point
+ * using the Google Maps Text Search API. It chooses a center coordinate
+ * to search for meeting points with. Once retrieved it calculates the distance
+ * from the meeting points to every RSVP'd user and calculates max and average
+ * distances. It then recommends the meeting point that works best for the users.
+ * @param {Event} event - The event to find meeting points for.
+ * @param {User[]} users - The users RSVP'd to the event
+ * @returns {MeetingPoint[]} - A list with generated meeting point recommendations
+ */
 const suggestGeneratedMeetingPoints = async (event, users) => {
   const centerCoordinate = meetingPointUtils.getUsersCenterCoordinate(users);
   const generatedMeetingPoints = await fetchGoogleMapsNearbyMeetingPoints(
     centerCoordinate,
     event.sport
   );
+  // If no meeting points are generated, return an empty list
   if (generatedMeetingPoints.length === 0) {
     return [];
   }
@@ -78,11 +95,16 @@ const suggestGeneratedMeetingPoints = async (event, users) => {
   return recommendations;
 };
 
-/*
-Preps a list of meeting points
-Input: Meeting points, users, event
-Output: Meeting points with additional metrics
-*/
+/**
+ * The function preps a list of meeting points by calculating the
+ * distance from every meeting to every user and calculates the maximum
+ * and minimums for each meeting point. These calculations are used to
+ * rank the best meeting points.
+ * @param {MeetingPoint[]} meetingPoints - List of meeting points
+ * @param {User[]} users - List of RSVP'd users
+ * @param {Event[]} event - The event
+ * @returns {MeetingPoint[]} - Meeting points with distance calculations
+ */
 const _handleMeetingPointsPrep = async (meetingPoints, users, event) => {
   const distancesFromUsersToParks =
     await meetingPointUtils.getDistancesFromUsersToParks(
@@ -98,7 +120,7 @@ const _handleMeetingPointsPrep = async (meetingPoints, users, event) => {
 };
 
 /*
-Retrieves the full event, including event details, rsvps, and user preferences
+Retrieves the full event, including event details, rsvps, and user preferences.
 */
 const getFullEventWithId = async (eventId) => {
   try {
@@ -147,7 +169,7 @@ const getFullEventWithId = async (eventId) => {
 };
 
 /*
-Parses the event to break it down into event, user set meeting points, and users.
+Parses the event to break it down into event, set meeting points, and users.
 */
 const _parseFullEvent = (fullEvent) => {
   const event = {
@@ -163,11 +185,17 @@ const _parseFullEvent = (fullEvent) => {
   return { event, userSetMeetingPoints, fetchedUsers: users };
 };
 
-/*
-Uses the google maps routes API to find the distance from a user to a meeting point.
-Uses the event time to determine the travel time based on when the event is.
-Returns an object with the travel time, travel distance, and user id.
-*/
+/**
+ * The function uses the google maps Routes API to find the distance from a
+ * user to a meeting point. It uses the event time to find the travel time based
+ * on when the event is. It then creates an object with information about the travel
+ * distance from the user to the meeting point.
+ * @param {Event} event - The event
+ * @param {User} user - The user
+ * @param {MeetingPoint} meetingPoint - The meeting point
+ * @returns {Object} - An object with the user id, distance in meters,
+ * miles, minutes, and seconds.
+ */
 const fetchOptimalRoute = async (event, user, meetingPoint) => {
   const BASE_ROUTES_URL = `https://routes.googleapis.com/directions/v2:computeRoutes?key=${process.env.GOOGLE_MAPS_API}`;
   try {
@@ -210,7 +238,7 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
     const formattedRoute = _formatGoogleMapsResponse(data, user.id);
     return formattedRoute;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
@@ -232,11 +260,15 @@ const _formatGoogleMapsResponse = (data, userId) => {
   return distanceObj;
 };
 
-/*
-Retrieves a list of potential meeting points around a central coordinate
-Input: Center coordinate, sport (text query)
-Output: A list of meeting points
-*/
+/**
+ * The function queries the google maps places API to find a list of potential
+ * meeting points around a central coordinate. It uses the sport taking place
+ * to query nearby. It filters out sports-clubs to prevent private locations
+ * from being recommended.
+ * @param {Coordinate} centerCoordinate - The coordinate to base searches on
+ * @param {string} sport - The event sport
+ * @returns {MeetingPoint[]} - List of nearby meeting points to a central coordinate
+ */
 const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
   const BASE_SEARCH_URL = `https://places.googleapis.com/v1/places:searchText?key=${process.env.GOOGLE_MAPS_API}`;
   try {
@@ -271,6 +303,7 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
       const results = _formatGoogleMapsNearbyMeetingPoints(data);
       return results;
     } else {
+      // No response
       return [];
     }
   } catch (error) {
@@ -283,6 +316,13 @@ Filters out private meeting points and formats the response.
 Input: Google Maps meeting points list
 Output: Formatted list of meeting points
 */
+/**
+ * Format the google maps places response to match the structure of
+ * the user inputted meeting points. Additionally, filter out
+ * locations that may be private.
+ * @param {MeetingPoint[]} meetingPoints - Generated meeting points
+ * @returns {MeetingPoint{}} - Formatted meeting points
+ */
 const _formatGoogleMapsNearbyMeetingPoints = (meetingPoints) => {
   const placesList = meetingPoints.places;
   const parks = placesList.filter(
@@ -292,6 +332,7 @@ const _formatGoogleMapsNearbyMeetingPoints = (meetingPoints) => {
         meetingPoint.types.includes(type)
       ) && !meetingPoint.types.includes("sports_club")
   );
+  // If all parks were filtered out, recommend original meeting points
   const actualPlaces = parks.length === 0 ? placesList : parks;
   const formattedPoints = actualPlaces.map((place) => {
     return {
