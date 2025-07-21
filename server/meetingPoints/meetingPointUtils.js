@@ -3,6 +3,14 @@ Creates a list with information about each park and how far the meeting point is
 Input: Meeting points, users, events
 Output: List of meeting points that contain information about how far it is to each user.
 */
+/**
+ * The function finds the distances from each meeting point to
+ * every user and stores that data.
+ * @param {MeetingPoint[]} meetingPoints - The meeting points
+ * @param {User[]} users - The RSVP'd users
+ * @param {Event} event - The event
+ * @returns {MeetingPoint[]} - The meeting points with additional metadata
+ */
 const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
   const { fetchOptimalRoute } = require("./meetingPointService.js");
 
@@ -22,12 +30,12 @@ const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
   return result;
 };
 
-/* 
-Gets the median coordiante to find the fairest central point
-for all the users.
-Input: Users list with locations
-Output: Central coordinate.
-*/
+/**
+ * Finds the median coordinate of the users to provide
+ * the fairest central location for the users.
+ * @param {User[]} users - List of users
+ * @returns {Coordinate} - A center coordinate for the users
+ */
 const getUsersCenterCoordinate = (users) => {
   if (users.length === 0) {
     throw new Error("Users required");
@@ -51,9 +59,11 @@ const getUsersCenterCoordinate = (users) => {
   return { latitude: medianLatitude, longitude: medianLongitude };
 };
 
-/* 
-Computes distance metrics for each meeting points and adds them to the object
-*/
+/**
+ * Computes the average and maximum distance from each user to each meeting point
+ * @param {MeetingPoint[]} meetingPoints - The meeting points with distance data
+ * @returns {MeetingPoint[]} - Meeting points with max and average calculations
+ */
 const computeDistanceAveragesAndMaximums = (meetingPoints) => {
   const result = meetingPoints.map((meetingPointData) => {
     return {
