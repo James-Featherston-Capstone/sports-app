@@ -75,7 +75,7 @@ const CustomEventFilters = ({
       <div className="flex w-1/1 py-1 m-1">
         <h1 className="text-xl mx-2 w-31">Radius: {radius}</h1>
         <Slider
-          max={50}
+          max={25}
           min={5}
           step={1}
           defaultValue={radius}
