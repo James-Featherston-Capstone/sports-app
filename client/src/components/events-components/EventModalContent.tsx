@@ -1,9 +1,18 @@
-import type { DisplayEvent, Comment, ParkPreference } from "@/utils/interfaces";
+import type {
+  DisplayEvent,
+  Comment,
+  ParkPreference,
+  ParkRecommendation,
+} from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import EventComments from "./EventComments";
 import EventParkPreferences from "./EventParkPreferences";
-import { getAllEventPreferences } from "@/utils/eventService";
+import ParkRecommendations from "./ParkRecommendations";
+import {
+  getAllEventPreferences,
+  getEventLocationRecommendations,
+} from "@/utils/eventService";
 
 interface EventModalContentType {
   event: DisplayEvent;
@@ -19,21 +28,32 @@ const EventModalContent = ({ event }: EventModalContentType) => {
   const [commentList, setCommentList] = useState<Comment[]>(event.comments);
   const [preferenceList, setPreferenceList] = useState<ParkPreference[]>([]);
   const [preferenceListSet, setPreferenceListSet] = useState(false);
+  const [recommendationList, setRecommendationList] = useState<
+    ParkRecommendation[]
+  >([]);
+  const [isRecommendationListSet, setIsRecommendationListSet] = useState(false);
   const [viewType, setViewType] = useState<number>(viewTypes.comments);
   const handleCommentToggle = () => {
     setViewType(viewTypes.comments);
   };
 
   const handlePreferenceViewToggle = async () => {
+    setViewType(viewTypes.enterPreferences);
     if (!preferenceListSet) {
       const retrievedPreferenceList = await getAllEventPreferences(event.id);
       setPreferenceList(retrievedPreferenceList);
       setPreferenceListSet(true);
     }
-    setViewType(viewTypes.enterPreferences);
   };
-  const handleRecommendParksToggle = () => {
+  const handleRecommendParksToggle = async () => {
     setViewType(viewTypes.viewRecommendedParks);
+    if (!isRecommendationListSet) {
+      const retrievedRecommendations = await getEventLocationRecommendations(
+        event.id
+      );
+      setRecommendationList(retrievedRecommendations);
+      setIsRecommendationListSet(true);
+    }
   };
   return (
     <div className="flex flex-col md:flex-row w-9/10 h-9/10 grow-1 overflow-auto">
@@ -87,10 +107,14 @@ const EventModalContent = ({ event }: EventModalContentType) => {
             eventId={event.id}
             preferenceList={preferenceList}
             setPreferenceList={setPreferenceList}
+            isLoading={!preferenceListSet}
           />
         )}
         {viewType === viewTypes.viewRecommendedParks && (
-          <div>These parks are recommended</div>
+          <ParkRecommendations
+            isLoading={!isRecommendationListSet}
+            recommendationList={recommendationList}
+          />
         )}
       </div>
     </div>
