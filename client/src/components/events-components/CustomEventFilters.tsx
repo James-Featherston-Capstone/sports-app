@@ -1,6 +1,7 @@
 import type { EventFilters } from "@/utils/interfaces";
 import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
+import DatePicker from "../DatePicker";
+import { Slider } from "../ui/slider";
 import { useState, type FormEvent } from "react";
 import {
   Select,
@@ -21,14 +22,20 @@ const CustomEventFilters = ({
   baseFilters,
 }: AllEventFiltersProps) => {
   const { closeDialog } = useDialogContext();
-  const [date, setDate] = useState<Date | undefined>(
-    baseFilters.date ? new Date(baseFilters.date) : undefined
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    baseFilters.startDate ? new Date(baseFilters.startDate) : undefined
+  );
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    baseFilters.endDate ? new Date(baseFilters.endDate) : undefined
   );
   const [sport, setSport] = useState<string>(
     baseFilters.sport ? baseFilters.sport : ""
   );
   const [location, setLocation] = useState<string>(
     baseFilters.location ? baseFilters.location : ""
+  );
+  const [radius, setRadius] = useState<number[]>(
+    baseFilters.radius ? baseFilters.radius : [10]
   );
 
   const onConfirmation = (e: FormEvent) => {
@@ -37,7 +44,9 @@ const CustomEventFilters = ({
       filter: "all",
       sport: sport,
       location: location,
-      date: date?.toISOString(),
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
+      radius: radius,
     };
     handleFilter(filters);
     closeDialog();
@@ -47,15 +56,35 @@ const CustomEventFilters = ({
       className="w-9/10 overflow-auto flex flex-col items-center"
       onSubmit={onConfirmation}
     >
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-lg border bg-white"
-        disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-      />
+      <label className="text-sm mb-1">Select a date range</label>
+      <div className="flex">
+        <DatePicker
+          date={startDate}
+          setDate={setStartDate}
+          dateType="start"
+          referenceDate={endDate}
+        />
+        <span className="h-8 flex justify-center items-center">-</span>
+        <DatePicker
+          date={endDate}
+          setDate={setEndDate}
+          dateType="end"
+          referenceDate={startDate}
+        />
+      </div>
+      <div className="flex w-1/1 py-1 m-1">
+        <h1 className="text-xl mx-2 w-31">Radius: {radius}</h1>
+        <Slider
+          max={50}
+          min={5}
+          step={1}
+          defaultValue={radius}
+          value={radius}
+          onValueChange={setRadius}
+        />
+      </div>
       <Select value={sport} onValueChange={setSport}>
-        <SelectTrigger className="w-1/1 my-0.5">
+        <SelectTrigger className="w-1/1 m-1">
           <SelectValue placeholder="Choose Sport" />
         </SelectTrigger>
         <SelectContent>

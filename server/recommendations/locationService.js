@@ -56,7 +56,8 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const rankedEvents = rankEvents(
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
-    { userSportsMap, userTimesMap, userDistanceMap }
+    { userSportsMap, userTimesMap, userDistanceMap },
+    userInputs.radius
   );
   return rankedEvents;
 };
@@ -137,13 +138,18 @@ const getNeededUserData = async (userId, userInputs) => {
  */
 const _getEventsFilters = (userInputs) => {
   const filters = {};
-  if (userInputs.date && userInputs.date !== "undefined") {
-    const start = new Date(userInputs.date);
+  if (userInputs.startDate && userInputs.startDate !== "undefined") {
+    const start = new Date(userInputs.startDate);
     start.setHours(0, 0, 0, 0);
-    const end = new Date(userInputs.date);
-    end.setHours(23, 59, 59, 999);
     filters.eventTime = {
       gte: start,
+    };
+  }
+  if (userInputs.endDate && userInputs.endDate !== "undefined") {
+    const end = new Date(userInputs.endDate);
+    end.setHours(23, 59, 59, 59);
+    filters.eventTime = {
+      ...filters.eventTime,
       lte: end,
     };
   }
@@ -165,7 +171,7 @@ const _getEventKeys = (user, userInputs) => {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const radius = userInputs.radius ? userInputs.radius : 10; // In miles
+  const radius = userInputs.radius ? parseInt(userInputs.radius) : 10; // In miles
   const offsets = locationUtils.calculateKeyOffsets(radius, user.latitude);
   const keys = locationUtils.getAllKeys(baseKey, offsets);
   return keys;
