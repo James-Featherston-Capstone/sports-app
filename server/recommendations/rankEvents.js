@@ -136,7 +136,7 @@ const _getDistanceValue = (distance, userDistanceMap) => {
  * Returns a value given the weather condition. All conditions are
  * found using the google maps API.
  * https://developers.google.com/maps/documentation/weather/
- * @param {*} condition
+ * @param {string} condition - The weather description
  */
 const _getWeatherValue = (condition) => {
   for (const key of WEATHER_VALUES_MAP.keys()) {

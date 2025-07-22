@@ -204,6 +204,11 @@ const _prepareEvents = async (events, userInputs) => {
   return eventsWithWeatherData;
 };
 
+/**
+ * Find the weather for each event at the events given time.
+ * @param {Event[]} events - The events
+ * @returns {Event[]} - Events with weather data
+ */
 const _getEventsWeatherData = async (events) => {
   const eventsWithWeatherData = await Promise.all(
     events.map(async (event) => {
@@ -217,6 +222,12 @@ const _getEventsWeatherData = async (events) => {
   return eventsWithWeatherData;
 };
 
+/**
+ * The function queries the Google Maps API to get the weather data
+ * and filters the necessary data.
+ * @param {Event} event
+ * @returns {string} - The weather description string
+ */
 const getGoogleMapsWeather = async (event) => {
   const BASE_WEATHER_URL = `https://weather.googleapis.com/v1/forecast/days:lookup`;
   const paramsObj = {
@@ -240,6 +251,12 @@ const getGoogleMapsWeather = async (event) => {
   }
 };
 
+/**
+ * Parses the response and returns the weather description.
+ * @param {Object} data - Google Maps Weather Response
+ * @param {Object} weatherIndex - Day index for the Google Maps Response
+ * @returns
+ */
 const _formatGoogleMapsWeatherResponse = (data, weatherIndex) => {
   const weatherOnEventDay = data.forecastDays[weatherIndex.index];
   if (!weatherOnEventDay) {
@@ -259,6 +276,12 @@ const _formatGoogleMapsWeatherResponse = (data, weatherIndex) => {
   }
 };
 
+/**
+ * Compares the event time to now to get the day index that
+ * corresponds with the target day on the Google Maps API.
+ * @param {Date} eventTime - Time of the event
+ * @returns {Object} - Day index and event time in Date format
+ */
 const _getWeatherDayIndex = (eventTime) => {
   const now = new Date();
   const eventDate = new Date(eventTime);
