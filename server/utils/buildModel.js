@@ -1,8 +1,11 @@
+const { extractLatLngFields } = require("../recommendations/locationUtils");
 const { mapSports } = require("./mapEnum");
 
 const buildProfile = (req) => {
-  const userId = req.session.user.id;
-  const user = { id: userId };
+  const user = {};
+  if (req.session.user?.id) {
+    user.id = req.session.user.id;
+  }
   const {
     bio,
     latitude,

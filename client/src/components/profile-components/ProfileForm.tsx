@@ -8,12 +8,14 @@ interface ProfileFormComponents {
   onSubmit: (event: React.FormEvent) => void;
   profile: Profile;
   setProfile: (current: Profile) => void;
+  errorMessage: string;
 }
 
 const ProfileForm = ({
   onSubmit,
   profile,
   setProfile,
+  errorMessage,
 }: ProfileFormComponents) => {
   return (
     <form
@@ -51,6 +53,7 @@ const ProfileForm = ({
       />
       <label> Sports: </label>
       <SportsOptions profile={profile} setProfile={setProfile} />
+      <h1 className="text-red-600 text-lg">{errorMessage}</h1>
       <Button variant="secondary" type="submit" className=" w-7/10">
         Submit
       </Button>
