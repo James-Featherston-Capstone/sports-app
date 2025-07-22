@@ -20,12 +20,12 @@ model User {
   email              String
   password           String
   profile_image_url  String         @default("")
-  bio                String         @default("")
-  location           String         @default("")
-  latitude           Decimal        @default(0.0)
-  longitude          Decimal        @default(0.0)
-  latitudeKey        Int            @default(0)
-  longitudeKey       Int            @default(0)
+  bio                String
+  location           String
+  latitude           Decimal
+  longitude          Decimal
+  latitudeKey        Int
+  longitudeKey       Int
   sports             Sports[]       @default([])
   created_at         DateTime       @default(now())
   updated_at         DateTime       @default(now())

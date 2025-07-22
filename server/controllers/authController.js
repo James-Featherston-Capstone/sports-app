@@ -6,6 +6,8 @@ const {
   NotFoundError,
   UnauthorizedError,
 } = require("../middleware/Errors");
+const { buildProfile } = require("../utils/buildModel");
+const locationUtils = require("../recommendations/locationUtils.js");
 
 exports.register = async (req, res, next) => {
   try {
@@ -18,8 +20,21 @@ exports.register = async (req, res, next) => {
     if (existingUser) {
       throw new ConflictError("This email is already in use");
     }
+    const profile = buildProfile(req);
     const hash = await hashPassword(plainPassword);
-    const newUser = { email, password: hash, username: username };
+    const userCredentials = { email, password: hash, username: username };
+    const newUser = { ...profile, ...userCredentials };
+    await locationUtils.extractLatLngFields(newUser);
+    if (
+      !newUser.bio ||
+      !newUser.location ||
+      !newUser.latitude ||
+      !newUser.longitude ||
+      !newUser.latitudeKey ||
+      !newUser.longitudeKey
+    ) {
+      throw new ValidationError("Location and bio required");
+    }
     const retUser = await authService.createUser(newUser);
     req.session.user = retUser;
     res.json(retUser);

@@ -22,6 +22,11 @@ const ParkRecommendations = ({
   }
   return (
     <div className="overflow-y-auto flex flex-col justify-center items-center">
+      {recommendationList.length === 0 && (
+        <h1 className="bg-white w-1/1 rounded-lg text-center p-1 my-2">
+          Unable to generate meeting points.
+        </h1>
+      )}
       {recommendationList.map((recommendation: ParkRecommendation) => {
         return (
           <div
