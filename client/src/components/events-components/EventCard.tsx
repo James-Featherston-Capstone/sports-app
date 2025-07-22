@@ -8,6 +8,7 @@ import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
 import { useEventContext } from "@/contexts/eventContext";
 import { getDisplayDate } from "@/utils/utils";
+import ButtonAnimation from "../ButtonAnimation";
 
 interface EventProps {
   event: DisplayEvent;
@@ -21,8 +22,7 @@ const EventCard = ({ event }: EventProps) => {
     event.isRsvpCurrentUser
   );
 
-  const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleRsvp = () => {
     if (!isRsvpByCurrentUser) {
       eventRsvp(event.id);
     } else {
@@ -87,13 +87,11 @@ const EventCard = ({ event }: EventProps) => {
           ) : (
             <></>
           )}
-          <Button
-            variant={isRsvpByCurrentUser ? "checked" : "default"}
-            className="h-8"
-            onClick={handleRsvp}
-          >
-            RSVP
-          </Button>
+          <ButtonAnimation
+            handleRsvp={handleRsvp}
+            isRsvp={isRsvpByCurrentUser ? isRsvpByCurrentUser : false}
+            event={event}
+          />
         </div>
       </div>
     </>

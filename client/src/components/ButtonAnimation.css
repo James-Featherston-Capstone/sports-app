@@ -1,0 +1,14 @@
+@keyframes spin {
+    0% {
+        transform: translateY(-100%) rotate(-360deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.animate-spin {
+    animation: spin 1.2s ease-out forwards
+}
