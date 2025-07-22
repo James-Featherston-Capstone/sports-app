@@ -241,11 +241,21 @@ const getGoogleMapsWeather = async (event) => {
 };
 
 const _formatGoogleMapsWeatherResponse = (data, weatherIndex) => {
-  const weatherOnEventDay = data.forecastDays[weatherIndex];
+  const weatherOnEventDay = data.forecastDays[weatherIndex.index];
   if (!weatherOnEventDay) {
     return "UNKNOWN";
   } else {
-    return weatherOnEventDay.daytimeForecast.weatherCondition.type;
+    const timeInterval = weatherOnEventDay.daytimeForecast.interval;
+    const dayTimeStart = new Date(timeInterval.startTime);
+    const dayTimeEnd = new Date(timeInterval.endTime);
+
+    if (dayTimeStart <= weatherIndex.time && dayTimeEnd >= weatherIndex.time) {
+      //Daytime forecast
+      return weatherOnEventDay.daytimeForecast.weatherCondition.type;
+    } else {
+      //Nighttime forecast
+      return weatherOnEventDay.nighttimeForecast.weatherCondition.type;
+    }
   }
 };
 
@@ -254,7 +264,7 @@ const _getWeatherDayIndex = (eventTime) => {
   const eventDate = new Date(eventTime);
   const diff = eventDate - now;
   const diffDays = Math.floor(diff / MILLISECS_TO_DAYS);
-  return diffDays;
+  return { index: diffDays, time: eventDate };
 };
 
 /**
