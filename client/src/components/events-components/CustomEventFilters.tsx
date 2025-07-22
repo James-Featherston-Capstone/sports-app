@@ -38,7 +38,9 @@ const CustomEventFilters = ({
   const [radius, setRadius] = useState<number[]>(
     baseFilters.radius ? baseFilters.radius : [10]
   );
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(
+    baseFilters.query ? baseFilters.query : ""
+  );
 
   const onConfirmation = (e: FormEvent) => {
     e.preventDefault();
