@@ -16,10 +16,10 @@ const EventList = () => {
     );
   }
   return (
-    <ul className="flex flex-col sm:flex-row justify-center sm:justify-start flex-wrap items-center w-screen">
+    <ul className="grid grid-cols-[repeat(auto-fit,minmax(320px,4fr))] gap-2 justify-center sm:justify-start flex-wrap items-center w-screen p-2">
       {events.map((event: DisplayEvent) => {
         return (
-          <ul className="flex justify-center grow-1" key={event.id}>
+          <ul className="flex justify-center" key={event.id}>
             <EventCard event={event} />
           </ul>
         );

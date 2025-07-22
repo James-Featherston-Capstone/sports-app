@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { DisplayEvent } from "@/utils/interfaces";
@@ -61,28 +60,29 @@ const EventCard = ({ event }: EventProps) => {
   };
   return (
     <>
-      <Card
+      <div
+        className="w-1/1 h-60 flex flex-col justify-around bg-white text-black p-2 m-1 rounded-2xl hover:-translate-y-1 hover:cursor-pointer"
         onClick={() => handleOpenEventViewModal()}
-        className="flex flex-col justify-around items-center w-9/10 sm:w-75 m-w-50 min-h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
       >
-        <CardTitle className="mt-2">{displayedEvent.sport}</CardTitle>
-        <CardContent>
+        <h1 className="mt-2 text-xl">{displayedEvent.sport}</h1>
+        <div className="w-1/1">
           <h1>{getDisplayDate(displayedEvent.eventTime)}</h1>
           <h1>{displayedEvent.location}</h1>
           <h1></h1>
           {displayedEvent.distance !== undefined && (
             <h1>Distance: {displayedEvent.distance} Miles</h1>
           )}
-        </CardContent>
-        <CardFooter>
+        </div>
+        <div>
           {areEventsEditable ? (
             <Button
               onClick={(e) => {
                 e.stopPropagation();
                 handleOpenEventEditModal();
               }}
+              className="h-8"
             >
-              Edit
+              EDIT
             </Button>
           ) : (
             <></>
@@ -94,8 +94,8 @@ const EventCard = ({ event }: EventProps) => {
           >
             RSVP
           </Button>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </>
   );
 };

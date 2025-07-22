@@ -50,7 +50,7 @@ const Filter = () => {
   return (
     <article className="m-1 flex order-2 flex-wrap justify-center">
       <Select value={eventFilters.filter} onValueChange={onFilterChange}>
-        <SelectTrigger className="w-37 m-1">
+        <SelectTrigger className="w-37 mt-3">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
