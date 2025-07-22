@@ -44,7 +44,8 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const user = await getNeededUserData(userId, userInputs);
   const filters = _getEventsFilters(userInputs);
   const keys = _getEventKeys(user, userInputs);
-  const events = await getEvents(filters, keys, userId);
+  const search = userInputs.query ? userInputs.query : "";
+  const events = await getEvents(filters, keys, userId, search);
   const preparedEvents = _prepareEvents(events, userInputs);
   const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
   const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
@@ -71,7 +72,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
  * @param {number} userId - The users id
  * @returns
  */
-const getEvents = async (filters, keys, userId) => {
+const getEvents = async (filters, keys, userId, search) => {
   const events = await prisma.event.findMany({
     where: {
       ...filters,
@@ -79,6 +80,10 @@ const getEvents = async (filters, keys, userId) => {
         latitudeKey: key.latitudeKey,
         longitudeKey: key.longitudeKey,
       })),
+      OR: [
+        { description: { contains: search, mode: "insensitive" } },
+        { organizer: { username: { contains: search, mode: "insensitive" } } },
+      ],
     },
     include: {
       rsvps: {

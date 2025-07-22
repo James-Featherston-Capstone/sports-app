@@ -22,8 +22,6 @@ exports.getAllEvents = async (req, res, next) => {
       events = await eventService.getAllEventRSVP(user.id);
     } else if (filter === "created") {
       events = await eventService.getAllEventsCreated(user.id);
-    } else if (filter === "search") {
-      events = await eventService.getAllEvents(user.id, query);
     } else {
       events = await locationService.getAllNearbyEvents(user.id, {
         startDate,
@@ -31,6 +29,7 @@ exports.getAllEvents = async (req, res, next) => {
         radius,
         sport,
         location,
+        query,
       });
     }
     res.json(events);
