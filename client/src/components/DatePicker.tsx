@@ -24,7 +24,7 @@ const DatePicker = ({
 }: DatePickerProps) => {
   return (
     <Popover>
-      <PopoverTrigger asChild className="bg-transparent">
+      <PopoverTrigger asChild className="bg-transparent w-1/1">
         <Button
           variant="outline"
           data-empty={!date}

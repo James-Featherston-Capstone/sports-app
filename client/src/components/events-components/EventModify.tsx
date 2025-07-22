@@ -1,4 +1,4 @@
-import { Calendar } from "../ui/calendar";
+import DatePicker from "../DatePicker";
 import {
   useState,
   type Dispatch,
@@ -129,12 +129,11 @@ const EventModify = ({
           }
           showMap={true}
         />
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-lg border bg-white"
-          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+        <DatePicker
+          date={date}
+          setDate={setDate}
+          dateType="start"
+          referenceDate={undefined}
         />
         <Input
           type="time"

@@ -58,19 +58,24 @@ const CustomEventFilters = ({
     >
       <label className="text-sm mb-1">Select a date range</label>
       <div className="flex">
-        <DatePicker
-          date={startDate}
-          setDate={setStartDate}
-          dateType="start"
-          referenceDate={endDate}
-        />
+        <div className="mx-2">
+          <DatePicker
+            date={startDate}
+            setDate={setStartDate}
+            dateType="start"
+            referenceDate={endDate}
+          />
+        </div>
+
         <span className="h-8 flex justify-center items-center">-</span>
-        <DatePicker
-          date={endDate}
-          setDate={setEndDate}
-          dateType="end"
-          referenceDate={startDate}
-        />
+        <div className="mx-1">
+          <DatePicker
+            date={endDate}
+            setDate={setEndDate}
+            dateType="end"
+            referenceDate={startDate}
+          />
+        </div>
       </div>
       <div className="flex w-1/1 py-1 m-1">
         <h1 className="text-xl mx-2 w-34">Radius: {radius}</h1>
