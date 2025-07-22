@@ -25,7 +25,6 @@ const EventProvider = ({ children }: { children: ReactNode }) => {
     setEvents(retrievedEvents);
     setAreEventsEditable(filters.filter === "created");
     setIsEventListLoading(false);
-    console.log(retrievedEvents);
   };
   const addEvent = (event: DisplayEvent) => {
     setEvents([event, ...events]);
