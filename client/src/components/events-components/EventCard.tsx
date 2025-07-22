@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { DisplayEvent } from "@/utils/interfaces";
-import { deleteEventRsvp, eventRsvp } from "@/utils/eventService";
+import { clickEvent, deleteEventRsvp, eventRsvp } from "@/utils/eventService";
 import { getEvent } from "@/utils/eventService";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
@@ -32,11 +32,19 @@ const EventCard = ({ event }: EventProps) => {
     setIsRsvpByCurrentUser(!isRsvpByCurrentUser);
   };
   const handleOpenEventViewModal = async () => {
+    if (event.distance !== undefined) {
+      await clickEvent(event.id, event.distance);
+    }
     const fullEvent = await getEvent(event.id);
     openDialog({
-      title: `${fullEvent.sport} at ${fullEvent.location}`,
+      title: `${fullEvent.sport}`,
       description: fullEvent.description,
-      reactChildren: <EventModalContent event={fullEvent} />,
+      reactChildren: (
+        <EventModalContent
+          event={fullEvent}
+          updateDisplayedEvent={setDisplayedEvent}
+        />
+      ),
     });
   };
   const handleOpenEventEditModal = () => {

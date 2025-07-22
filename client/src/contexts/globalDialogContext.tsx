@@ -38,12 +38,12 @@ const DialogProvider = ({ children }: { children: ReactNode }) => {
     <DialogContext.Provider value={{ openDialog, closeDialog }}>
       {children}
       {isModalOpen && (
-        <div className="fixed z-2 w-screen h-screen bg-black/50 top-0 " />
+        <div className="fixed z-2 w-screen h-screen bg-black/50 top-0" />
       )}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen} modal={false}>
-        <DialogContent className="bg-white text-black flex flex-col items-center min-h-8/10 min-w-8/10">
+        <DialogContent className="bg-blue-300 text-black flex flex-col items-center min-h-8/10 min-w-8/10">
           <DialogHeader>
-            <DialogTitle>{dialogContent.title}</DialogTitle>
+            <DialogTitle className="mt-4">{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
           </DialogHeader>
           {dialogContent.reactChildren}

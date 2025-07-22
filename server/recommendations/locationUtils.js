@@ -1,16 +1,19 @@
 /*
-Input: Latitude or longitude
-Ouput: Key that corresponds with the input
+Returns the key that corresponds with the degree entered.
 */
 const calculateLocationKey = (value) => {
   return Math.round(value * 100);
 };
 
-/*
-Input: Latitude and longitude of 2 different locations in degrees
-Output: Distance between location 1 and location 2 
-Reference: https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
-*/
+/**
+ * Calculates the haversine distance from one coordinate to another.
+ * @param {Degree} lat1Degrees - Coordinate 1 latitude
+ * @param {Degree} lng1Degrees - Coordinate 1 longitude
+ * @param {Degree} lat2Degrees - Coordinate 2 latitude
+ * @param {Degree} lng2Degrees - Coordinate 2 longitude
+ * @returns
+ * Reference: https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
+ */
 const performHaversine = (
   lat1Degrees,
   lng1Degrees,
@@ -38,10 +41,11 @@ const performHaversine = (
   return EARTHRADIUSMILES * c;
 };
 
-/*
-Input: Object with its location set
-Output: Object with it's latitude, longitude, and location indexes set.
-*/
+/**
+ * Adds the latitude, longitude, latitude key, and longitude key
+ * to an object with a location field.
+ * @param {Object} obj - Object with a location field
+ */
 const extractLatLngFields = async (obj) => {
   const locationService = require("./locationService");
   const coords = await locationService.getGeoCode(obj.location);
@@ -51,18 +55,24 @@ const extractLatLngFields = async (obj) => {
   obj.longitudeKey = calculateLocationKey(coords.longitude);
 };
 
-/*
-Input: Center latitude and longitude keys, and the number of surrounding loops to retrieve
-Output: List of keys
-*/
-const getAllKeys = (baseKey, keyOffset) => {
-  const latLngOffsets = Array.from(
-    { length: keyOffset * 2 + 1 },
-    (_, i) => i - keyOffset
+/**
+ * Generates a list of keys based on the offsets
+ * @param {Coordinate} baseKey - The central key
+ * @param {Offset} offsets - Latitude and longitude key offsets
+ * @returns {Key[][]} - A 2D list of keys
+ */
+const getAllKeys = (baseKey, offsets) => {
+  const latitudeOffsets = Array.from(
+    { length: offsets.latitudeKeyOffset * 2 + 1 },
+    (_, i) => i - offsets.latitudeKeyOffset
+  );
+  const longitudeOffsets = Array.from(
+    { length: offsets.longitudeKeyOffset * 2 + 1 },
+    (_, i) => i - offsets.longitudeKeyOffset
   );
 
-  const keyGen = latLngOffsets.map((latKey) => {
-    return latLngOffsets.map((lngKey) => {
+  const keyGen = latitudeOffsets.map((latKey) => {
+    return longitudeOffsets.map((lngKey) => {
       return {
         latitudeKey: latKey + baseKey.latitudeKey,
         longitudeKey: lngKey + baseKey.longitudeKey,
@@ -73,9 +83,34 @@ const getAllKeys = (baseKey, keyOffset) => {
   return keys;
 };
 
+/**
+ * Calculates the key offsets needed for a give radius and latitude,
+ * factoring in the curvature of the earth.
+ * @param {number} radius - Radius in miles
+ * @param {Degree} latitude - The latitude
+ * @returns {Offset} - Latitude and longitude key offsets
+ */
+const calculateKeyOffsets = (radius, latitude) => {
+  const MILES_PER_DEGREE = 69.17;
+  const latitudeMultiplier = Math.cos(parseFloat(latitude)); // Due to the earth being round
+
+  const milesPerDegreeLatitude = MILES_PER_DEGREE * latitudeMultiplier;
+  const milesPerDegreeLongitude = MILES_PER_DEGREE;
+  const latitudeMilesPerKey = milesPerDegreeLatitude / 100;
+  const longitudeMilesPerKey = milesPerDegreeLongitude / 100;
+
+  const latitudeKeys = radius / latitudeMilesPerKey;
+  const longitudeKeys = radius / longitudeMilesPerKey;
+  return {
+    latitudeKeyOffset: Math.ceil(latitudeKeys),
+    longitudeKeyOffset: Math.ceil(longitudeKeys),
+  };
+};
+
 module.exports = {
   extractLatLngFields,
   calculateLocationKey,
   getAllKeys,
   performHaversine,
+  calculateKeyOffsets,
 };

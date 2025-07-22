@@ -8,15 +8,24 @@ import { Input } from "./ui/input";
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 interface MapsInputProps {
-  location: string;
   setLocation: (location: string) => void;
+  showMap: boolean;
+  baseLatitude?: number;
+  baseLongitude?: number;
 }
 const libraries: Libraries = ["places"];
-const MapsInput = ({ location, setLocation }: MapsInputProps) => {
-  const [coords, setCoords] = useState<google.maps.LatLngLiteral>({
-    lat: 0,
-    lng: 0,
-  });
+const MapsInput = ({
+  setLocation,
+  showMap,
+  baseLatitude,
+  baseLongitude,
+}: MapsInputProps) => {
+  const mapCenter: google.maps.LatLngLiteral = {
+    lat: baseLatitude ? baseLatitude : 0,
+    lng: baseLongitude ? baseLongitude : 0,
+  };
+  const [coords, setCoords] = useState<google.maps.LatLngLiteral>(mapCenter);
+  const [inputLocation, setInputLocation] = useState<string>("");
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
@@ -33,6 +42,7 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
         const selectedPlace = places[0];
         if (selectedPlace.formatted_address) {
           setLocation(selectedPlace.formatted_address);
+          setInputLocation(selectedPlace.formatted_address);
           if (selectedPlace.geometry?.location) {
             setCoords({
               lat: selectedPlace.geometry.location.lat(),
@@ -47,15 +57,17 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
     <div className="w-1/1 flex justify-center items-center flex-col">
       {isLoaded && (
         <>
-          <GoogleMap
-            mapContainerStyle={{
-              width: "100%",
-              height: "250px",
-              maxWidth: "600px",
-            }}
-            center={coords}
-            zoom={15}
-          ></GoogleMap>
+          {showMap && (
+            <GoogleMap
+              mapContainerStyle={{
+                width: "100%",
+                height: "250px",
+                maxWidth: "600px",
+              }}
+              center={coords}
+              zoom={15}
+            ></GoogleMap>
+          )}
           <div className="w-1/1 m-2 flex">
             <div className="w-1/1">
               <StandaloneSearchBox
@@ -64,18 +76,19 @@ const MapsInput = ({ location, setLocation }: MapsInputProps) => {
               >
                 <Input
                   type="text"
-                  placeholder="Enter your address..."
+                  placeholder="Enter address..."
                   className="w-1/1"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  value={inputLocation}
+                  onChange={(e) => setInputLocation(e.target.value)}
                 />
               </StandaloneSearchBox>
             </div>
             <Button
+              className="mr-0"
               variant="secondary"
               onClick={(e) => {
                 e.preventDefault();
-                setLocation("");
+                setInputLocation("");
               }}
             >
               Clear

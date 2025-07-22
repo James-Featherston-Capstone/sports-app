@@ -57,6 +57,7 @@ const Register = () => {
           onChange={(e) => setProfile({ ...profile, username: e.target.value })}
           autoComplete="on"
           placeholder="Username"
+          required
         />
         <label> Email: </label>
         <Input
@@ -66,6 +67,7 @@ const Register = () => {
           onChange={(e) => setProfile({ ...profile, email: e.target.value })}
           autoComplete="on"
           placeholder="someone@gmail.com"
+          required
         />
         <label> Password: </label>
         <Input
@@ -75,6 +77,7 @@ const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="on"
           placeholder="Password"
+          required
         />
         <label> Confirm Password: </label>
         <Input
@@ -84,6 +87,7 @@ const Register = () => {
           onChange={(e) => setTestPassword(e.target.value)}
           autoComplete="on"
           placeholder="Password"
+          required
         />
         <Button type="submit" className="w-1/1 mx-0 my-1.5" variant="secondary">
           Next

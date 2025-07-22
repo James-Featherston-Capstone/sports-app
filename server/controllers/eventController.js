@@ -10,11 +10,13 @@ const {
   validateNewComment,
 } = require("../utils/validation.js");
 const locationUtils = require("../recommendations/locationUtils.js");
+const meetingPointService = require("../meetingPoints/meetingPointService.js");
 
 exports.getAllEvents = async (req, res, next) => {
   try {
     const user = req.session.user;
-    const { filter, date, sport, location } = req.query;
+    const { filter, startDate, endDate, sport, location, radius, query } =
+      req.query;
     let events = [];
     if (filter === "rsvp") {
       events = await eventService.getAllEventRSVP(user.id);
@@ -22,9 +24,12 @@ exports.getAllEvents = async (req, res, next) => {
       events = await eventService.getAllEventsCreated(user.id);
     } else {
       events = await locationService.getAllNearbyEvents(user.id, {
-        date,
+        startDate,
+        endDate,
+        radius,
         sport,
         location,
+        query,
       });
     }
     res.json(events);
@@ -131,6 +136,89 @@ exports.createComment = async (req, res, next) => {
     const commentObj = buildComment(req);
     const comment = await eventService.createComment(commentObj);
     res.json(comment);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getEventPreferences = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    if (!eventId) {
+      throw new ValidationError("Event id missing");
+    }
+    const preferences = await eventService.getEventPreferences(eventId);
+    res.json(preferences);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createEventPreference = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    const { location } = req.body;
+    if (!location || !eventId) {
+      throw new ValidationError("Location required");
+    }
+    const preferenceObj = { eventId: eventId, location: location };
+    await locationUtils.extractLatLngFields(preferenceObj);
+    delete preferenceObj.latitudeKey;
+    delete preferenceObj.longitudeKey;
+    const preference = await eventService.createEventPreference(preferenceObj);
+    res.json(preference);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.preferenceUpvote = async (req, res, next) => {
+  try {
+    const preferenceId = parseInt(req.params.preferenceId);
+    if (!preferenceId) {
+      throw new ValidationError("Preference id required");
+    }
+    const updatedPreference = await eventService.preferenceUpvote(preferenceId);
+    res.json(updatedPreference);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getRecommendedMeetingPoints = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    if (!eventId) {
+      throw new ValidationError("Event id required");
+    }
+    const recommendations = await meetingPointService.suggestMeetingPoints(
+      eventId
+    );
+    res.json(recommendations);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createEventClick = async (req, res, next) => {
+  try {
+    const eventId = parseInt(req.params.eventId);
+    const eventDistance = parseFloat(req.body.eventDistance);
+    const userId = req.session.user.id;
+    if (
+      !eventId ||
+      !userId ||
+      eventDistance === undefined ||
+      eventDistance === null
+    ) {
+      throw new ValidationError("Event id and event distance required");
+    }
+    const clickEvent = await eventService.createClickEvent({
+      eventId,
+      eventDistance,
+      userId,
+    });
+    res.json(clickEvent);
   } catch (error) {
     next(error);
   }

@@ -15,8 +15,8 @@ interface EventModel {
   eventImage: string;
   eventTime: string;
   location: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: string;
+  longitude?: string;
   organizerId?: number;
   id: number;
   sport: string;
@@ -37,13 +37,56 @@ interface DisplayEvent extends EventModel {
       ]
     | null;
   isRsvpCurrentUser?: boolean;
+  comments: Comment[];
+}
+interface Comment {
+  id: number;
+  comment: string;
+  author: {
+    id: number;
+    username: string;
+  };
 }
 
 interface EventFilters {
   location?: string;
-  date?: string; //toISOString(Date)
+  startDate?: string; //toISOString(Date)
+  endDate?: string;
   sport?: string;
+  radius?: number[];
+  query?: string;
   filter: string;
 }
 
-export type { Profile, EventModel, EventFilters, DisplayEvent };
+interface ParkPreference {
+  id: number;
+  location: string;
+  upvotes: number;
+  eventId: number;
+}
+
+interface ClickEvent {
+  id: number;
+  userId: number;
+  eventId: number;
+  eventDistance: number;
+}
+
+interface ParkRecommendation {
+  recommendationTitle: string;
+  displayName?: string;
+  location: string;
+  averageDistance: number;
+  maximumDistance: number;
+}
+
+export type {
+  Profile,
+  EventModel,
+  EventFilters,
+  DisplayEvent,
+  Comment,
+  ParkPreference,
+  ClickEvent,
+  ParkRecommendation,
+};

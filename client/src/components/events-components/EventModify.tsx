@@ -1,4 +1,4 @@
-import { Calendar } from "../ui/calendar";
+import DatePicker from "../DatePicker";
 import {
   useState,
   type Dispatch,
@@ -24,10 +24,16 @@ import { useDialogContext } from "@/contexts/globalDialogContext";
 interface EventModifyProps {
   baseEvent?: DisplayEvent;
   updateDisplayedEvent?: Dispatch<SetStateAction<DisplayEvent>>;
+  addEvent?: (event: DisplayEvent) => void;
 }
 
-const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
+const EventModify = ({
+  baseEvent,
+  updateDisplayedEvent,
+  addEvent,
+}: EventModifyProps) => {
   const { closeDialog } = useDialogContext();
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [description, setDescription] = useState(
     baseEvent ? baseEvent.description : ""
   );
@@ -56,16 +62,25 @@ const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
       eventTime: getDateTime(eventTime, date).toISOString(),
       location: eventLocation,
     };
-    if (!baseEvent) {
-      type CreateEvent = Omit<EventModel, "id" | "rsvps">;
-      const event: CreateEvent = eventChanges;
-      createEvent(event);
+    if (description === "") {
+      setErrorMessage("Description Required");
+    } else if (sport === "") {
+      setErrorMessage("Sport Required");
+    } else if (eventLocation === "") {
+      setErrorMessage("Location required");
     } else {
-      const event: DisplayEvent = { ...baseEvent, ...eventChanges };
-      editEvent(event);
-      updateDisplayedEvent && updateDisplayedEvent(event);
+      if (!baseEvent) {
+        type CreateEvent = Omit<EventModel, "id" | "rsvps">;
+        const event: CreateEvent = eventChanges;
+        const createdEvent = await createEvent(event);
+        if (addEvent) addEvent(createdEvent);
+      } else {
+        const event: DisplayEvent = { ...baseEvent, ...eventChanges };
+        editEvent(event);
+        updateDisplayedEvent && updateDisplayedEvent(event);
+      }
+      closeDialog();
     }
-    closeDialog();
   };
   return (
     <form className="w-9/10" onSubmit={handleEventModify}>
@@ -103,17 +118,22 @@ const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
           className="my-1"
         />
         <MapsInput
-          location={eventLocation}
           setLocation={(location) => {
             setEventLocation(location);
           }}
+          baseLatitude={
+            baseEvent?.latitude ? parseFloat(baseEvent.latitude) : 0
+          }
+          baseLongitude={
+            baseEvent?.longitude ? parseFloat(baseEvent.longitude) : 0
+          }
+          showMap={true}
         />
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-lg border bg-white"
-          disabled={(date) => date < new Date()}
+        <DatePicker
+          date={date}
+          setDate={setDate}
+          dateType="start"
+          referenceDate={undefined}
         />
         <Input
           type="time"
@@ -121,6 +141,7 @@ const EventModify = ({ baseEvent, updateDisplayedEvent }: EventModifyProps) => {
           onChange={(e) => setEventTime(e.target.value)}
           className="my-1"
         />
+        <h1 className="text-red-500 text-lg">{errorMessage}</h1>
       </div>
       <Button className="w-1/1 mx-0 my-1" type="submit">
         Submit

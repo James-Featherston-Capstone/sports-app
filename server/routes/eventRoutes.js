@@ -11,5 +11,13 @@ router.post("/:eventId/rsvp", eventController.rsvpEvent);
 router.delete("/:eventId/rsvp", eventController.removeRsvpEvent);
 router.get("/:eventId/comments", eventController.getComments);
 router.post("/:eventId/comments", eventController.createComment);
+router.get("/:eventId/preferences", eventController.getEventPreferences);
+router.post("/:eventId/preferences", eventController.createEventPreference);
+router.put("/preferences/:preferenceId", eventController.preferenceUpvote);
+router.get(
+  "/:eventId/meeting-points",
+  eventController.getRecommendedMeetingPoints
+);
+router.post("/:eventId/event-click", eventController.createEventClick);
 
 module.exports = router;

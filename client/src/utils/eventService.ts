@@ -1,6 +1,14 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { EventFilters, DisplayEvent, EventModel } from "./interfaces";
+import type {
+  EventFilters,
+  DisplayEvent,
+  EventModel,
+  Comment,
+  ParkPreference,
+  ClickEvent,
+  ParkRecommendation,
+} from "./interfaces";
 
 const getAllEvents = async (
   filters?: EventFilters
@@ -33,7 +41,7 @@ const getEvent = async (eventId: number): Promise<DisplayEvent> => {
 
 const createEvent = async (
   event: Omit<EventModel, "id" | "rsvps">
-): Promise<EventModel> => {
+): Promise<DisplayEvent> => {
   const path = `${BASE_URL}/events`;
   const req = {
     method: "POST",
@@ -83,6 +91,87 @@ const deleteEventRsvp = async (eventId: number): Promise<EventModel> => {
   return await fetchData(path, req);
 };
 
+const createComment = async (
+  eventId: number,
+  comment: string
+): Promise<Comment> => {
+  const path = `${BASE_URL}/events/${eventId}/comments`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ comment }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const getAllEventPreferences = async (
+  eventId: number
+): Promise<ParkPreference[]> => {
+  const path = `${BASE_URL}/events/${eventId}/preferences`;
+  const req = {
+    method: "GET",
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const createEventPreference = async (
+  eventId: number,
+  location: string
+): Promise<ParkPreference> => {
+  const path = `${BASE_URL}/events/${eventId}/preferences`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ location }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const upvotePreference = async (
+  preferenceId: number
+): Promise<ParkPreference> => {
+  const path = `${BASE_URL}/events/preferences/${preferenceId}`;
+  const req = {
+    method: "PUT",
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const clickEvent = async (
+  eventId: number,
+  distance: number | undefined
+): Promise<ClickEvent> => {
+  const path = `${BASE_URL}/events/${eventId}/event-click`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ eventDistance: distance }),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const getEventLocationRecommendations = (
+  eventId: number
+): Promise<ParkRecommendation[]> => {
+  const path = `${BASE_URL}/events/${eventId}/meeting-points`;
+  const req = {
+    method: "GET",
+    credentials: "include",
+  };
+  return fetchData(path, req);
+};
+
 export {
   getAllEvents,
   getEvent,
@@ -90,4 +179,10 @@ export {
   editEvent,
   eventRsvp,
   deleteEventRsvp,
+  createComment,
+  getAllEventPreferences,
+  createEventPreference,
+  upvotePreference,
+  clickEvent,
+  getEventLocationRecommendations,
 };
