@@ -15,12 +15,15 @@ const meetingPointService = require("../meetingPoints/meetingPointService.js");
 exports.getAllEvents = async (req, res, next) => {
   try {
     const user = req.session.user;
-    const { filter, startDate, endDate, sport, location, radius } = req.query;
+    const { filter, startDate, endDate, sport, location, radius, query } =
+      req.query;
     let events = [];
     if (filter === "rsvp") {
       events = await eventService.getAllEventRSVP(user.id);
     } else if (filter === "created") {
       events = await eventService.getAllEventsCreated(user.id);
+    } else if (filter === "search") {
+      events = await eventService.getAllEvents(user.id, query);
     } else {
       events = await locationService.getAllNearbyEvents(user.id, {
         startDate,

@@ -1,11 +1,12 @@
 const prisma = require("../prisma.js");
 
-exports.getAllEvents = async (query, userId) => {
+exports.getAllEvents = async (userId, query) => {
   const events = await prisma.event.findMany({
     where: {
-      description: {
-        contains: query,
-      },
+      OR: [
+        { description: { contains: query, mode: "insensitive" } },
+        { organizer: { username: { contains: query, mode: "insensitive" } } },
+      ],
     },
     include: {
       rsvps: {
@@ -19,7 +20,7 @@ exports.getAllEvents = async (query, userId) => {
     },
     take: 10,
     orderBy: {
-      eventTime: "desc",
+      updated_at: "desc",
     },
   });
   return events;
