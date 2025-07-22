@@ -26,17 +26,23 @@ const EditProfile = ({
   const navigate = useNavigate();
   const { setLoginStatus } = useLoginContext();
   const [newProfile, setNewProfile] = useState<Profile>(profile);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (type === "create") {
-      if (password) {
-        await register(newProfile, password);
-      }
-      const user = await createProfile(newProfile);
-      if (user) {
-        setLoginStatus(true);
-        navigate("/");
+      if (newProfile.location === "") {
+        setErrorMessage("Must set a location");
+      } else {
+        if (password) {
+          const user = await register(newProfile, password);
+          if (user) {
+            setLoginStatus(true);
+            navigate("/");
+          } else {
+            setErrorMessage("User creation failed.");
+          }
+        }
       }
     } else {
       const user = await createProfile(newProfile);
@@ -68,6 +74,7 @@ const EditProfile = ({
         onSubmit={onSubmit}
         profile={newProfile}
         setProfile={setNewProfile}
+        errorMessage={errorMessage}
       />
     </div>
   );
