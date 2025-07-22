@@ -54,6 +54,7 @@ interface EventFilters {
   endDate?: string;
   sport?: string;
   radius?: number[];
+  query?: string;
   filter: string;
 }
 

@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import DatePicker from "../DatePicker";
 import { Slider } from "../ui/slider";
 import { useState, type FormEvent } from "react";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
@@ -37,6 +38,9 @@ const CustomEventFilters = ({
   const [radius, setRadius] = useState<number[]>(
     baseFilters.radius ? baseFilters.radius : [10]
   );
+  const [searchQuery, setSearchQuery] = useState<string>(
+    baseFilters.query ? baseFilters.query : ""
+  );
 
   const onConfirmation = (e: FormEvent) => {
     e.preventDefault();
@@ -47,6 +51,7 @@ const CustomEventFilters = ({
       startDate: startDate?.toISOString(),
       endDate: endDate?.toISOString(),
       radius: radius,
+      query: searchQuery,
     };
     handleFilter(filters);
     closeDialog();
@@ -102,6 +107,11 @@ const CustomEventFilters = ({
           })}
         </SelectContent>
       </Select>
+      <Input
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search... (description or organizer)"
+      />
       <MapsInput setLocation={setLocation} showMap={true} />
       <Button type="submit" className="w-1/1">
         Submit

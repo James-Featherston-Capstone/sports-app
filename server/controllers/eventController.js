@@ -15,7 +15,8 @@ const meetingPointService = require("../meetingPoints/meetingPointService.js");
 exports.getAllEvents = async (req, res, next) => {
   try {
     const user = req.session.user;
-    const { filter, startDate, endDate, sport, location, radius } = req.query;
+    const { filter, startDate, endDate, sport, location, radius, query } =
+      req.query;
     let events = [];
     if (filter === "rsvp") {
       events = await eventService.getAllEventRSVP(user.id);
@@ -28,6 +29,7 @@ exports.getAllEvents = async (req, res, next) => {
         radius,
         sport,
         location,
+        query,
       });
     }
     res.json(events);
