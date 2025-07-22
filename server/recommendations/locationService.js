@@ -1,7 +1,11 @@
 const prisma = require("../prisma.js");
 const locationUtils = require("./locationUtils.js");
 const { rankEvents } = require("./rankEvents.js");
-const { DISTANCE_RANGES } = require("../config.js");
+const {
+  DISTANCE_RANGES,
+  NUM_WEATHER_DAYS,
+  MILLISECS_TO_DAYS,
+} = require("../config.js");
 
 /**
  * Gets the coordinates for a location string using the
@@ -46,7 +50,7 @@ const getAllNearbyEvents = async (userId, userInputs) => {
   const keys = _getEventKeys(user, userInputs);
   const search = userInputs.query ? userInputs.query : "";
   const events = await getEvents(filters, keys, userId, search);
-  const preparedEvents = _prepareEvents(events, userInputs);
+  const preparedEvents = await _prepareEvents(events, userInputs);
   const recentRSVPs = _filterDataLastThreeMonths(user.eventsRSVP);
   const recentClicks = _filterDataLastThreeMonths(user.clickedEvents);
   const userSportsMap = userInputs.sport
@@ -187,7 +191,7 @@ const _getEventKeys = (user, userInputs) => {
  * @param {Object} userInputs - The inputs from the user for filtering
  * @returns {Event[]} - Prepared events
  */
-const _prepareEvents = (events, userInputs) => {
+const _prepareEvents = async (events, userInputs) => {
   const userDate =
     userInputs.date && userInputs.date !== "undefined"
       ? new Date(userInputs.date)
@@ -196,7 +200,61 @@ const _prepareEvents = (events, userInputs) => {
     const eventDate = new Date(event.eventTime);
     return eventDate >= userDate;
   });
-  return futureEvents;
+  const eventsWithWeatherData = await _getEventsWeatherData(futureEvents);
+  return eventsWithWeatherData;
+};
+
+const _getEventsWeatherData = async (events) => {
+  const eventsWithWeatherData = await Promise.all(
+    events.map(async (event) => {
+      const weather = await getGoogleMapsWeather(event);
+      return {
+        ...event,
+        weather: weather,
+      };
+    })
+  );
+  return eventsWithWeatherData;
+};
+
+const getGoogleMapsWeather = async (event) => {
+  const BASE_WEATHER_URL = `https://weather.googleapis.com/v1/forecast/days:lookup`;
+  const paramsObj = {
+    key: process.env.GOOGLE_MAPS_API,
+    "location.latitude": event.latitude,
+    "location.longitude": event.longitude,
+    days: NUM_WEATHER_DAYS,
+  };
+  const urlParams = new URLSearchParams(paramsObj);
+  const url = `${BASE_WEATHER_URL}?${urlParams.toString()}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Something went wrong");
+  }
+  const data = await response.json();
+  if (data) {
+    const weatherIndex = _getWeatherDayIndex(event.eventTime);
+    return _formatGoogleMapsWeatherResponse(data, weatherIndex);
+  } else {
+    return "UNKNOWN";
+  }
+};
+
+const _formatGoogleMapsWeatherResponse = (data, weatherIndex) => {
+  const weatherOnEventDay = data.forecastDays[weatherIndex];
+  if (!weatherOnEventDay) {
+    return "UNKNOWN";
+  } else {
+    return weatherOnEventDay.daytimeForecast.weatherCondition.type;
+  }
+};
+
+const _getWeatherDayIndex = (eventTime) => {
+  const now = new Date();
+  const eventDate = new Date(eventTime);
+  const diff = eventDate - now;
+  const diffDays = Math.floor(diff / MILLISECS_TO_DAYS);
+  return diffDays;
 };
 
 /**

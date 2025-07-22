@@ -15,4 +15,21 @@ Used to set the max age of the cookie
 */
 const MAX_AGE = 1000 * 60 * 60; // 1 Hour
 
-module.exports = { GOOGLE_MAPS_RADIUS, DISTANCE_RANGES, MAX_AGE };
+/*
+The days in the future the Google Maps API searches
+*/
+const NUM_WEATHER_DAYS = 7; // 7 days
+
+/*
+Converts milliseconds to days
+Used for date subtraction
+*/
+const MILLISECS_TO_DAYS = 1000 * 60 * 60 * 24;
+
+module.exports = {
+  GOOGLE_MAPS_RADIUS,
+  DISTANCE_RANGES,
+  MAX_AGE,
+  NUM_WEATHER_DAYS,
+  MILLISECS_TO_DAYS,
+};
