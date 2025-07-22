@@ -15,8 +15,8 @@ interface EventModel {
   eventImage: string;
   eventTime: string;
   location: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: string;
+  longitude?: string;
   organizerId?: number;
   id: number;
   sport: string;

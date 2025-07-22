@@ -37,7 +37,11 @@ const EventComments = ({
         />
         <Button type="submit">Comment</Button>
       </form>
-
+      {commentList.length === 0 && (
+        <h1 className="bg-white w-1/1 rounded-lg text-center p-1 my-2">
+          Be the first to comment
+        </h1>
+      )}
       <div className="w-1/1 h-1/1 flex flex-col">
         {commentList.map((commentInstance) => {
           return (
