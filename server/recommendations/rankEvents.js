@@ -63,8 +63,8 @@ const getBounds = (events, preferenceMaps) => {
     maxDistance,
     minDate,
     maxDate,
-    distanceRange,
-    dateRange,
+    distanceRange: distanceRange > 0 ? distanceRange : 1,
+    dateRange: dateRange > 0 ? dateRange : 1,
     maxTimeValue: maxTimeValue > 0 ? maxTimeValue : 1,
     maxDistanceValue: maxDistanceValue > 0 ? maxDistanceValue : 1,
   };
