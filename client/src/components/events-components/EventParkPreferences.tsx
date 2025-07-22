@@ -59,6 +59,12 @@ const EventParkPreferences = ({
           </p>
         )}
       </div>
+      {preferenceList.length === 0 && (
+        <h1 className="bg-white w-1/1 rounded-lg text-center p-1 my-2">
+          Create a recommendation preference by typing an address in the input
+          field.{" "}
+        </h1>
+      )}
       {preferenceList.map((preference) => {
         return (
           <div
