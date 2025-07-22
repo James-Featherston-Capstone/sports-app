@@ -61,7 +61,7 @@ const EventCard = ({ event }: EventProps) => {
   return (
     <>
       <div
-        className="w-1/1 h-60 flex flex-col justify-around bg-white text-black p-2 m-1 rounded-2xl hover:-translate-y-1 hover:cursor-pointer"
+        className="w-1/1 h-60 flex flex-col justify-around bg-white text-black p-2 m-1 rounded-2xl hover:-translate-y-1 hover:cursor-context-menu"
         onClick={() => handleOpenEventViewModal()}
       >
         <h1 className="mt-2 text-xl">{displayedEvent.sport}</h1>

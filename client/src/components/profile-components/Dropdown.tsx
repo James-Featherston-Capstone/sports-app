@@ -24,7 +24,7 @@ const Dropdown = ({ setEditing }: DropdownProps) => {
     <div className="absolute top-3 right-10">
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <span className="text-3xl">...</span>
+          <span className="text-3xl hover:cursor-pointer">...</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuGroup>

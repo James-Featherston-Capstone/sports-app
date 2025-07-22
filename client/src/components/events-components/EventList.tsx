@@ -8,7 +8,7 @@ const EventList = () => {
   if (events.length == 0) {
     return (
       <div className="flex flex-col sm:flex-row justify-center items-center sm:justify-start flex-wrap w-screen">
-        <h1 className="text-xl m-4">
+        <h1 className="text-xl m-4 grow">
           No events found near you. Update your profile or filter a new location
           to get different results.
         </h1>

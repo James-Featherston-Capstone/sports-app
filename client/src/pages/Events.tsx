@@ -27,7 +27,7 @@ const Events = () => {
       <div className="flex justify-center flex-wrap">
         <Button
           variant="secondary"
-          className="order-0 sm:order-4 w-8/10 sm:w-auto mt-3 mb-1"
+          className="order-0 sm:order-4 w-8/10 sm:w-auto mt-4 mb-1"
           onClick={() => openEventCreationModal()}
         >
           Create Event

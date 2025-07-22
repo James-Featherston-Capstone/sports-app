@@ -29,7 +29,7 @@ const ButtonAnimation = ({ handleRsvp, isRsvp, event }: ButtonAnimation) => {
     <>
       <Button
         onClick={handleButtonClick}
-        variant={isRsvp ? "checked" : "default"}
+        variant={isRsvp ? "checked" : "notChecked"}
       >
         <span
           className={`transition-opacity duration-300 ${
@@ -39,20 +39,19 @@ const ButtonAnimation = ({ handleRsvp, isRsvp, event }: ButtonAnimation) => {
           RSVP
         </span>
         {clicked && (
-          <div onClick={handleBackgroundClick}>
-            <div
-              className={`absolute inset-0 flex items-center justify-center text-black animate-spin`}
-            >
-              <div className="flex justify-around items-center flex-col w-100 h-100 bg-white rounded-xl border-2 hover shadow-sm">
-                <h1 className="text-4xl font-bold">Congratulations</h1>
-                <h1 className="text-2xl">Get Ready for</h1>
-                <h1 className="text-3xl">{event.sport}</h1>
-                <h1 className="text-2xl">Hosted on:</h1>
-                <h1 className="text-xl">{getDisplayDate(event.eventTime)}</h1>
-                <h1 className="text-lg">Click on the event for more info</h1>
-              </div>
+          <span
+            onClick={handleBackgroundClick}
+            className={`fixed z-50 flex items-center justify-center text-black animate-spin`}
+          >
+            <div className="fixed flex justify-around z-50 items-center flex-col w-100 h-100 bg-white rounded-xl border-2 hover shadow-sm">
+              <h1 className="text-4xl font-bold">Congratulations</h1>
+              <h1 className="text-2xl">Get Ready for</h1>
+              <h1 className="text-3xl">{event.sport}</h1>
+              <h1 className="text-2xl">Hosted on:</h1>
+              <h1 className="text-xl">{getDisplayDate(event.eventTime)}</h1>
+              <h1 className="text-lg">Click on the event for more info</h1>
             </div>
-          </div>
+          </span>
         )}
       </Button>
     </>
