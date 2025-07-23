@@ -139,11 +139,12 @@ const _getDistanceValue = (distance, userDistanceMap) => {
  * @param {string} condition - The weather description
  */
 const _getWeatherValue = (condition) => {
-  for (const [key, weight] of Object.entries(WEATHER_VALUES_MAP)) {
+  for (const [key, weight] of Object.entries(DEFAULT_WEATHER_WEIGHTS)) {
     if (condition.includes(key)) {
       return weight;
     }
   }
+  console.log("This should cause it");
   return 0; //Return 0 if not found
 };
 
