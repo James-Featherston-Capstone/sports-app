@@ -1,4 +1,4 @@
-const { DISTANCE_RANGES } = require("../config");
+const { DISTANCE_RANGES, DEFAULT_WEATHER_WEIGHTS } = require("../config");
 const { performHaversine } = require("./locationUtils");
 
 /**
@@ -84,9 +84,10 @@ const getEventWeight = (event, bounds, preferenceMaps) => {
   const userDistanceMap = preferenceMaps.userDistanceMap;
   const LOCATION_WEIGHT = 0.45; // 45%
   const DISTANCE_WEIGHT = 0.05; // 5%
-  const DATE_WEIGHT = 0.25; // 25%
-  const SPORT_WEIGHT = 0.15; // 15%
+  const DATE_WEIGHT = 0.22; // 22%
+  const SPORT_WEIGHT = 0.13; // 13%
   const TIME_OF_DAY_WEIGHT = 0.1; // 10%
+  const WEATHER_WEIGHT = 0.05; // 5%
   const sportValue = sportsMap.get(event.sport)
     ? sportsMap.get(event.sport)
     : 0;
@@ -106,12 +107,14 @@ const getEventWeight = (event, bounds, preferenceMaps) => {
   const distanceValue = _getDistanceValue(event.distance, userDistanceMap);
   const distanceWeight =
     1 - (bounds.maxDistanceValue - distanceValue) / bounds.maxDistanceValue;
+  const weatherWeight = _getWeatherValue(event.weather);
   return (
     sportWeight * SPORT_WEIGHT +
     locationWeight * LOCATION_WEIGHT +
     dateWeight * DATE_WEIGHT +
     timeWeight * TIME_OF_DAY_WEIGHT +
-    distanceWeight * DISTANCE_WEIGHT
+    distanceWeight * DISTANCE_WEIGHT +
+    weatherWeight * WEATHER_WEIGHT
   );
 };
 
@@ -127,6 +130,22 @@ const _getDistanceValue = (distance, userDistanceMap) => {
   }
   const value = userDistanceMap.get(DISTANCE_RANGES[index]);
   return value ? value : 0;
+};
+
+/**
+ * Returns a value given the weather condition. All conditions are
+ * found using the google maps API.
+ * https://developers.google.com/maps/documentation/weather/
+ * @param {string} condition - The weather description
+ */
+const _getWeatherValue = (condition) => {
+  for (const [key, weight] of Object.entries(DEFAULT_WEATHER_WEIGHTS)) {
+    if (condition.includes(key)) {
+      return weight;
+    }
+  }
+  console.log("This should cause it");
+  return 0; //Return 0 if not found
 };
 
 module.exports = { rankEvents };
