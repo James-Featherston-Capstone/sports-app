@@ -1,4 +1,4 @@
-const { DISTANCE_RANGES, WEATHER_VALUES_MAP } = require("../config");
+const { DISTANCE_RANGES, DEFAULT_WEATHER_WEIGHTS } = require("../config");
 const { performHaversine } = require("./locationUtils");
 
 /**
@@ -139,9 +139,9 @@ const _getDistanceValue = (distance, userDistanceMap) => {
  * @param {string} condition - The weather description
  */
 const _getWeatherValue = (condition) => {
-  for (const key of WEATHER_VALUES_MAP.keys()) {
+  for (const [key, weight] of Object.entries(WEATHER_VALUES_MAP)) {
     if (condition.includes(key)) {
-      return WEATHER_VALUES_MAP.get(key);
+      return weight;
     }
   }
   return 0; //Return 0 if not found
