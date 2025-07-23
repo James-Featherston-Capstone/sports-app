@@ -207,7 +207,7 @@ const _prepareEvents = async (events, userInputs) => {
 /**
  * Find the weather for each event at the events given time.
  * @param {Event[]} events - The events
- * @returns {Event[]} - Events with weather data
+ * @returns {EventWithWeatherData[]} - Events with weather data
  */
 const _getEventsWeatherData = async (events) => {
   const eventsWithWeatherData = await Promise.all(
