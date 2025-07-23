@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import EventModify from "./EventModify";
 import type { DisplayEvent } from "@/utils/interfaces";
@@ -8,6 +7,8 @@ import { getEvent } from "@/utils/eventService";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 import EventModalContent from "./EventModalContent";
 import { useEventContext } from "@/contexts/eventContext";
+import { getDisplayDate } from "@/utils/utils";
+import ButtonAnimation from "../ButtonAnimation";
 
 interface EventProps {
   event: DisplayEvent;
@@ -21,8 +22,7 @@ const EventCard = ({ event }: EventProps) => {
     event.isRsvpCurrentUser
   );
 
-  const handleRsvp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
+  const handleRsvp = () => {
     if (!isRsvpByCurrentUser) {
       eventRsvp(event.id);
     } else {
@@ -60,43 +60,40 @@ const EventCard = ({ event }: EventProps) => {
   };
   return (
     <>
-      <Card
+      <div
+        className="w-1/1 h-60 flex flex-col justify-around bg-white text-black p-2 m-1 rounded-2xl hover:cursor-context-menu"
         onClick={() => handleOpenEventViewModal()}
-        className="flex flex-col justify-start items-center w-9/10 sm:w-75 m-w-50 h-50 sm:h-100 m-3 p-1.5 border rounded-xl text-black"
       >
-        <CardDescription>
-          <h1 className="text-black">{displayedEvent.description}</h1>
-        </CardDescription>
-        <CardContent>
-          <h1>Time: {displayedEvent.eventTime}</h1>
-          <h1>Location: {displayedEvent.location}</h1>
-          <h1>Sport: {displayedEvent.sport}</h1>
+        <h1 className="mt-2 text-xl">{displayedEvent.sport}</h1>
+        <div className="w-1/1">
+          <h1>{getDisplayDate(displayedEvent.eventTime)}</h1>
+          <h1>{displayedEvent.location}</h1>
+          <h1></h1>
           {displayedEvent.distance !== undefined && (
             <h1>Distance: {displayedEvent.distance} Miles</h1>
           )}
-        </CardContent>
-        <CardFooter>
+        </div>
+        <div>
           {areEventsEditable ? (
             <Button
               onClick={(e) => {
                 e.stopPropagation();
                 handleOpenEventEditModal();
               }}
+              className="h-8"
             >
-              Edit
+              EDIT
             </Button>
           ) : (
             <></>
           )}
-          <Button
-            variant={isRsvpByCurrentUser ? "checked" : "default"}
-            className="h-8"
-            onClick={handleRsvp}
-          >
-            RSVP
-          </Button>
-        </CardFooter>
-      </Card>
+          <ButtonAnimation
+            handleRsvp={handleRsvp}
+            isRsvp={isRsvpByCurrentUser ? isRsvpByCurrentUser : false}
+            event={event}
+          />
+        </div>
+      </div>
     </>
   );
 };

@@ -1,3 +1,4 @@
+//Returns a date with the correct HH:MM
 const getDateTime = (time: string, date: Date | undefined) => {
   let realDate = date;
   if (realDate === undefined) {
@@ -9,6 +10,7 @@ const getDateTime = (time: string, date: Date | undefined) => {
   return realDate;
 };
 
+//Gets the time in the format HH:MM
 const getTimeOfDay = (ISOTime: string) => {
   const date = new Date(ISOTime);
   const hours = date.getHours();
@@ -19,4 +21,22 @@ const getTimeOfDay = (ISOTime: string) => {
   return timeString;
 };
 
-export { getDateTime, getTimeOfDay };
+//Gets a date string to display
+const getDisplayDate = (ISOTime: string): string => {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
+  const date = new Date(ISOTime);
+  const datePart = date.toLocaleDateString(undefined, dateOptions);
+  const timePart = date.toLocaleTimeString(undefined, timeOptions);
+  return `${datePart} at ${timePart}`;
+};
+
+export { getDateTime, getTimeOfDay, getDisplayDate };

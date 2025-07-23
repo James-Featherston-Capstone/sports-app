@@ -104,7 +104,7 @@ exports.getAllEventsCreated = async (userId) => {
       },
     },
     orderBy: {
-      eventTime: "desc",
+      updated_at: "desc",
     },
   });
 
