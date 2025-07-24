@@ -157,4 +157,11 @@ const updateRecommendationData = async (userId, newData) => {
   });
   return result;
 };
+
+const refreshRecommendationData = async (userId) => {
+  const result = await prisma.recommendationData.delete({
+    where: { userId: userId },
+  });
+  return result;
+};
 module.exports = { handleWeightChange };
