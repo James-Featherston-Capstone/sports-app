@@ -159,7 +159,6 @@ const updateRecommendationData = async (userId, newData) => {
     where: { userId: userId },
     data: newData,
   });
-  console.log(result);
   return result;
 };
 
