@@ -11,6 +11,7 @@ const {
 } = require("../utils/validation.js");
 const locationUtils = require("../recommendations/locationUtils.js");
 const meetingPointService = require("../meetingPoints/meetingPointService.js");
+const { handleWeightChange } = require("../recommendations/eventWeights.js");
 
 exports.getAllEvents = async (req, res, next) => {
   try {
@@ -218,6 +219,7 @@ exports.createEventClick = async (req, res, next) => {
       eventDistance,
       userId,
     });
+    handleWeightChange(clickEvent);
     res.json(clickEvent);
   } catch (error) {
     next(error);

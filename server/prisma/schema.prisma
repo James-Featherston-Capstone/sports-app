@@ -15,28 +15,43 @@ datasource db {
 }
 
 model User {
-  id                 Int            @id @default(autoincrement())
+  id                 Int                 @id @default(autoincrement())
   username           String
   email              String
   password           String
-  profile_image_url  String         @default("")
+  profile_image_url  String              @default("")
   bio                String
   location           String
   latitude           Decimal
   longitude          Decimal
   latitudeKey        Int
   longitudeKey       Int
-  sports             Sports[]       @default([])
-  created_at         DateTime       @default(now())
-  updated_at         DateTime       @default(now())
+  sports             Sports[]            @default([])
+  created_at         DateTime            @default(now())
+  updated_at         DateTime            @default(now())
   eventsCreated      Event[]
   eventsRSVP         EventRSVP[]
   comments           EventComment[]
-  friendshipSent     Friendship[]   @relation("UserToFriend")
-  friendshipReceived Friendship[]   @relation("FriendToUser")
+  friendshipSent     Friendship[]        @relation("UserToFriend")
+  friendshipReceived Friendship[]        @relation("FriendToUser")
   clickedEvents      ClickedEvent[]
+  recommendationData RecommendationData?
 
   @@index([latitudeKey, longitudeKey])
+}
+
+model RecommendationData {
+  id               Int     @id @default(autoincrement())
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int     @unique
+  timeOfDayBuckets Json
+  timeOfDayCount   Decimal @default(0)
+  timeOfDayWeight  Decimal @default(0.15)
+  sportBuckets     Json
+  sportCount       Decimal @default(0)
+  sportWeight      Decimal @default(0.35)
+  dateCount        Decimal @default(0)
+  dateWeight       Decimal @default(0.5)
 }
 
 model Friendship {
