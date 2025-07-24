@@ -1,12 +1,21 @@
+const {
+  MILLISECS_TO_DAYS,
+  MAX_TIME_OF_DAY_WEIGHT,
+  MAX_DATE_AND_SPORT_WEIGHT,
+  DATE_BALANCE,
+  MAX_DAYS_AWAY,
+} = require("../config.js");
 const prisma = require("../prisma.js");
 
 /**
- *
- * @param {*} click
+ * Updates weights for the event recommendation algorithm.
+ * Based on an event click, it calculates the likelyhood that the
+ * click was based on time of day, sport count, or date count. It
+ * then updates the weights to reflect the reason for a click.
+ * @param {Click} click - The click event
  */
 const handleWeightChange = async (click) => {
   const recommendationData = await getRecommendationData(click.userId);
-  const MAX_DAYS_AWAY = 7;
   const counts = {
     timeOfDayCount: parseFloat(recommendationData.timeOfDayCount),
     sportCount: parseFloat(recommendationData.sportCount),
@@ -42,7 +51,7 @@ const handleWeightChange = async (click) => {
   const sportAddition = sportBuckets[click.event.sport] / totalSport;
   const timeOfDayAddition = timeOfDayBuckets[timeOfDayBucket] / totalTimeOfDay;
   const dateAddition =
-    Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0) * 0.33;
+    Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0) * DATE_BALANCE;
 
   const newCounts = {
     timeOfDayCount: counts.timeOfDayCount + timeOfDayAddition,
@@ -56,17 +65,17 @@ const handleWeightChange = async (click) => {
   const newTimeOfDayWeight = Math.min(
     (1 - MAX_CHANGE) * weights.timeOfDayWeight +
       MAX_CHANGE * (newCounts.timeOfDayCount / total),
-    0.15
+    MAX_TIME_OF_DAY_WEIGHT
   );
   const newDateWeight = Math.min(
     (1 - MAX_CHANGE) * weights.dateWeight +
       MAX_CHANGE * (newCounts.dateCount / total),
-    0.65
+    MAX_DATE_AND_SPORT_WEIGHT
   );
   const newSportWeight = Math.min(
     (1 - MAX_CHANGE) * weights.sportWeight +
       MAX_CHANGE * (newCounts.sportCount / total),
-    0.65
+    MAX_DATE_AND_SPORT_WEIGHT
   );
 
   const normalized = _normalizeWeights(
@@ -86,6 +95,7 @@ const handleWeightChange = async (click) => {
   updateRecommendationData(click.userId, updatedRecommendationData);
 };
 
+/* Normalizes the weights */
 const _normalizeWeights = (
   newTimeOfDayWeight,
   newDateWeight,
@@ -99,12 +109,19 @@ const _normalizeWeights = (
   };
 };
 
+/* Gets the difference in days between two dates */
 const _getDaysDiff = (date1, date2) => {
   const diff = date1 - date2;
-  const daysDiff = diff / (1000 * 60 * 60 * 24);
+  const daysDiff = diff / MILLISECS_TO_DAYS;
   return daysDiff;
 };
 
+/**
+ * Calculates the time of day bucket by
+ * rounding the time to the nearest hour.
+ * @param {Date} eventTime - The event time
+ * @returns {number} - The event bucket
+ */
 const _getTimeOfDayBucket = (eventTime) => {
   const minutes = eventTime.getMinutes();
   const roundUp = Math.floor(minutes / 30);
@@ -112,9 +129,12 @@ const _getTimeOfDayBucket = (eventTime) => {
   return timeOfDay;
 };
 
-/* 
-Gets recommendation data and creates it if it does not already exist
-*/
+/**
+ * Gets the recommendation data for a user and creates an
+ * entry if one does not already exist.
+ * @param {number} userId - The user id
+ * @returns {RecommendationData} - Recommendation data for the user
+ */
 const getRecommendationData = async (userId) => {
   const data = await prisma.recommendationData.upsert({
     where: { userId: userId },
@@ -124,13 +144,17 @@ const getRecommendationData = async (userId) => {
   return data;
 };
 
-/* 
-Updates recommendation data
-*/
+/**
+ * Updates the recommendation data for a user
+ * @param {number} userId - The user id
+ * @param {RecommendationData} newData - The updated recommendation data
+ * @returns
+ */
 const updateRecommendationData = async (userId, newData) => {
   const result = await prisma.recommendationData.update({
     where: { userId: userId },
     data: newData,
   });
+  return result;
 };
 module.exports = { handleWeightChange };
