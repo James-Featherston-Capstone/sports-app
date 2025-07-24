@@ -98,11 +98,14 @@ const getEventWeight = (event, bounds, preferenceMaps, dynamicWeights) => {
   const WEATHER_WEIGHT = 0.05; // 5%
   const DYNAMIC_WEIGHT_PERCENTAGE = 0.45; //45%
   const dynamicSportWeight =
-    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.sportWeight;
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.sportWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.35;
   const dynamicDateWeight =
-    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.dateWeight;
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.dateWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.5;
   const dynamicTimeOfDayWeight =
-    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.timeOfDayWeight;
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.timeOfDayWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.15;
   const sportValue = sportsMap.get(event.sport)
     ? sportsMap.get(event.sport)
     : 0;

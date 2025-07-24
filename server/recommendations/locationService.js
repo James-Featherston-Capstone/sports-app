@@ -64,9 +64,9 @@ const getAllNearbyEvents = async (userId, userInputs) => {
     { userSportsMap, userTimesMap, userDistanceMap },
     userInputs.radius,
     {
-      dateWeight: user.recommendationData.dateWeight,
-      sportWeight: user.recommendationData.sportWeight,
-      timeOfDayWeight: user.recommendationData.timeOfDayWeight,
+      dateWeight: user.recommendationData?.dateWeight,
+      sportWeight: user.recommendationData?.sportWeight,
+      timeOfDayWeight: user.recommendationData?.timeOfDayWeight,
     }
   );
   return rankedEvents;

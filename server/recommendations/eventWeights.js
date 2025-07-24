@@ -48,11 +48,16 @@ const handleWeightChange = async (click) => {
     (sum, sport) => sum + sport,
     0
   );
+  const maxSport = Object.values(sportBuckets).reduce(
+    (max, sport) => Math.max(max, sport),
+    0
+  );
+  const dateBalance = maxSport / totalSport;
 
   const sportAddition = sportBuckets[click.event.sport] / totalSport;
   const timeOfDayAddition = timeOfDayBuckets[timeOfDayBucket] / totalTimeOfDay;
   const dateAddition =
-    Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0) * DATE_BALANCE;
+    Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0) * dateBalance;
 
   const newCounts = {
     timeOfDayCount: counts.timeOfDayCount + timeOfDayAddition,
@@ -92,7 +97,8 @@ const handleWeightChange = async (click) => {
     dateWeight: normalized.dateWeight,
     timeOfDayWeight: normalized.timeOfDayWeight,
   };
-  updateRecommendationData(click.userId, updatedRecommendationData);
+  // updateRecommendationData(click.userId, updatedRecommendationData);
+  // refreshRecommendationData(click.userId);
 };
 
 /* Normalizes the weights */
