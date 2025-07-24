@@ -225,12 +225,28 @@ exports.createClickEvent = async (data) => {
   if (!existingClickEvent) {
     const newClickEvent = await prisma.clickedEvent.create({
       data: data,
+      include: {
+        event: {
+          select: {
+            eventTime: true,
+            sport: true,
+          },
+        },
+      },
     });
     return newClickEvent;
   } else {
     const updatedClick = await prisma.clickedEvent.update({
       where: { id: existingClickEvent.id },
       data: { eventDistance: data.eventDistance },
+      include: {
+        event: {
+          select: {
+            eventTime: true,
+            sport: true,
+          },
+        },
+      },
     });
     return updatedClick;
   }

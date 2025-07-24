@@ -42,6 +42,25 @@ const DEFAULT_WEATHER_WEIGHTS = {
   THUNDERSTORM: 0,
 };
 
+/* 
+The following constants are used for the event weights 
+calculation in the event recommendation algorithm 
+*/
+// Used to calculate the likely hood an event was cliked on
+// because it is near in the future
+const MAX_DAYS_AWAY = 7;
+// Ensures the date field does not have a disproportional
+// effect on the weights
+const DATE_BALANCE = 1 / 3;
+// Max weight for the time of day.
+// Less important weight to the algorithm, so it gets capped.
+const MAX_TIME_OF_DAY_WEIGHT = 0.15;
+// Max weight for date or sport
+// Ensures fairness in the algorithm for extreme cases
+const MAX_DATE_AND_SPORT_WEIGHT = 0.6;
+// Max weight change per click
+const MAX_CHANGE_PER_CLICK = 0.1;
+
 module.exports = {
   GOOGLE_MAPS_RADIUS,
   DISTANCE_RANGES,
@@ -49,4 +68,9 @@ module.exports = {
   NUM_WEATHER_DAYS,
   MILLISECS_TO_DAYS,
   DEFAULT_WEATHER_WEIGHTS,
+  MAX_DAYS_AWAY,
+  MAX_DATE_AND_SPORT_WEIGHT,
+  MAX_TIME_OF_DAY_WEIGHT,
+  DATE_BALANCE,
+  MAX_CHANGE_PER_CLICK,
 };

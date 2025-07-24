@@ -144,7 +144,6 @@ const _getWeatherValue = (condition) => {
       return weight;
     }
   }
-  console.log("This should cause it");
   return 0; //Return 0 if not found
 };
 

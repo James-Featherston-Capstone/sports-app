@@ -32,7 +32,7 @@ const EventCard = ({ event }: EventProps) => {
   };
   const handleOpenEventViewModal = async () => {
     if (event.distance !== undefined) {
-      await clickEvent(event.id, event.distance);
+      clickEvent(event.id, event.distance);
     }
     const fullEvent = await getEvent(event.id);
     openDialog({
