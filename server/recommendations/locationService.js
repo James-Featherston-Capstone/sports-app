@@ -62,7 +62,12 @@ const getAllNearbyEvents = async (userId, userInputs) => {
     preparedEvents,
     { latitude: user.latitude, longitude: user.longitude },
     { userSportsMap, userTimesMap, userDistanceMap },
-    userInputs.radius
+    userInputs.radius,
+    {
+      dateWeight: user.recommendationData.dateWeight,
+      sportWeight: user.recommendationData.sportWeight,
+      timeOfDayWeight: user.recommendationData.timeOfDayWeight,
+    }
   );
   return rankedEvents;
 };
@@ -129,6 +134,13 @@ const getNeededUserData = async (userId, userInputs) => {
               eventTime: true,
             },
           },
+        },
+      },
+      recommendationData: {
+        select: {
+          timeOfDayWeight: true,
+          sportWeight: true,
+          dateWeight: true,
         },
       },
     },
