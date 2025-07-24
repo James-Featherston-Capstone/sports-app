@@ -58,6 +58,8 @@ const MAX_TIME_OF_DAY_WEIGHT = 0.15;
 // Max weight for date or sport
 // Ensures fairness in the algorithm for extreme cases
 const MAX_DATE_AND_SPORT_WEIGHT = 0.6;
+// Max weight change per click
+const MAX_CHANGE_PER_CLICK = 0.1;
 
 module.exports = {
   GOOGLE_MAPS_RADIUS,
@@ -70,4 +72,5 @@ module.exports = {
   MAX_DATE_AND_SPORT_WEIGHT,
   MAX_TIME_OF_DAY_WEIGHT,
   DATE_BALANCE,
+  MAX_CHANGE_PER_CLICK,
 };

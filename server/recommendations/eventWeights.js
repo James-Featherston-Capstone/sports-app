@@ -4,6 +4,7 @@ const {
   MAX_DATE_AND_SPORT_WEIGHT,
   DATE_BALANCE,
   MAX_DAYS_AWAY,
+  MAX_CHANGE_PER_CLICK,
 } = require("../config.js");
 const prisma = require("../prisma.js");
 
@@ -59,22 +60,21 @@ const handleWeightChange = async (click) => {
     dateCount: counts.dateCount + dateAddition,
   };
 
-  const total = Object.values(newCounts).reduce((sum, count) => sum + count, 1);
+  const total = Object.values(newCounts).reduce((sum, count) => sum + count, 0);
 
-  const MAX_CHANGE = 0.1;
   const newTimeOfDayWeight = Math.min(
-    (1 - MAX_CHANGE) * weights.timeOfDayWeight +
-      MAX_CHANGE * (newCounts.timeOfDayCount / total),
+    (1 - MAX_CHANGE_PER_CLICK) * weights.timeOfDayWeight +
+      MAX_CHANGE_PER_CLICK * (newCounts.timeOfDayCount / total),
     MAX_TIME_OF_DAY_WEIGHT
   );
   const newDateWeight = Math.min(
-    (1 - MAX_CHANGE) * weights.dateWeight +
-      MAX_CHANGE * (newCounts.dateCount / total),
+    (1 - MAX_CHANGE_PER_CLICK) * weights.dateWeight +
+      MAX_CHANGE_PER_CLICK * (newCounts.dateCount / total),
     MAX_DATE_AND_SPORT_WEIGHT
   );
   const newSportWeight = Math.min(
-    (1 - MAX_CHANGE) * weights.sportWeight +
-      MAX_CHANGE * (newCounts.sportCount / total),
+    (1 - MAX_CHANGE_PER_CLICK) * weights.sportWeight +
+      MAX_CHANGE_PER_CLICK * (newCounts.sportCount / total),
     MAX_DATE_AND_SPORT_WEIGHT
   );
 
