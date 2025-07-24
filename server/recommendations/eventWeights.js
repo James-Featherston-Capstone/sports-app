@@ -2,7 +2,6 @@ const {
   MILLISECS_TO_DAYS,
   MAX_TIME_OF_DAY_WEIGHT,
   MAX_DATE_AND_SPORT_WEIGHT,
-  DATE_BALANCE,
   MAX_DAYS_AWAY,
   MAX_CHANGE_PER_CLICK,
 } = require("../config.js");
@@ -97,8 +96,7 @@ const handleWeightChange = async (click) => {
     dateWeight: normalized.dateWeight,
     timeOfDayWeight: normalized.timeOfDayWeight,
   };
-  // updateRecommendationData(click.userId, updatedRecommendationData);
-  // refreshRecommendationData(click.userId);
+  updateRecommendationData(click.userId, updatedRecommendationData);
 };
 
 /* Normalizes the weights */
@@ -161,6 +159,7 @@ const updateRecommendationData = async (userId, newData) => {
     where: { userId: userId },
     data: newData,
   });
+  console.log(result);
   return result;
 };
 
