@@ -73,12 +73,3 @@ exports.logout = async (req, res) => {
     res.json({ message: "Logout successful" });
   });
 };
-
-exports.me = async (req, res) => {
-  if (!req.session.user) {
-    throw new UnauthorizedError("User is not logged in");
-  }
-  const filters = { id: req.session.user.id };
-  const user = await authService.getUser(filters);
-  res.json(user);
-};
