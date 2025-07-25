@@ -60,6 +60,9 @@ const suggestPreferenceMeetingPoint = async (
     users,
     event
   );
+  if (preppedMeetingPoints.length === 0) {
+    return [];
+  }
   const recommendedMeetingPoints =
     rankingMeetingPoints.recommendBestUserPreferences(preppedMeetingPoints);
   return recommendedMeetingPoints;
@@ -90,6 +93,9 @@ const suggestGeneratedMeetingPoints = async (event, users) => {
     users,
     event
   );
+  if (preppedMeetingPoints.length === 0) {
+    return [];
+  }
   const recommendations =
     rankingMeetingPoints.recommendBestGeneratedEvent(preppedMeetingPoints);
   return recommendations;
@@ -112,6 +118,9 @@ const _handleMeetingPointsPrep = async (meetingPoints, users, event) => {
       users,
       event
     );
+  if (distancesFromUsersToParks.length === 0) {
+    return [];
+  }
   const meetingPointsWithDistanceCalculations =
     meetingPointUtils.computeDistanceAveragesAndMaximums(
       distancesFromUsersToParks
@@ -232,13 +241,16 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
     const path = `${BASE_ROUTES_URL}`;
     const response = await fetch(path, req);
     if (!response.ok) {
-      throw new Error("Something went wrong");
+      throw new Error(
+        `Optimal Route API failed: ${response.status}, ${response.statusText}`
+      );
     }
     const data = await response.json();
     const formattedRoute = _formatGoogleMapsResponse(data, user.id);
     return formattedRoute;
   } catch (error) {
-    throw error;
+    console.error(error);
+    return undefined;
   }
 };
 
@@ -296,7 +308,9 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
     };
     const response = await fetch(BASE_SEARCH_URL, req);
     if (!response.ok) {
-      throw new Error("Something went wrong");
+      throw new Error(
+        `Nearby Meeting Points Search API Failed: ${response.status}, ${response.statusText}`
+      );
     }
     const data = await response.json();
     if (data) {
@@ -307,7 +321,8 @@ const fetchGoogleMapsNearbyMeetingPoints = async (centerCoordinate, sport) => {
       return [];
     }
   } catch (error) {
-    throw error;
+    console.error(error);
+    return [];
   }
 };
 

@@ -31,11 +31,6 @@ const getGeoCode = async (location) => {
   }
 };
 
-/*
-Gets nearby events and recommends them based on user characteristics
-Input: user id and user filters
-Output: List of events
-*/
 /**
  * Recommends a list of events to a user based on their location,
  * preferences, and activity. The user is able to add their
@@ -188,11 +183,14 @@ const _getEventsFilters = (userInputs) => {
  * @returns {Key[]} - List of coordinate keys
  */
 const _getEventKeys = (user, userInputs) => {
+  const DEFAULT_RADIUS = 10;
   const baseKey = {
     latitudeKey: user.latitudeKey,
     longitudeKey: user.longitudeKey,
   };
-  const radius = userInputs.radius ? parseInt(userInputs.radius) : 10; // In miles
+  const radius = userInputs.radius
+    ? parseInt(userInputs.radius)
+    : DEFAULT_RADIUS; // In miles
   const offsets = locationUtils.calculateKeyOffsets(radius, user.latitude);
   const keys = locationUtils.getAllKeys(baseKey, offsets);
   return keys;
@@ -252,7 +250,10 @@ const getGoogleMapsWeather = async (event) => {
   const url = `${BASE_WEATHER_URL}?${urlParams.toString()}`;
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error("Something went wrong");
+    console.error(
+      `Weather API Failed: ${response.status}, ${response.statusText}`
+    );
+    return "UNKNOWN";
   }
   const data = await response.json();
   if (data) {

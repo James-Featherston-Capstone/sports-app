@@ -21,13 +21,22 @@ const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
           return await fetchOptimalRoute(event, user, meetingPoint);
         })
       );
+      const foundDistances = userDistances.filter(
+        (distance) => distance !== undefined
+      );
+      if (foundDistances.length === 0) {
+        return undefined;
+      }
       return {
         ...meetingPoint,
-        userDistances,
+        userDistances: foundDistances,
       };
     })
   );
-  return result;
+  const validResults = result.filter(
+    (meetingPoint) => meetingPoint !== undefined
+  );
+  return validResults;
 };
 
 /**

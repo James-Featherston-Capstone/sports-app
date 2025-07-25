@@ -41,7 +41,18 @@ const DialogProvider = ({ children }: { children: ReactNode }) => {
         <div className="fixed z-2 w-screen h-screen bg-black/50 top-0 left-0" />
       )}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen} modal={false}>
-        <DialogContent className="bg-blue-300 text-black flex flex-col items-center min-h-8/10 min-w-8/10">
+        <DialogContent
+          onInteractOutside={(e) => {
+            if (
+              e.target instanceof HTMLElement &&
+              (e.target.closest(".pac-container") ||
+                e.target.classList.contains("pac-item"))
+            ) {
+              e.preventDefault();
+            }
+          }}
+          className="bg-blue-300 text-black flex flex-col items-center min-h-8/10 min-w-8/10"
+        >
           <DialogHeader>
             <DialogTitle className="mt-4">{dialogContent.title}</DialogTitle>
             <DialogDescription>{dialogContent.description}</DialogDescription>
