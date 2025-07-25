@@ -57,6 +57,12 @@ const MAX_TIME_OF_DAY_WEIGHT = 0.15;
 const MAX_DATE_AND_SPORT_WEIGHT = 0.6;
 // Max weight change per click
 const MAX_CHANGE_PER_CLICK = 0.2;
+// Sets the max count a feature can have so that a users click
+// will still impact the weights when a lot of
+// data is present
+const MAX_FEATURE_COUNT = 50;
+// Shinks the features counts proportionally when one hits the max feature count
+const SHRINK_MULTIPLIER_ON_MAX = 0.8; // 20% shrink
 
 module.exports = {
   GOOGLE_MAPS_RADIUS,
@@ -69,4 +75,6 @@ module.exports = {
   MAX_DATE_AND_SPORT_WEIGHT,
   MAX_TIME_OF_DAY_WEIGHT,
   MAX_CHANGE_PER_CLICK,
+  MAX_FEATURE_COUNT,
+  SHRINK_MULTIPLIER_ON_MAX,
 };
