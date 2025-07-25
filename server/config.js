@@ -46,7 +46,7 @@ const DEFAULT_WEATHER_WEIGHTS = {
 The following constants are used for the event weights 
 calculation in the event recommendation algorithm 
 */
-// Used to calculate the likely hood an event was cliked on
+// Used to calculate the likely hood an event was clicked on
 // because it is near in the future
 const MAX_DAYS_AWAY = 7;
 // Max weight for the time of day.
