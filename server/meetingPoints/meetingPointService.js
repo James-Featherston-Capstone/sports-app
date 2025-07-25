@@ -15,6 +15,9 @@ const { GOOGLE_MAPS_RADIUS } = require("../config.js");
  */
 const suggestMeetingPoints = async (eventId) => {
   const fullEvent = await getFullEventWithId(eventId);
+  if (!fullEvent) {
+    return [];
+  }
   const { event, userSetMeetingPoints, fetchedUsers } =
     _parseFullEvent(fullEvent);
   const { keptUsers } = filterOutliers(fetchedUsers, event.organizer);
@@ -173,7 +176,8 @@ const getFullEventWithId = async (eventId) => {
     });
     return event;
   } catch (error) {
-    throw error;
+    console.error(error);
+    return null;
   }
 };
 
