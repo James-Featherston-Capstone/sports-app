@@ -22,10 +22,10 @@ const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
         })
       );
       const foundDistances = userDistances.filter(
-        (distance) => distance !== undefined
+        (distance) => distance !== null
       );
       if (foundDistances.length === 0) {
-        return undefined;
+        return null;
       }
       return {
         ...meetingPoint,
@@ -33,9 +33,7 @@ const getDistancesFromUsersToParks = async (meetingPoints, users, event) => {
       };
     })
   );
-  const validResults = result.filter(
-    (meetingPoint) => meetingPoint !== undefined
-  );
+  const validResults = result.filter((meetingPoint) => meetingPoint !== null);
   return validResults;
 };
 

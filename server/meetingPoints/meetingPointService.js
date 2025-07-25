@@ -250,7 +250,7 @@ const fetchOptimalRoute = async (event, user, meetingPoint) => {
     return formattedRoute;
   } catch (error) {
     console.error(error);
-    return undefined;
+    return null;
   }
 };
 
