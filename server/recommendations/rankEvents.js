@@ -8,7 +8,13 @@ const { performHaversine } = require("./locationUtils");
  * @param {Object} preferenceMaps - Object with preference Maps
  * @returns {Event[]} - Ranked events
  */
-const rankEvents = (events, userLocation, preferenceMaps, radius) => {
+const rankEvents = (
+  events,
+  userLocation,
+  preferenceMaps,
+  radius,
+  dynamicWeights
+) => {
   const eventsWithDistance = events.map((event) => {
     event.distance =
       Math.round(
@@ -27,7 +33,12 @@ const rankEvents = (events, userLocation, preferenceMaps, radius) => {
   );
   const bounds = getBounds(filterFarEvents, preferenceMaps);
   const eventsWithWeights = filterFarEvents.map((event) => {
-    event.weight = getEventWeight(event, bounds, preferenceMaps);
+    event.weight = getEventWeight(
+      event,
+      bounds,
+      preferenceMaps,
+      dynamicWeights
+    );
     return event;
   });
   const rankedEvents = eventsWithWeights.toSorted((a, b) =>
@@ -78,16 +89,23 @@ const getBounds = (events, preferenceMaps) => {
  * @param {Object} preferenceMaps - Object with preference Maps
  * @returns {number} - Resulting weight for the object
  */
-const getEventWeight = (event, bounds, preferenceMaps) => {
+const getEventWeight = (event, bounds, preferenceMaps, dynamicWeights) => {
   const sportsMap = preferenceMaps.userSportsMap;
   const userTimesMap = preferenceMaps.userTimesMap;
   const userDistanceMap = preferenceMaps.userDistanceMap;
   const LOCATION_WEIGHT = 0.45; // 45%
   const DISTANCE_WEIGHT = 0.05; // 5%
-  const DATE_WEIGHT = 0.22; // 22%
-  const SPORT_WEIGHT = 0.13; // 13%
-  const TIME_OF_DAY_WEIGHT = 0.1; // 10%
   const WEATHER_WEIGHT = 0.05; // 5%
+  const DYNAMIC_WEIGHT_PERCENTAGE = 0.45; //45%
+  const dynamicSportWeight =
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.sportWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.35; // 35% default of dynamic weight
+  const dynamicDateWeight =
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.dateWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.5; // 50% default of dynamic weight
+  const dynamicTimeOfDayWeight =
+    DYNAMIC_WEIGHT_PERCENTAGE * dynamicWeights.timeOfDayWeight ||
+    DYNAMIC_WEIGHT_PERCENTAGE * 0.15; // 15% default of dynamic weight
   const sportValue = sportsMap.get(event.sport)
     ? sportsMap.get(event.sport)
     : 0;
@@ -109,10 +127,10 @@ const getEventWeight = (event, bounds, preferenceMaps) => {
     1 - (bounds.maxDistanceValue - distanceValue) / bounds.maxDistanceValue;
   const weatherWeight = _getWeatherValue(event.weather);
   return (
-    sportWeight * SPORT_WEIGHT +
+    sportWeight * dynamicSportWeight +
     locationWeight * LOCATION_WEIGHT +
-    dateWeight * DATE_WEIGHT +
-    timeWeight * TIME_OF_DAY_WEIGHT +
+    dateWeight * dynamicDateWeight +
+    timeWeight * dynamicTimeOfDayWeight +
     distanceWeight * DISTANCE_WEIGHT +
     weatherWeight * WEATHER_WEIGHT
   );

@@ -2,9 +2,10 @@ const {
   MILLISECS_TO_DAYS,
   MAX_TIME_OF_DAY_WEIGHT,
   MAX_DATE_AND_SPORT_WEIGHT,
-  DATE_BALANCE,
   MAX_DAYS_AWAY,
   MAX_CHANGE_PER_CLICK,
+  MAX_FEATURE_COUNT,
+  SHRINK_MULTIPLIER_ON_MAX,
 } = require("../config.js");
 const prisma = require("../prisma.js");
 
@@ -44,20 +45,25 @@ const handleWeightChange = async (click) => {
     (sum, sport) => sum + sport,
     0
   );
-  const totalSport = Object.values(sportBuckets).reduce(
-    (sum, sport) => sum + sport,
+  const maxSport = Object.values(sportBuckets).reduce(
+    (max, sport) => Math.max(max, sport),
     0
   );
 
-  const sportAddition = sportBuckets[click.event.sport] / totalSport;
+  const sportAddition = sportBuckets[click.event.sport] / maxSport;
   const timeOfDayAddition = timeOfDayBuckets[timeOfDayBucket] / totalTimeOfDay;
-  const dateAddition =
-    Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0) * DATE_BALANCE;
+  const dateAddition = Math.max((MAX_DAYS_AWAY - dateDiff) / MAX_DAYS_AWAY, 0);
+
+  const shouldShrinkCounts = Object.values(counts).some(
+    (count) => count > MAX_FEATURE_COUNT
+  );
+
+  const multiplier = shouldShrinkCounts ? SHRINK_MULTIPLIER_ON_MAX : 1;
 
   const newCounts = {
-    timeOfDayCount: counts.timeOfDayCount + timeOfDayAddition,
-    sportCount: counts.sportCount + sportAddition,
-    dateCount: counts.dateCount + dateAddition,
+    timeOfDayCount: (counts.timeOfDayCount + timeOfDayAddition) * multiplier,
+    sportCount: (counts.sportCount + sportAddition) * multiplier,
+    dateCount: (counts.dateCount + dateAddition) * multiplier,
   };
 
   const total = Object.values(newCounts).reduce((sum, count) => sum + count, 0);
@@ -157,4 +163,5 @@ const updateRecommendationData = async (userId, newData) => {
   });
   return result;
 };
+
 module.exports = { handleWeightChange };

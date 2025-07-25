@@ -46,12 +46,9 @@ const DEFAULT_WEATHER_WEIGHTS = {
 The following constants are used for the event weights 
 calculation in the event recommendation algorithm 
 */
-// Used to calculate the likely hood an event was cliked on
+// Used to calculate the likely hood an event was clicked on
 // because it is near in the future
 const MAX_DAYS_AWAY = 7;
-// Ensures the date field does not have a disproportional
-// effect on the weights
-const DATE_BALANCE = 1 / 3;
 // Max weight for the time of day.
 // Less important weight to the algorithm, so it gets capped.
 const MAX_TIME_OF_DAY_WEIGHT = 0.15;
@@ -59,7 +56,13 @@ const MAX_TIME_OF_DAY_WEIGHT = 0.15;
 // Ensures fairness in the algorithm for extreme cases
 const MAX_DATE_AND_SPORT_WEIGHT = 0.6;
 // Max weight change per click
-const MAX_CHANGE_PER_CLICK = 0.1;
+const MAX_CHANGE_PER_CLICK = 0.2;
+// Sets the max count a feature can have so that a users click
+// will still impact the weights when a lot of
+// data is present
+const MAX_FEATURE_COUNT = 50;
+// Shinks the features counts proportionally when one hits the max feature count
+const SHRINK_MULTIPLIER_ON_MAX = 0.8; // 20% shrink
 
 module.exports = {
   GOOGLE_MAPS_RADIUS,
@@ -71,6 +74,7 @@ module.exports = {
   MAX_DAYS_AWAY,
   MAX_DATE_AND_SPORT_WEIGHT,
   MAX_TIME_OF_DAY_WEIGHT,
-  DATE_BALANCE,
   MAX_CHANGE_PER_CLICK,
+  MAX_FEATURE_COUNT,
+  SHRINK_MULTIPLIER_ON_MAX,
 };
