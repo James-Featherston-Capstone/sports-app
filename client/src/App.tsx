@@ -8,6 +8,8 @@ import Footer from "./components/Footer";
 import ProfilePage from "./pages/ProfilePage";
 import { DialogProvider } from "./contexts/globalDialogContext";
 import { EventProvider } from "./contexts/eventContext";
+import { FriendProvider } from "./contexts/friendContext";
+import Friends from "./pages/Friends";
 
 function App() {
   const location = useLocation();
@@ -28,6 +30,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/friends"
+            element={
+              <FriendProvider>
+                <Friends />
+              </FriendProvider>
+            }
+          />
         </Routes>
         {!hideLayout && <Footer />}
       </div>

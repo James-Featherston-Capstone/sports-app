@@ -17,6 +17,14 @@ const Header = () => {
             </span>
           </i>
         </div>
+        <div onClick={() => navigate("/friends")}>
+          <h3 className="text-xl font-bold m-3 hidden sm:block">Friends</h3>
+          <i className="block sm:hidden">
+            <span className="material-symbols-outlined">
+              <h1 className="text-3xl">person</h1>
+            </span>
+          </i>
+        </div>
         <div onClick={() => navigate("/profile")}>
           <h3 className="text-xl font-bold m-3 hidden sm:block">Profile</h3>
           <i className="block sm:hidden">
