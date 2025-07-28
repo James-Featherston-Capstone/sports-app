@@ -1,6 +1,6 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { FriendshipListResponse, Friendship } from "./interfaces";
+import type { FriendshipListResponse, FriendshipDisplay } from "./interfaces";
 
 const getFriends = async (): Promise<FriendshipListResponse> => {
   const path = `${BASE_URL}/friends`;
@@ -11,7 +11,9 @@ const getFriends = async (): Promise<FriendshipListResponse> => {
   return await fetchData(path, req);
 };
 
-const createFriendship = async (friendId: number): Promise<Friendship> => {
+const createFriendship = async (
+  friendId: number
+): Promise<FriendshipDisplay> => {
   const path = `${BASE_URL}/friends`;
   const req = {
     method: "GET",
@@ -24,7 +26,9 @@ const createFriendship = async (friendId: number): Promise<Friendship> => {
   return await fetchData(path, req);
 };
 
-const deleteFriendship = async (friendshipId: number): Promise<Friendship> => {
+const deleteFriendship = async (
+  friendshipId: number
+): Promise<FriendshipDisplay> => {
   const path = `${BASE_URL}/friends/${friendshipId}`;
   const req = {
     method: "DELETE",
@@ -33,7 +37,9 @@ const deleteFriendship = async (friendshipId: number): Promise<Friendship> => {
   return await fetchData(path, req);
 };
 
-const searchFriends = async (query: string): Promise<Friendship[]> => {
+const fetchSearchFriends = async (
+  query: string
+): Promise<FriendshipDisplay[]> => {
   const urlParams = new URLSearchParams(query);
   const path = `${BASE_URL}/friends? ${urlParams.toString()}`;
   const req = {
@@ -43,4 +49,4 @@ const searchFriends = async (query: string): Promise<Friendship[]> => {
   return await fetchData(path, req);
 };
 
-export { getFriends, createFriendship, deleteFriendship, searchFriends };
+export { getFriends, createFriendship, deleteFriendship, fetchSearchFriends };

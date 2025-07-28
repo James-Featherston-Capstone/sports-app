@@ -10,17 +10,10 @@ const Friends = () => {
     onMount();
   }, []);
 
-  if (areFriendsLoading) {
-    return (
-      <div className="w-screen grow-1 flex justify-center items-center">
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
   return (
     <section className="w-screen grow-1 overflow-auto p-2">
       <FriendViews />
-      <FriendList />
+      {areFriendsLoading ? <h1>Loading...</h1> : <FriendList />}
     </section>
   );
 };
