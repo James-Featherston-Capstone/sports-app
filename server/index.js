@@ -12,6 +12,7 @@ const { CustomError } = require("./middleware/Errors");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const eventRouter = require("./routes/eventRoutes");
+const friendRouter = require("./routes/friendRoutes");
 
 const app = express();
 app.use(express.json());
@@ -75,6 +76,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/events", eventRouter);
+app.use("/api/friends", friendRouter);
 
 app.get("/api/redis-test", (req, res) => {
   (req.session.test = "Testing Connection"),
