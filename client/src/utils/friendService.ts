@@ -1,6 +1,10 @@
 import { BASE_URL } from "./service";
 import { fetchData } from "./service";
-import type { FriendshipListResponse, FriendshipDisplay } from "./interfaces";
+import type {
+  FriendshipListResponse,
+  FriendshipDisplay,
+  Profile,
+} from "./interfaces";
 
 const getFriends = async (): Promise<FriendshipListResponse> => {
   const path = `${BASE_URL}/friends`;
@@ -37,11 +41,9 @@ const deleteFriendship = async (
   return await fetchData(path, req);
 };
 
-const fetchSearchFriends = async (
-  query: string
-): Promise<FriendshipDisplay[]> => {
-  const urlParams = new URLSearchParams(query);
-  const path = `${BASE_URL}/friends? ${urlParams.toString()}`;
+const fetchSearchFriends = async (query: string): Promise<Profile[]> => {
+  const urlParams = new URLSearchParams({ query });
+  const path = `${BASE_URL}/friends/search?${urlParams.toString()}`;
   const req = {
     method: "GET",
     credentials: "include",

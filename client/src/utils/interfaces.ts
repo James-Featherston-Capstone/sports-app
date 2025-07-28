@@ -1,4 +1,5 @@
 interface Profile {
+  id: number;
   bio: string;
   email: string;
   username: string;

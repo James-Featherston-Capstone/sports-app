@@ -4,15 +4,15 @@ import { useFriendContext } from "@/contexts/friendContext";
 const FriendList = () => {
   const { displayFriends } = useFriendContext();
   return (
-    <div>
+    <ul>
       {displayFriends.map((friend) => {
         return (
-          <div key={friend.id}>
+          <li key={friend.id}>
             <FriendCard friend={friend} />
-          </div>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 };
 

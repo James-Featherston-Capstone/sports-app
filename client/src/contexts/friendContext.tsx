@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-import { getFriends, fetchSearchFriends } from "@/utils/friendService";
+import { fetchSearchFriends, getFriends } from "@/utils/friendService";
 import type {
   FriendshipDisplay,
   FriendshipListResponse,
+  Profile,
 } from "@/utils/interfaces";
 
 interface FriendContextType {
@@ -11,6 +12,8 @@ interface FriendContextType {
   onMount: () => void;
   searchFriends: (query: string) => void;
   changeView: (view: string) => void;
+  userSearchResults: Profile[];
+  viewType: string;
 }
 
 const FriendContext = createContext<FriendContextType | undefined>(undefined);
@@ -20,6 +23,7 @@ const FriendProvider = ({ children }: { children: ReactNode }) => {
     FriendshipListResponse | undefined
   >(undefined);
   const [displayFriends, setDisplayFriends] = useState<FriendshipDisplay[]>([]);
+  const [userSearchResults, setUserSearchResults] = useState<Profile[]>([]);
   const [areFriendsLoading, setAreFriendsLoading] = useState<boolean>(true);
   const [viewType, setViewType] = useState<string>("friends");
 
@@ -31,20 +35,27 @@ const FriendProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const searchFriends = async (query: string) => {
-    setAreFriendsLoading(true);
+    const lowerQuery = query.toLowerCase();
     if (viewType === "friends") {
-      setDisplayFriends(friendshipList!.friends);
+      const filtered = friendshipList!.friends.filter((friend) => {
+        const username = friend.friend.username.toLowerCase();
+        return username.includes(lowerQuery);
+      });
+      setDisplayFriends(filtered);
     } else if (viewType === "friendsOf") {
-      setDisplayFriends(friendshipList!.friendsOf);
+      const filtered = friendshipList!.friendsOf.filter((friend) => {
+        const username = friend.friend.username.toLowerCase();
+        return username.includes(lowerQuery);
+      });
+      setDisplayFriends(filtered);
     } else if (viewType === "search") {
-      const results = await fetchSearchFriends(query);
-      setDisplayFriends(results);
+      const users = await fetchSearchFriends(query);
+      setUserSearchResults(users);
     }
     setAreFriendsLoading(false);
   };
 
   const changeView = (newView: string) => {
-    setAreFriendsLoading(true);
     setViewType(newView);
     if (newView === "friends") {
       setDisplayFriends(friendshipList!.friends);
@@ -53,15 +64,16 @@ const FriendProvider = ({ children }: { children: ReactNode }) => {
     } else if (newView === "search") {
       setDisplayFriends([]);
     }
-    setAreFriendsLoading(false);
   };
 
   return (
     <FriendContext.Provider
       value={{
         displayFriends,
+        userSearchResults,
         areFriendsLoading,
         onMount,
+        viewType,
         changeView,
         searchFriends,
       }}

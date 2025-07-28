@@ -1,7 +1,7 @@
-import type { FriendshipDisplay } from "@/utils/interfaces";
+import type { FriendshipDisplay, Profile } from "@/utils/interfaces";
 
 type FriendCardType = {
-  friend: FriendshipDisplay;
+  friend: FriendshipDisplay | Profile;
 };
 const FriendCard = ({ friend }: FriendCardType) => {
   return <div>{friend.id}</div>;
