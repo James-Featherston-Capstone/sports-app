@@ -80,6 +80,25 @@ interface ParkRecommendation {
   maximumDistance: number;
 }
 
+interface Friendship {
+  id: number;
+  userId: number;
+  friendshipId: number;
+}
+
+interface FriendshipDisplay extends Friendship {
+  isFollowing: boolean;
+  friend: {
+    username: string;
+    profile_image_url: string;
+  };
+}
+
+interface FriendshipListResponse {
+  friends: FriendshipDisplay[];
+  friendsOf: FriendshipDisplay[];
+}
+
 export type {
   Profile,
   EventModel,
@@ -89,4 +108,7 @@ export type {
   ParkPreference,
   ClickEvent,
   ParkRecommendation,
+  Friendship,
+  FriendshipDisplay,
+  FriendshipListResponse,
 };
