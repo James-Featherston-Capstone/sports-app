@@ -39,17 +39,27 @@ exports.register = async (req, res) => {
   res.json(retUser);
 };
 
-exports.checkEmail = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
+exports.checkEmailAndPassword = async (req, res) => {
+  const { email, username } = req.body;
+  if (!email || !username) {
     throw new ValidationError("Missing email");
   }
-  const filters = { email: email };
+  const filters = { OR: [{ email: email }, { username: username }] };
   const existingUser = await authService.getUser(filters);
-  if (existingUser) {
-    res.json({ emailInUse: true });
+  if (!existingUser) {
+    res.json({ emailInUse: false, usernameInUse: false });
+  } else if (
+    existingUser.username === username &&
+    existingUser.email === email
+  ) {
+    console.log(1);
+    res.json({ emailInUse: true, usernameInUse: true });
+  } else if (existingUser.username === username) {
+    console.log(2);
+    res.json({ emailInUse: false, usernameInUse: true });
   } else {
-    res.json({ emailInUse: false });
+    console.log(3);
+    res.json({ emailInUse: true, usernameInUse: false });
   }
 };
 

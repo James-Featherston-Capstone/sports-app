@@ -11,7 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^6.10.1",
+    "@prisma/client": "^6.13.0",
     "argon2": "^0.43.0",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
@@ -23,6 +23,6 @@
   "devDependencies": {
     "@playwright/test": "^1.54.1",
     "@types/node": "^24.1.0",
-    "prisma": "^6.10.1"
+    "prisma": "^6.13.0"
   }
 }
