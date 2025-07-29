@@ -29,7 +29,7 @@ const ButtonAnimation = ({ handleRsvp, isRsvp, event }: ButtonAnimation) => {
     <>
       <Button
         onClick={handleButtonClick}
-        variant={isRsvp ? "checked" : "notChecked"}
+        variant={isRsvp ? "checked" : "outline"}
       >
         <span
           className={`transition-opacity duration-300 ${
@@ -40,19 +40,25 @@ const ButtonAnimation = ({ handleRsvp, isRsvp, event }: ButtonAnimation) => {
         </span>
       </Button>
       {clicked && (
-        <span
-          onClick={handleBackgroundClick}
-          className={`z-50 absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] flex items-center justify-center text-black animate-spin`}
-        >
-          <div className="flex justify-around z-50 items-center flex-col w-100 h-100 bg-white rounded-xl border-2 hover shadow-sm">
-            <h1 className="text-4xl font-bold">Congratulations</h1>
-            <h1 className="text-2xl">Get Ready for</h1>
-            <h1 className="text-3xl">{event.sport}</h1>
-            <h1 className="text-2xl">Hosted on:</h1>
-            <h1 className="text-xl">{getDisplayDate(event.eventTime)}</h1>
-            <h1 className="text-lg">Click on the event for more info</h1>
-          </div>
-        </span>
+        <>
+          <div
+            className="fixed w-screen h-screen top-0 left-0 bg-black/10 z-5"
+            onClick={handleBackgroundClick}
+          />
+          <span
+            onClick={handleBackgroundClick}
+            className={`z-50 absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] flex items-center justify-center text-black animate-spin`}
+          >
+            <div className="flex justify-around z-50 items-center flex-col w-100 h-100 bg-white rounded-xl border-2 hover shadow-sm">
+              <h1 className="text-4xl font-bold">Congratulations</h1>
+              <h1 className="text-2xl">Get Ready for</h1>
+              <h1 className="text-3xl">{event.sport}</h1>
+              <h1 className="text-2xl">Hosted on:</h1>
+              <h1 className="text-xl">{getDisplayDate(event.eventTime)}</h1>
+              <h1 className="text-lg">Click on the event for more info</h1>
+            </div>
+          </span>
+        </>
       )}
     </>
   );

@@ -61,7 +61,7 @@ const EventCard = ({ event }: EventProps) => {
   return (
     <>
       <div
-        className="w-1/1 h-60 flex flex-col justify-around bg-white text-black p-2 m-1 rounded-2xl hover:cursor-context-menu"
+        className="w-1/1 max-w-110 h-60 flex flex-col justify-around text-black p-2 m-1 rounded-2xl hover:cursor-context-menu border-2 shadow-md"
         onClick={() => handleOpenEventViewModal()}
       >
         <h1 className="mt-2 text-xl">{displayedEvent.sport}</h1>
@@ -76,11 +76,11 @@ const EventCard = ({ event }: EventProps) => {
         <div>
           {areEventsEditable ? (
             <Button
+              variant="outline"
               onClick={(e) => {
                 e.stopPropagation();
                 handleOpenEventEditModal();
               }}
-              className="h-8"
             >
               EDIT
             </Button>

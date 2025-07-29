@@ -29,29 +29,31 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="container border-2 w-9/10 md:w-5/10 h-5/10 flex justify-center items-center rounded-md flex-col">
+    <div className="container border-2 w-9/10 md:w-5/10 flex justify-center items-center rounded-md flex-col p-3 py-20">
       <h1 className="text-lg">Login to Team Up</h1>
       <form
         className="flex justify-center flex-col items-start w-9/10"
         onSubmit={handleLogin}
       >
-        <label> Email: </label>
+        <label className="mt-2"> Email: </label>
         <Input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="on"
           placeholder="someone@gmail.com"
+          className="mb-3"
         />
-        <label> Password: </label>
+        <label className="mt-2"> Password: </label>
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="on"
           placeholder="Password"
+          className="mb-3"
         />
-        <Button type="submit" className="w-1/1 mx-0 my-1" variant="secondary">
+        <Button type="submit" className="w-1/1 mx-0 my-3" variant="outline">
           Login
         </Button>
         {error ? (
@@ -62,11 +64,7 @@ const Login = () => {
       </form>
       <p>
         Don't have an account?
-        <Button
-          variant="link"
-          className="text-white"
-          onClick={() => navigate("/register")}
-        >
+        <Button variant="link" onClick={() => navigate("/register")}>
           Register
         </Button>
       </p>

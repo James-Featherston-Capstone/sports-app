@@ -7,7 +7,6 @@ const UserAvatar = ({
   user: Profile;
   diameter: number;
 }) => {
-  console.log(diameter);
   return (
     <Avatar className={`m-1 h-${diameter} w-${diameter}`}>
       <AvatarImage src={user.profile_image_url} alt="Profile picture" />
