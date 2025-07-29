@@ -52,13 +52,10 @@ exports.checkEmailAndPassword = async (req, res) => {
     existingUser.username === username &&
     existingUser.email === email
   ) {
-    console.log(1);
     res.json({ emailInUse: true, usernameInUse: true });
   } else if (existingUser.username === username) {
-    console.log(2);
     res.json({ emailInUse: false, usernameInUse: true });
   } else {
-    console.log(3);
     res.json({ emailInUse: true, usernameInUse: false });
   }
 };

@@ -1,8 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import type { Profile } from "@/utils/interfaces";
 import { createFriendship, deleteFriendship } from "@/utils/friendService";
+import UserAvatar from "../UserAvatar";
 type UserCardType = {
   user: Profile;
   isFollowing: boolean;
@@ -29,16 +29,16 @@ const UserCard = ({ user, isFollowing, friendshipId }: UserCardType) => {
     setIsLoadingFollow(false);
   };
   return (
-    <div className="w-full bg-white border-2 text-black my-2 rounded-sm">
-      <Avatar>
-        <AvatarImage src={user.profile_image_url} alt="@shadcn" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      {user.id}
+    <div className="bg-white border-2 text-black my-2 mx-4 rounded-sm flex items-center">
+      <UserAvatar user={user} diameter={8} />
+      <h3 className="text-xl">{user.username}</h3>
+      <div className="grow-1" />
       <Button
         variant={isUserFollowing ? "checked" : "default"}
         disabled={isLoadingFollow}
         onClick={handleFollow}
+        size="sm"
+        className="w-20"
       >
         {isUserFollowing ? "Unfollow" : "Follow"}
       </Button>

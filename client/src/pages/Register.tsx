@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EditProfile from "./EditProfile";
 import type { Profile } from "@/utils/interfaces";
-import { checkEmail, login } from "../utils/authService";
+import { checkEmailAndUsername, login } from "../utils/authService";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,6 +14,7 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [creatingProfile, setCreatingProfile] = useState(false);
   const [profile, setProfile] = useState<Profile>({
+    id: 0,
     bio: "",
     email: "",
     username: "",
@@ -30,10 +31,19 @@ const Register = () => {
       setError(true);
       setErrorMessage("Passwords Do Not Match");
     } else {
-      const emailInUse = await checkEmail(profile.email);
-      if (emailInUse) {
+      const result = await checkEmailAndUsername(
+        profile.email,
+        profile.username
+      );
+      if (result.emailInUse && result.usernameInUse) {
         setError(true);
-        setErrorMessage("Email is in use");
+        setErrorMessage("Email and username must be unique");
+      } else if (result.emailInUse) {
+        setError(true);
+        setErrorMessage("Email must be unique");
+      } else if (result.usernameInUse) {
+        setError(true);
+        setErrorMessage("Username must be unique");
       } else {
         setCreatingProfile(true);
       }
