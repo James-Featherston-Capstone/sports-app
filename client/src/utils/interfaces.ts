@@ -84,12 +84,13 @@ interface ParkRecommendation {
 interface Friendship {
   id: number;
   userId: number;
-  friendshipId: number;
+  friendId: number;
 }
 
 interface FriendshipDisplay extends Friendship {
   isFollowing: boolean;
   friend: {
+    id: number;
     username: string;
     profile_image_url: string;
   };

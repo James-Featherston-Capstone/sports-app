@@ -9,6 +9,7 @@ exports.getFriends = async (userId) => {
         select: {
           username: true,
           profile_image_url: true,
+          id: true,
         },
       },
     },
@@ -21,6 +22,7 @@ exports.getFriends = async (userId) => {
         select: {
           username: true,
           profile_image_url: true,
+          id: true,
         },
       },
     },
