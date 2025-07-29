@@ -1,5 +1,6 @@
 import type { ParkRecommendation } from "@/utils/interfaces";
 import { Button } from "../ui/button";
+import LoadingCircleSpinner from "../Spinner";
 
 interface ParkRecommendationProps {
   recommendationList: ParkRecommendation[];
@@ -16,7 +17,7 @@ const ParkRecommendations = ({
   const handleLocationChange = (location: string) => {
     updateLocation(location);
   };
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingCircleSpinner />;
   if (recommendationList.length === 0) {
     return <div>Unable to generate meeting locations.</div>;
   }

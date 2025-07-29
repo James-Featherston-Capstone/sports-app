@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import MapsInput from "../MapsInput";
 import type { ParkPreference } from "@/utils/interfaces";
 import { createEventPreference, upvotePreference } from "@/utils/eventService";
+import LoadingCircleSpinner from "../Spinner";
 
 interface EventParkPreferencesProps {
   eventId: number;
@@ -44,7 +45,7 @@ const EventParkPreferences = ({
     setPreferenceList(updatedPreferenceList);
   };
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingCircleSpinner />;
   }
   return (
     <>
