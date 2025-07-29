@@ -1,5 +1,5 @@
 import { useFriendContext } from "@/contexts/friendContext";
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
@@ -7,16 +7,17 @@ const SearchFriends = () => {
   const { searchFriends } = useFriendContext();
   const [query, setQuery] = useState<string>("");
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    searchFriends(query);
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+    searchFriends(newQuery);
   };
   return (
-    <form className="flex m-3" onSubmit={onSubmit}>
+    <form className="flex m-3">
       <Input
         className="mx-1"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={onChange}
         placeholder="Search Friends..."
       />
       <Button type="submit" variant="outline">

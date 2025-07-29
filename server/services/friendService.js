@@ -5,26 +5,14 @@ exports.getFriends = async (userId) => {
   const friends = await prisma.friendship.findMany({
     where: { userId },
     include: {
-      friend: {
-        select: {
-          username: true,
-          profile_image_url: true,
-          id: true,
-        },
-      },
+      friend: true,
     },
   });
   // Others following user relationship
   const friendsOf = await prisma.friendship.findMany({
     where: { friendId: userId },
     include: {
-      user: {
-        select: {
-          username: true,
-          profile_image_url: true,
-          id: true,
-        },
-      },
+      user: true,
     },
   });
 

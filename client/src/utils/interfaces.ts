@@ -88,12 +88,8 @@ interface Friendship {
 }
 
 interface FriendshipDisplay extends Friendship {
-  isFollowing: boolean;
-  friend: {
-    id: number;
-    username: string;
-    profile_image_url: string;
-  };
+  followingUser: boolean;
+  friend: Profile;
 }
 
 interface FriendshipListResponse {

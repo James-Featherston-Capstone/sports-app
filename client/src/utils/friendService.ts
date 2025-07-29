@@ -20,7 +20,7 @@ const createFriendship = async (
 ): Promise<FriendshipDisplay> => {
   const path = `${BASE_URL}/friends`;
   const req = {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
