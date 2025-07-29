@@ -55,15 +55,21 @@ const FriendProvider = ({ children }: { children: ReactNode }) => {
     setAreFriendsLoading(false);
   };
 
-  const changeView = (newView: string) => {
+  const changeView = async (newView: string) => {
+    setAreFriendsLoading(true);
     setViewType(newView);
     if (newView === "friends") {
-      setDisplayFriends(friendshipList!.friends);
+      const friends = await getFriends();
+      setFriendshipList(friends);
+      setDisplayFriends(friends.friends);
     } else if (newView === "friendsOf") {
-      setDisplayFriends(friendshipList!.friendsOf);
+      const friends = await getFriends();
+      setFriendshipList(friends);
+      setDisplayFriends(friends.friendsOf);
     } else if (newView === "search") {
       setDisplayFriends([]);
     }
+    setAreFriendsLoading(false);
   };
 
   return (
