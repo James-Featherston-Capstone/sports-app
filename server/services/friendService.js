@@ -4,10 +4,16 @@ exports.getFriends = async (userId) => {
   // User following others relationship
   const friends = await prisma.friendship.findMany({
     where: { userId },
+    include: {
+      friend: true,
+    },
   });
   // Others following user relationship
   const friendsOf = await prisma.friendship.findMany({
     where: { friendId: userId },
+    include: {
+      user: true,
+    },
   });
 
   const followingIds = new Set(friends.map((friend) => friend.friendId));
@@ -18,9 +24,10 @@ exports.getFriends = async (userId) => {
         followingUser: true,
       };
     }),
-    friendsOf: friendsOf.map((friendOf) => {
+    friendsOf: friendsOf.map(({ user, ...friendOf }) => {
       return {
         ...friendOf,
+        friend: user,
         followingUser: followingIds.has(friendOf.userId),
       };
     }),

@@ -1,4 +1,5 @@
 interface Profile {
+  id: number;
   bio: string;
   email: string;
   username: string;
@@ -83,15 +84,12 @@ interface ParkRecommendation {
 interface Friendship {
   id: number;
   userId: number;
-  friendshipId: number;
+  friendId: number;
 }
 
 interface FriendshipDisplay extends Friendship {
-  isFollowing: boolean;
-  friend: {
-    username: string;
-    profile_image_url: string;
-  };
+  followingUser: boolean;
+  friend: Profile;
 }
 
 interface FriendshipListResponse {
