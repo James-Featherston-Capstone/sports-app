@@ -21,9 +21,10 @@ const MapsInput = ({
   baseLongitude,
 }: MapsInputProps) => {
   const mapCenter: google.maps.LatLngLiteral = {
-    lat: baseLatitude ? baseLatitude : 0,
-    lng: baseLongitude ? baseLongitude : 0,
+    lat: baseLatitude ? baseLatitude : 39,
+    lng: baseLongitude ? baseLongitude : -95,
   };
+  const defaultzoom = baseLatitude ? 15 : 2;
   const [coords, setCoords] = useState<google.maps.LatLngLiteral>(mapCenter);
   const [inputLocation, setInputLocation] = useState<string>("");
   const { isLoaded } = useJsApiLoader({
@@ -65,7 +66,7 @@ const MapsInput = ({
                 maxWidth: "600px",
               }}
               center={coords}
-              zoom={15}
+              zoom={defaultzoom}
             ></GoogleMap>
           )}
           <div className="w-1/1 m-2 flex">

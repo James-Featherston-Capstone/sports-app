@@ -53,13 +53,13 @@ const Register = () => {
     login({});
   }, []);
   return (
-    <div className="container border-2 w-9/10 md:w-5/10 h-8/10 p-1 md:p-6 md:h-6/10 flex justify-center items-center rounded-md flex-col">
+    <div className="container border-2 w-9/10 md:w-5/10 py-15 md:p-6 md:h-6/10 flex justify-center items-center rounded-md flex-col">
       <h1 className="text-xl mx-3">Create a Team Up Account</h1>
       <form
         className="flex justify-center flex-col items-start w-9/10"
         onSubmit={handleNext}
       >
-        <label className="my-3"> Username: </label>
+        <label className="mt-2"> Username: </label>
         <Input
           className="mb-3 mt-.5"
           type="text"
@@ -69,7 +69,7 @@ const Register = () => {
           placeholder="Username"
           required
         />
-        <label> Email: </label>
+        <label className="mt-2"> Email: </label>
         <Input
           className="mb-3 mt-.5"
           type="email"
@@ -79,7 +79,7 @@ const Register = () => {
           placeholder="someone@gmail.com"
           required
         />
-        <label> Password: </label>
+        <label className="mt-2"> Password: </label>
         <Input
           className="mb-3 mt-.5"
           type="password"
@@ -89,7 +89,7 @@ const Register = () => {
           placeholder="Password"
           required
         />
-        <label> Confirm Password: </label>
+        <label className="mt-2"> Confirm Password: </label>
         <Input
           className="mb-3 mt-.5"
           type="password"
@@ -99,7 +99,7 @@ const Register = () => {
           placeholder="Password"
           required
         />
-        <Button type="submit" className="w-1/1 mx-0 my-1.5" variant="secondary">
+        <Button type="submit" className="w-1/1 mx-0 my-1.5" variant="outline">
           Next
         </Button>
         {error ? (
@@ -110,11 +110,7 @@ const Register = () => {
       </form>
       <p>
         Already have an account?
-        <Button
-          variant="link"
-          className="text-white"
-          onClick={() => navigate("/login")}
-        >
+        <Button variant="link" onClick={() => navigate("/login")}>
           Login
         </Button>
       </p>

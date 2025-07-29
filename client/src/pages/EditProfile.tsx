@@ -56,7 +56,7 @@ const EditProfile = ({
     return <></>;
   }
   return (
-    <div className="flex flex-col grow-1 w-screen h-screen items-center justify-center bg-black fixed pt-20">
+    <div className="flex flex-col grow-1 w-screen h-screen items-center justify-center bg-white fixed pt-20 z-11">
       <div className="absolute top-6 left-4" onClick={() => onReturn(false)}>
         <span className="material-symbols-outlined">
           {type === "edit" && <h1 className="text-4xl">chevron_left</h1>}

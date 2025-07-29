@@ -157,8 +157,7 @@ exports.createEventClick = async (req, res) => {
     !eventId ||
     !userId ||
     eventDistance === undefined ||
-    eventDistance === null ||
-    !eventDistance
+    eventDistance === null
   ) {
     throw new ValidationError("Event id and event distance required");
   }
