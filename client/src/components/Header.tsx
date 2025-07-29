@@ -7,7 +7,6 @@ const nonSelectedButtonStyling = "text-4xl p-1.5 border-2 border-transparent";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   return (
     <header className="bg-white/70 z-10 backdrop-blur-md flex justify-center sm:justify-end items-center shadow-sm w-screen p-5 px-8 order-1 sm:order-0 border-t-2 border-b-0 sm:border-b-2 sm:border-t-0 border-black">
       <h1 className="justify-self-start text-3xl font-bold ml-8 hidden sm:block">
