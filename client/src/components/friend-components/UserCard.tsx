@@ -30,8 +30,10 @@ const UserCard = ({ user, isFollowing, friendshipId }: UserCardType) => {
   };
   return (
     <div className="bg-white border-2 text-black my-2 mx-4 rounded-sm flex items-center">
-      <UserAvatar user={user} diameter={8} />
-      <h3 className="text-xl">{user.username}</h3>
+      <UserAvatar user={user} diameter={10} />
+      <h3 className="text-md overflow-hidden whitespace-nowrap text-ellipsis m-1">
+        {user.username}
+      </h3>
       <div className="grow-1" />
       <Button
         variant={isUserFollowing ? "checked" : "default"}

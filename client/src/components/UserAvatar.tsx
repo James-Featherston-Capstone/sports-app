@@ -7,8 +7,9 @@ const UserAvatar = ({
   user: Profile;
   diameter: number;
 }) => {
+  console.log(diameter);
   return (
-    <Avatar className={`m-3 w-${diameter} h-${diameter}`}>
+    <Avatar className={`m-1 h-${diameter} w-${diameter}`}>
       <AvatarImage src={user.profile_image_url} alt="Profile picture" />
       <AvatarFallback>
         {user.username.substring(0, 2).toUpperCase()}
