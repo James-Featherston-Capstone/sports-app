@@ -41,7 +41,7 @@ exports.searchFriends = async (userId, query) => {
       NOT: {
         id: userId,
       },
-      friendshipSent: {
+      friendshipReceived: {
         none: {
           userId: userId,
         },
