@@ -142,10 +142,10 @@ const EventModify = ({
           className="my-1"
         />
         <h1 className="text-red-500 text-lg">{errorMessage}</h1>
+        <Button className="w-1/1 mx-0 my-1" type="submit">
+          Submit
+        </Button>
       </div>
-      <Button className="w-1/1 mx-0 my-1" type="submit">
-        Submit
-      </Button>
     </form>
   );
 };
