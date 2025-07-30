@@ -4,6 +4,7 @@ import Dropdown from "@/components/profile-components/Dropdown";
 import EditProfile from "./EditProfile";
 import type { Profile } from "@/utils/interfaces";
 import UserAvatar from "@/components/UserAvatar";
+import LoadingCircleSpinner from "@/components/Spinner";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<Profile>({} as Profile);
@@ -19,7 +20,11 @@ const ProfilePage = () => {
     fetchProfile();
   }, []);
   if (isLoading) {
-    return <h1 className="grow-1">Loading...</h1>;
+    return (
+      <h1 className="grow-1">
+        <LoadingCircleSpinner />
+      </h1>
+    );
   }
   return (
     <div className="grow-1 overflow-auto w-screen p-8 relative display flex flex-col justify-start items-center">

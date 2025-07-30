@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import EventModify from "@/components/events-components/EventModify";
 import { useDialogContext } from "@/contexts/globalDialogContext";
 import { useEventContext } from "@/contexts/eventContext";
+import LoadingCircleSpinner from "@/components/Spinner";
 
 const Events = () => {
   const { openDialog } = useDialogContext();
@@ -34,7 +35,7 @@ const Events = () => {
         </Button>
         <Filter />
       </div>
-      {isEventListLoading ? <h1>Loading...</h1> : <EventList />}
+      {isEventListLoading ? <LoadingCircleSpinner /> : <EventList />}
     </section>
   );
 };

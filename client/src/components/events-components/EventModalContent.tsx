@@ -3,6 +3,7 @@ import type {
   Comment,
   ParkPreference,
   ParkRecommendation,
+  FriendshipDisplay,
 } from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -14,6 +15,17 @@ import {
   getAllEventPreferences,
   getEventLocationRecommendations,
 } from "@/utils/eventService";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarSeparator,
+} from "../ui/menubar";
+import { getFriends } from "@/utils/friendService";
+import EventParkDetails from "./EventParkDetails";
+import InviteFriends from "../friend-components/InviteFriends";
 
 interface EventModalContentType {
   event: DisplayEvent;
@@ -24,6 +36,8 @@ const viewTypes = {
   comments: 0,
   enterPreferences: 1,
   viewRecommendedParks: 2,
+  eventDetails: 3,
+  invite: 4,
 };
 
 const EventModalContent = ({
@@ -37,10 +51,25 @@ const EventModalContent = ({
   const [recommendationList, setRecommendationList] = useState<
     ParkRecommendation[]
   >([]);
+  const [isFriendListLoading, setIsFriendListLoading] = useState<boolean>(true);
+  const [friendList, setFriendList] = useState<FriendshipDisplay[]>([]);
   const [isRecommendationListSet, setIsRecommendationListSet] = useState(false);
-  const [viewType, setViewType] = useState<number>(viewTypes.comments);
+  const [viewType, setViewType] = useState<number>(viewTypes.eventDetails);
+  const handleToggleEventDetails = async () => {
+    setViewType(viewTypes.eventDetails);
+  };
+
   const handleCommentToggle = () => {
     setViewType(viewTypes.comments);
+  };
+
+  const handleInviteFriends = async () => {
+    setViewType(viewTypes.invite);
+    if (isFriendListLoading) {
+      const friends = await getFriends();
+      setFriendList(friends.friends);
+      setIsFriendListLoading(false);
+    }
   };
 
   const handlePreferenceViewToggle = async () => {
@@ -73,68 +102,90 @@ const EventModalContent = ({
   };
   return (
     <div className="flex flex-col md:flex-row w-9/10 h-9/10 grow-1 overflow-auto">
-      <div className="grow-0 md:grow-1">
-        <h4>{event.description}</h4>
-        <h3>Address: {location}</h3>
-        <h3>Sport: {event.sport}</h3>
-        <div className="flex">
-          <h3>Rsvps:</h3>
-          {event.rsvps &&
-            event.rsvps.slice(0, 10).map((rsvp, index) => (
-              <h3 className="mx-1" key={index}>
-                {rsvp.user?.username},
-              </h3>
-            ))}
-          ...
+      <div className="grow-1 flex flex-col">
+        <Menubar className="mb-2 flex justify-around">
+          <MenubarMenu>
+            <Button
+              className="p-0 mx-1"
+              variant="ghost"
+              disabled={viewType === viewTypes.eventDetails}
+              onClick={handleToggleEventDetails}
+            >
+              Event Details
+            </Button>
+            <Button
+              className="p-0 mx-1"
+              variant="ghost"
+              onClick={handleCommentToggle}
+              disabled={viewType === viewTypes.comments}
+            >
+              Comments
+            </Button>
+            <MenubarTrigger>Parks</MenubarTrigger>
+            <MenubarContent className="p-0">
+              <MenubarItem className="px-2 py-0 m-0">
+                <Button
+                  className="p-0 m-0"
+                  variant="ghost"
+                  onClick={handlePreferenceViewToggle}
+                  disabled={viewType === viewTypes.enterPreferences}
+                >
+                  Park Preferences
+                </Button>
+              </MenubarItem>
+              <MenubarSeparator className="my-0" />
+              <MenubarItem className="px-2 py-0 m-0">
+                <Button
+                  className="p-0 m-0"
+                  variant="ghost"
+                  onClick={handleRecommendParksToggle}
+                  disabled={viewType === viewTypes.viewRecommendedParks}
+                >
+                  Park Recommendations
+                </Button>
+              </MenubarItem>
+            </MenubarContent>
+            <Button
+              className="p-0 mx-1"
+              variant="ghost"
+              onClick={handleInviteFriends}
+              disabled={viewType === viewTypes.invite}
+            >
+              Invite
+            </Button>
+          </MenubarMenu>
+        </Menubar>
+        <div className="w-1/1">
+          {viewType === viewTypes.eventDetails && (
+            <EventParkDetails event={event} location={location} />
+          )}
+          {viewType === viewTypes.comments && (
+            <EventComments
+              eventId={event.id}
+              commentList={commentList}
+              setCommentList={setCommentList}
+            />
+          )}
+          {viewType === viewTypes.enterPreferences && (
+            <EventParkPreferences
+              eventId={event.id}
+              preferenceList={preferenceList}
+              setPreferenceList={setPreferenceList}
+              isLoading={!preferenceListSet}
+            />
+          )}
+          {viewType === viewTypes.viewRecommendedParks && (
+            <ParkRecommendations
+              isLoading={!isRecommendationListSet}
+              recommendationList={recommendationList}
+              updateLocation={updateLocation}
+              regenerateRecommendations={generateRecommendations}
+            />
+          )}
+          {viewType === viewTypes.invite && (
+            <InviteFriends friendList={friendList} />
+          )}
         </div>
-      </div>
-      <div className="grow-1 mt-2 flex flex-col">
-        <div className="w-1/1 flex flex-row justify-around my-2 flex-wrap">
-          <Button
-            onClick={handleCommentToggle}
-            className="m-1"
-            disabled={viewType === viewTypes.comments}
-          >
-            Comments
-          </Button>
-          <Button
-            onClick={handlePreferenceViewToggle}
-            className="m-1"
-            disabled={viewType === viewTypes.enterPreferences}
-          >
-            Park Preferences
-          </Button>
-          <Button
-            onClick={handleRecommendParksToggle}
-            className="m-1"
-            disabled={viewType === viewTypes.viewRecommendedParks}
-          >
-            Park Recommendations
-          </Button>
-        </div>
-        {viewType === viewTypes.comments && (
-          <EventComments
-            eventId={event.id}
-            commentList={commentList}
-            setCommentList={setCommentList}
-          />
-        )}
-        {viewType === viewTypes.enterPreferences && (
-          <EventParkPreferences
-            eventId={event.id}
-            preferenceList={preferenceList}
-            setPreferenceList={setPreferenceList}
-            isLoading={!preferenceListSet}
-          />
-        )}
-        {viewType === viewTypes.viewRecommendedParks && (
-          <ParkRecommendations
-            isLoading={!isRecommendationListSet}
-            recommendationList={recommendationList}
-            updateLocation={updateLocation}
-            regenerateRecommendations={generateRecommendations}
-          />
-        )}
       </div>
     </div>
   );

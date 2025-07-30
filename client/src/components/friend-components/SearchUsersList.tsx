@@ -1,5 +1,6 @@
 import { useFriendContext } from "@/contexts/friendContext";
 import UserCard from "./UserCard";
+import { motion } from "motion/react";
 
 const SearchUsersList = () => {
   const { userSearchResults } = useFriendContext();
@@ -10,9 +11,14 @@ const SearchUsersList = () => {
     <ul>
       {userSearchResults.map((user) => {
         return (
-          <li key={user.id}>
+          <motion.li
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2 }}
+            key={user.id}
+          >
             <UserCard user={user} isFollowing={false} />
-          </li>
+          </motion.li>
         );
       })}
     </ul>
