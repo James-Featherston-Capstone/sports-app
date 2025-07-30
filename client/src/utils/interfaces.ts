@@ -8,6 +8,7 @@ interface Profile {
   longitude: string;
   sports: string[];
   profile_image_url: string;
+  EventInvite?: EventInvite[];
 }
 
 interface EventModel {
@@ -48,6 +49,12 @@ interface Comment {
     id: number;
     username: string;
   };
+}
+
+interface EventInvite {
+  id: number;
+  invitedId: number;
+  eventId: number;
 }
 
 interface EventFilters {
@@ -110,4 +117,5 @@ export type {
   Friendship,
   FriendshipDisplay,
   FriendshipListResponse,
+  EventInvite,
 };

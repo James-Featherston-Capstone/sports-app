@@ -214,6 +214,13 @@ exports.preferenceUpvote = async (preferenceId) => {
   return updatedPreference;
 };
 
+exports.createEventInvite = async (eventId, invitedId) => {
+  const eventInvite = await prisma.eventInvite.create({
+    data: { eventId, invitedId },
+  });
+  return eventInvite;
+};
+
 exports.createClickEvent = async (data) => {
   // Not using upsert because a unique field is required in the query.
   const existingClickEvent = await prisma.clickedEvent.findFirst({

@@ -1,11 +1,23 @@
 import type { FriendshipDisplay } from "@/utils/interfaces";
 import InviteCard from "./InviteEventCard";
 
-const InviteFriends = ({ friendList }: { friendList: FriendshipDisplay[] }) => {
+const InviteFriends = ({
+  friendList,
+  eventId,
+}: {
+  friendList: FriendshipDisplay[];
+  eventId: number;
+}) => {
   return (
     <div className="h-1/1 overflow-y-auto">
       {friendList.map((friend) => {
-        return <InviteCard key={friend.friendId} user={friend.friend} />;
+        return (
+          <InviteCard
+            key={friend.friendId}
+            user={friend.friend}
+            eventId={eventId}
+          />
+        );
       })}
     </div>
   );

@@ -36,6 +36,7 @@ model User {
   friendshipReceived Friendship[]        @relation("FriendToUser")
   clickedEvents      ClickedEvent[]
   recommendationData RecommendationData?
+  EventInvite        EventInvite[]
 
   @@index([latitudeKey, longitudeKey])
 }
@@ -83,8 +84,17 @@ model Event {
   comments     EventComment[]
   preferences  EventParkPreference[]
   clicks       ClickedEvent[]
+  EventInvite  EventInvite[]
 
   @@index([latitudeKey, longitudeKey])
+}
+
+model EventInvite {
+  id        Int   @id @default(autoincrement())
+  invitedId Int
+  invited   User  @relation(fields: [invitedId], references: [id], onDelete: Cascade)
+  eventId   Int
+  event     Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model ClickedEvent {

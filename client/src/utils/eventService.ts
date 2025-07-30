@@ -8,6 +8,7 @@ import type {
   ParkPreference,
   ClickEvent,
   ParkRecommendation,
+  EventInvite,
 } from "./interfaces";
 
 const getAllEvents = async (
@@ -49,6 +50,22 @@ const createEvent = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(event),
+    credentials: "include",
+  };
+  return await fetchData(path, req);
+};
+
+const createEventInvite = async (
+  eventId: number,
+  invitedId: number
+): Promise<EventInvite> => {
+  const path = `${BASE_URL}/events/${eventId}/invite`;
+  const req = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ invitedId }),
     credentials: "include",
   };
   return await fetchData(path, req);
@@ -185,4 +202,5 @@ export {
   upvotePreference,
   clickEvent,
   getEventLocationRecommendations,
+  createEventInvite,
 };
