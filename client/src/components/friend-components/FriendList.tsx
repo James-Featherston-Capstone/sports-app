@@ -1,9 +1,12 @@
 import UserCard from "./UserCard";
-import { useFriendContext } from "@/contexts/friendContext";
+import type { FriendshipDisplay } from "@/utils/interfaces";
 import { motion } from "motion/react";
 
-const FriendList = () => {
-  const { displayFriends } = useFriendContext();
+const FriendList = ({
+  displayFriends,
+}: {
+  displayFriends: FriendshipDisplay[];
+}) => {
   return (
     <ul>
       {displayFriends.map((friendship) => {

@@ -3,6 +3,7 @@ import type {
   Comment,
   ParkPreference,
   ParkRecommendation,
+  FriendshipDisplay,
 } from "@/utils/interfaces";
 import { Button } from "../ui/button";
 import { useState, type Dispatch, type SetStateAction } from "react";
@@ -22,7 +23,9 @@ import {
   MenubarTrigger,
   MenubarSeparator,
 } from "../ui/menubar";
+import { getFriends } from "@/utils/friendService";
 import EventParkDetails from "./EventParkDetails";
+import InviteFriends from "../friend-components/InviteFriends";
 
 interface EventModalContentType {
   event: DisplayEvent;
@@ -34,6 +37,7 @@ const viewTypes = {
   enterPreferences: 1,
   viewRecommendedParks: 2,
   eventDetails: 3,
+  invite: 4,
 };
 
 const EventModalContent = ({
@@ -47,14 +51,25 @@ const EventModalContent = ({
   const [recommendationList, setRecommendationList] = useState<
     ParkRecommendation[]
   >([]);
+  const [isFriendListLoading, setIsFriendListLoading] = useState<boolean>(true);
+  const [friendList, setFriendList] = useState<FriendshipDisplay[]>([]);
   const [isRecommendationListSet, setIsRecommendationListSet] = useState(false);
-  const [viewType, setViewType] = useState<number>(viewTypes.comments);
-  const handleToggleEventDetails = () => {
+  const [viewType, setViewType] = useState<number>(viewTypes.eventDetails);
+  const handleToggleEventDetails = async () => {
     setViewType(viewTypes.eventDetails);
   };
 
   const handleCommentToggle = () => {
     setViewType(viewTypes.comments);
+  };
+
+  const handleInviteFriends = async () => {
+    setViewType(viewTypes.invite);
+    if (isFriendListLoading) {
+      const friends = await getFriends();
+      setFriendList(friends.friends);
+      setIsFriendListLoading(false);
+    }
   };
 
   const handlePreferenceViewToggle = async () => {
@@ -130,6 +145,14 @@ const EventModalContent = ({
                 </Button>
               </MenubarItem>
             </MenubarContent>
+            <Button
+              className="p-0 mx-1"
+              variant="ghost"
+              onClick={handleInviteFriends}
+              disabled={viewType === viewTypes.invite}
+            >
+              Invite
+            </Button>
           </MenubarMenu>
         </Menubar>
         <div className="w-1/1">
@@ -158,6 +181,9 @@ const EventModalContent = ({
               updateLocation={updateLocation}
               regenerateRecommendations={generateRecommendations}
             />
+          )}
+          {viewType === viewTypes.invite && (
+            <InviteFriends friendList={friendList} />
           )}
         </div>
       </div>

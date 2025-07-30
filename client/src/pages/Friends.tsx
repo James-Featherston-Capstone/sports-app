@@ -7,7 +7,8 @@ import SearchUsersList from "@/components/friend-components/SearchUsersList";
 import LoadingCircleSpinner from "@/components/Spinner";
 
 const Friends = () => {
-  const { areFriendsLoading, onMount, viewType } = useFriendContext();
+  const { areFriendsLoading, onMount, viewType, displayFriends } =
+    useFriendContext();
 
   useEffect(() => {
     onMount();
@@ -22,7 +23,7 @@ const Friends = () => {
       ) : viewType === "search" ? (
         <SearchUsersList />
       ) : (
-        <FriendList />
+        <FriendList displayFriends={displayFriends} />
       )}
     </section>
   );
