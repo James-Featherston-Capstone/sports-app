@@ -36,6 +36,7 @@ exports.register = async (req, res) => {
   }
   const retUser = await authService.createUser(newUser);
   req.session.user = retUser;
+  await req.session.save();
   res.json(retUser);
 };
 
@@ -69,6 +70,7 @@ exports.login = async (req, res) => {
   const user = await authService.getUser(filters);
   if (user && (await verifyPassword(plainPassword, user.password))) {
     req.session.user = user;
+    await req.session.save();
     res.json(user);
   } else {
     throw new NotFoundError("Email or password is incorrect.");
