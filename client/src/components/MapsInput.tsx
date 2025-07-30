@@ -24,9 +24,9 @@ const MapsInput = ({
     lat: baseLatitude ? baseLatitude : 39,
     lng: baseLongitude ? baseLongitude : -95,
   };
-  const defaultzoom = baseLatitude ? 15 : 2;
   const [coords, setCoords] = useState<google.maps.LatLngLiteral>(mapCenter);
   const [inputLocation, setInputLocation] = useState<string>("");
+  const [zoom, setZoom] = useState<number>(baseLatitude ? 15 : 2);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
@@ -44,6 +44,7 @@ const MapsInput = ({
         if (selectedPlace.formatted_address) {
           setLocation(selectedPlace.formatted_address);
           setInputLocation(selectedPlace.formatted_address);
+          setZoom(15);
           if (selectedPlace.geometry?.location) {
             setCoords({
               lat: selectedPlace.geometry.location.lat(),
@@ -66,7 +67,7 @@ const MapsInput = ({
                 maxWidth: "600px",
               }}
               center={coords}
-              zoom={defaultzoom}
+              zoom={zoom}
             ></GoogleMap>
           )}
           <div className="w-1/1 m-2 flex">

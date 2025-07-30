@@ -33,6 +33,7 @@ interface DisplayEvent extends EventModel {
           user?: {
             id: number;
             username: string;
+            profile_image_url: string;
           };
         }
       ]
