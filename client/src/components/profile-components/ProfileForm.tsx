@@ -21,7 +21,7 @@ const ProfileForm = ({
     <form
       action="submit"
       onSubmit={onSubmit}
-      className="w-screen p-3 grow-1 flex flex-col items-center"
+      className="w-screen p-3 grow-1 flex flex-col items-center mb-5"
     >
       <label className="self-start ml-1"> Biography: </label>
       <Input

@@ -56,26 +56,31 @@ const EditProfile = ({
     return <></>;
   }
   return (
-    <div className="flex flex-col grow-1 w-screen h-screen items-center justify-center bg-white fixed pt-20 z-11">
-      <div className="absolute top-6 left-4" onClick={() => onReturn(false)}>
-        <span className="material-symbols-outlined">
-          {type === "edit" && <h1 className="text-4xl">chevron_left</h1>}
-        </span>
+    <div className="flex flex-col grow-1 w-screen h-screen items-center justify-center bg-white fixed top-0 left-0 z-11">
+      <div className="min-h-screen overflow-y-auto">
+        <div className="absolute top-6 left-4" onClick={() => onReturn(false)}>
+          <span className="material-symbols-outlined">
+            {type === "edit" && <h1 className="text-4xl">chevron_left</h1>}
+          </span>
+        </div>
+        <div>
+          <h1 className="text-4xl mt-20">
+            {type === "create" ? "Create Profile" : "Edit Profile"}
+          </h1>
+          {type === "create" && (
+            <h2 className="text-l my-2">
+              Profile can be changed later in settings
+            </h2>
+          )}
+        </div>
+
+        <ProfileForm
+          onSubmit={onSubmit}
+          profile={newProfile}
+          setProfile={setNewProfile}
+          errorMessage={errorMessage}
+        />
       </div>
-      <h1 className="text-4xl">
-        {type === "create" ? "Create Profile" : "Edit Profile"}
-      </h1>
-      {type === "create" && (
-        <h2 className="text-l my-2">
-          Profile can be changed later in settings
-        </h2>
-      )}
-      <ProfileForm
-        onSubmit={onSubmit}
-        profile={newProfile}
-        setProfile={setNewProfile}
-        errorMessage={errorMessage}
-      />
     </div>
   );
 };

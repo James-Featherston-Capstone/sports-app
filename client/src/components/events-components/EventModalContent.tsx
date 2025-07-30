@@ -183,7 +183,7 @@ const EventModalContent = ({
             />
           )}
           {viewType === viewTypes.invite && (
-            <InviteFriends friendList={friendList} />
+            <InviteFriends friendList={friendList} eventId={event.id} />
           )}
         </div>
       </div>

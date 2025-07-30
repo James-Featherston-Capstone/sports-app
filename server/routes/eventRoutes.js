@@ -19,5 +19,6 @@ router.get(
   eventController.getRecommendedMeetingPoints
 );
 router.post("/:eventId/event-click", eventController.createEventClick);
+router.post("/:eventId/invite", eventController.createEventInvite);
 
 module.exports = router;

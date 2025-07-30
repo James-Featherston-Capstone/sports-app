@@ -22,6 +22,8 @@ exports.getAllEvents = async (req, res) => {
     events = await eventService.getAllEventRSVP(user.id);
   } else if (filter === "created") {
     events = await eventService.getAllEventsCreated(user.id);
+  } else if (filter === "invites") {
+    events = await eventService.getAllInvites(user.id);
   } else {
     events = await locationService.getAllNearbyEvents(user.id, {
       startDate,
@@ -168,4 +170,14 @@ exports.createEventClick = async (req, res) => {
   });
   handleWeightChange(clickEvent);
   res.json(clickEvent);
+};
+
+exports.createEventInvite = async (req, res) => {
+  const eventId = parseInt(req.params.eventId);
+  const invitedId = parseFloat(req.body.invitedId);
+  if (!eventId || !invitedId) {
+    throw new ValidationError("Event id and invited id are required");
+  }
+  const eventInvite = await eventService.createEventInvite(eventId, invitedId);
+  res.json(eventInvite);
 };

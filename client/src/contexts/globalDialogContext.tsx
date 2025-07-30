@@ -51,7 +51,7 @@ const DialogProvider = ({ children }: { children: ReactNode }) => {
               e.preventDefault();
             }
           }}
-          className="text-black flex flex-col items-center min-h-8/10 min-w-8/10"
+          className="text-black flex flex-col items-center min-h-8/10 min-w-8/10 max-h-98/100 overflow-y-auto"
         >
           <DialogHeader>
             <DialogTitle className="mt-4">{dialogContent.title}</DialogTitle>
