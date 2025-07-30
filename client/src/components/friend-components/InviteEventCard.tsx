@@ -18,7 +18,7 @@ const InviteCard = ({ user, eventId }: InviteCardType) => {
   const handleInvite = async () => {
     if (!invited) {
       setHandlingInvite(true);
-      const invite = await createEventInvite(eventId, user.id);
+      await createEventInvite(eventId, user.id);
       setInvited(!invited);
       setHandlingInvite(false);
     }

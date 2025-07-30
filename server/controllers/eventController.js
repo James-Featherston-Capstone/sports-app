@@ -22,6 +22,8 @@ exports.getAllEvents = async (req, res) => {
     events = await eventService.getAllEventRSVP(user.id);
   } else if (filter === "created") {
     events = await eventService.getAllEventsCreated(user.id);
+  } else if (filter === "invites") {
+    events = await eventService.getAllInvites(user.id);
   } else {
     events = await locationService.getAllNearbyEvents(user.id, {
       startDate,

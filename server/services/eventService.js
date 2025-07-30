@@ -111,6 +111,19 @@ exports.getAllEventsCreated = async (userId) => {
   return events;
 };
 
+exports.getAllInvites = async (userId) => {
+  const invites = await prisma.eventInvite.findMany({
+    where: { invitedId: userId },
+    select: {
+      event: true,
+    },
+  });
+  const events = invites.map((invite) => {
+    return invite.event;
+  });
+  return events;
+};
+
 exports.createEvent = async (eventObj) => {
   const event = await prisma.event.create({
     data: eventObj,

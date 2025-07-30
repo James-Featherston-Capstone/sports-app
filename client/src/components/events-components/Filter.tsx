@@ -57,6 +57,7 @@ const Filter = () => {
           <SelectItem value="all">Nearby Events</SelectItem>
           <SelectItem value="rsvp">My RSVP's</SelectItem>
           <SelectItem value="created">My Created</SelectItem>
+          <SelectItem value="invites">Invites</SelectItem>
         </SelectContent>
       </Select>
       {eventFilters.filter === "all" && (

@@ -67,7 +67,6 @@ const EventModalContent = ({
     setViewType(viewTypes.invite);
     if (isFriendListLoading) {
       const friends = await getFriends();
-      console.log(friends);
       setFriendList(friends.friends);
       setIsFriendListLoading(false);
     }
