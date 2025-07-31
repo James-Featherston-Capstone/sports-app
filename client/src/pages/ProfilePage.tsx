@@ -35,8 +35,8 @@ const ProfilePage = () => {
       <h1 className="text-4xl mt-3">{profile.username}</h1>
       <div className="w-9/10 max-w-125 h-0.25 bg-black my-2" />
 
-      <div className="w-8/10 max-w-125">
-        <p className="text-l text-start px-2">{profile.bio}</p>
+      <div className="w-8/10 max-w-125 mb-6">
+        <p className="text-l px-2 text-center">{profile.bio}</p>
       </div>
 
       <h1 className="mt-2 text-lg font-bold">Your Location:</h1>

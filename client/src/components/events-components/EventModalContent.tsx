@@ -103,7 +103,7 @@ const EventModalContent = ({
   return (
     <div className="flex flex-col md:flex-row w-9/10 h-9/10 grow-1 overflow-auto">
       <div className="grow-1 flex flex-col">
-        <Menubar className="mb-2 flex justify-around">
+        <Menubar className="mb-2 flex justify-around overflow-x-auto">
           <MenubarMenu>
             <Button
               className="p-0 mx-1"

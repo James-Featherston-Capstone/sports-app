@@ -18,15 +18,15 @@ const EventParkDetails = ({
       </Avatar>
       <h4 className="font-bold text-xl p-1">{event.description}</h4>
       <p className="text-md">at</p>
-      <h3 className="text-l p-1">{location}</h3>
+      <h3 className="text-l p-1 text-center">{location}</h3>
       <h3 className="m-3">Sport: {event.sport}</h3>
       <h3>Attendees:</h3>
-      <ul className="flex flex-row justify-center">
+      <ul className="flex flex-row justify-center flex-wrap">
         {event.rsvps &&
-          event.rsvps.slice(0, 10).map((rsvp, index) => (
+          event.rsvps.map((rsvp, index) => (
             <li
               key={index}
-              className="flex items-center px-1 py-0.5 border-2 rounded-md"
+              className="flex items-center px-1 py-0.5 border-2 rounded-md m-0.25"
             >
               <Avatar className="m-1 w-6 h-6">
                 <AvatarImage

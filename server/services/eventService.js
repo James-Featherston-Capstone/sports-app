@@ -39,6 +39,7 @@ exports.getEvent = async (eventId) => {
             select: {
               id: true,
               username: true,
+              profile_image_url: true,
             },
           },
         },
